@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quản lý License · ETABS &amp; SAFE</title>
+<style>
+  :root{
+    --ink:#0f1e2b; --ink2:#42606f; --line:#dde5ec; --bg:#eef2f6; --card:#fff;
+    --etabs:#1f6feb; --etabs-bg:#e8f1ff; --safe:#12855a; --safe-bg:#e3f5ec;
+    --green:#18a058; --green-bg:#e6f7ee; --gray:#9fb1bd;
+    --warn:#c0392b; --amber:#b7791f; --amber-bg:#fdf3e2;
+    --shadow:0 1px 3px rgba(15,30,43,.08),0 8px 24px rgba(15,30,43,.06);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);
+    -webkit-font-smoothing:antialiased;font-size:15px;line-height:1.45}
+  header{background:var(--ink);color:#fff;padding:14px 20px;display:flex;justify-content:space-between;
+    align-items:center;flex-wrap:wrap;gap:8px}
+  header h1{font-size:17px;margin:0;font-weight:600}
+  header .clock{font-size:13px;color:#9db4c4;font-variant-numeric:tabular-nums}
+  .wrap{max-width:1080px;margin:0 auto;padding:16px 16px 60px}
+  .tabs{display:flex;gap:4px;margin:14px 0 18px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+  .tab{padding:9px 15px;border:0;background:none;font-size:14px;font-weight:600;color:var(--ink2);
+    cursor:pointer;border-bottom:2px solid transparent}
+  .tab.active{color:var(--ink);border-bottom-color:var(--ink)}
+  .tab .badge{background:var(--amber);color:#fff;border-radius:10px;font-size:11px;padding:1px 6px;margin-left:6px;font-weight:700}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:11px;box-shadow:var(--shadow);
+    padding:18px;margin-bottom:16px}
+  .card h2{margin:0 0 3px;font-size:16px}
+  .sub{color:var(--ink2);font-size:13px;margin:0 0 14px}
+  .grp-title{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;letter-spacing:.4px;
+    text-transform:uppercase;color:var(--ink2);margin:6px 0 10px}
+  .lic-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:11px;margin-bottom:18px}
+  .lic{border:1px solid var(--line);border-radius:10px;padding:13px 14px;position:relative;background:#fff;
+    border-left:4px solid var(--gray)}
+  .lic.busy{border-left-color:var(--green);background:#fbfefc}
+  .lic.overdue{border-left-color:var(--warn);background:#fef7f5;animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{box-shadow:var(--shadow)}50%{box-shadow:0 0 0 3px rgba(192,57,43,.18)}}
+  .lic .dot.over{color:var(--warn)}
+  .lic .deadline{margin-top:7px;font-size:12px;color:var(--ink2)}
+  .lic .over{margin-top:8px;font-size:12.5px;color:var(--warn);font-weight:600}
+  .lic .over-strong{margin-top:5px;background:#fdecea;border-radius:6px;padding:6px 8px;color:#8c1d13;font-weight:700}
+  .dash-alert{background:#fdecea;border:1px solid #f3b5ae;border-left:4px solid var(--warn);border-radius:9px;
+    padding:12px 14px;margin-bottom:16px;color:#8c1d13;font-size:13.5px;font-weight:600}
+  .dash-alert b{color:var(--warn)}
+  .recon-row{display:grid;grid-template-columns:90px 1fr 1fr 1fr;gap:10px;align-items:center;
+    padding:10px 0;border-bottom:1px solid var(--line)}
+  .recon-row:last-child{border-bottom:0}
+  .recon-row .lbl{font-size:12px;color:var(--ink2);font-weight:600;text-transform:uppercase}
+  .recon-row .val{font-size:13px}
+  .recon-row .val b{font-size:20px;font-variant-numeric:tabular-nums}
+  .recon-row input{width:70px;border:1px solid var(--line);border-radius:6px;padding:6px 8px;font-size:15px;text-align:center}
+  .recon-flag{font-size:12.5px;font-weight:700;padding:4px 10px;border-radius:20px;display:inline-block}
+  .recon-flag.ok{background:var(--green-bg);color:var(--green)}
+  .recon-flag.bad{background:#fdecea;color:var(--warn)}
+  .recon-flag.under{background:var(--amber-bg);color:var(--amber)}
+  .recon-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:6px}
+  #reconNames{margin-top:10px}
+  .warn-name{background:#fdecea;border:1px solid #f3b5ae;border-radius:8px;padding:10px 13px;margin-top:8px;
+    font-size:13.5px;color:#8c1d13;font-weight:600}
+  .warn-name b{color:var(--warn)}
+  .ok-name{background:var(--green-bg);border-radius:8px;padding:9px 13px;margin-top:8px;font-size:13px;color:var(--green);font-weight:600}
+  #machBody input{width:180px;border:1px solid var(--line);border-radius:6px;padding:6px 9px;font-size:14px;text-transform:uppercase}
+  .modal-bg{position:fixed;inset:0;background:rgba(15,30,43,.5);display:none;align-items:flex-start;
+    justify-content:center;padding:40px 16px;z-index:200;overflow:auto}
+  .modal-bg.show{display:flex}
+  .modal{background:#fff;border-radius:12px;padding:20px;max-width:560px;width:100%;box-shadow:var(--shadow)}
+  .modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+  .checkin-list{margin-top:8px}
+  .checkin-row{display:grid;grid-template-columns:1fr 90px 90px;gap:8px;align-items:center;
+    padding:9px 4px;border-bottom:1px solid var(--line)}
+  .checkin-row:first-child{font-size:12px;font-weight:700;text-transform:uppercase;color:var(--ink2);border-bottom:2px solid var(--line)}
+  .checkin-row .who b{display:block}
+  .checkin-row .who small{color:var(--ink2)}
+  .checkin-row label{display:flex;align-items:center;justify-content:center;gap:5px;cursor:pointer;font-size:13px;font-weight:600}
+  .checkin-row input[type=checkbox]{width:17px;height:17px;cursor:pointer}
+  .lookup-card{border:1px solid var(--line);border-radius:9px;padding:14px}
+  .lookup-card.found{border-left:4px solid var(--green);background:#fbfefc}
+  .lookup-card.notfound{border-left:4px solid var(--amber);background:#fffdf6}
+  .lookup-card .nm{font-size:18px;font-weight:700;margin:2px 0}
+  .lookup-card .st{font-size:13px;margin-top:6px}
+  .lookup-card .st.reg{color:var(--green);font-weight:600}
+  .lookup-card .st.notreg{color:var(--warn);font-weight:600}
+  .lic .top{display:flex;justify-content:space-between;align-items:center}
+  .lic .name{font-weight:700;font-size:14px;letter-spacing:.3px}
+  .lic .dot{font-size:12px;font-weight:700}
+  .lic .dot.free{color:var(--gray)} .lic .dot.busy{color:var(--green)}
+  .lic .body{margin-top:9px;font-size:13px;color:var(--ink2);min-height:20px}
+  .lic .body b{color:var(--ink);font-weight:600}
+  .lic .timer{font-variant-numeric:tabular-nums;font-weight:600;color:var(--ink)}
+  .lic .act{margin-top:11px}
+  .pill{font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px}
+  .pill.etabs{background:var(--etabs-bg);color:var(--etabs)}
+  .pill.safe{background:var(--safe-bg);color:var(--safe)}
+  .pill.sang{background:#fff3d6;color:#9a6b00}
+  .pill.chieu{background:#e5e0ff;color:#4a34b8}
+  .pill.pri-hot{background:#fdecea;color:#c0392b}
+  .pill.pri-warm{background:#fdf3e2;color:#b7791f}
+  .pill.pri-cool{background:#eef3f7;color:#42606f}
+  .btn{border:0;border-radius:7px;padding:9px 16px;font-size:14px;font-weight:600;cursor:pointer}
+  .btn.primary{background:var(--ink);color:#fff}
+  .btn.green{background:var(--green);color:#fff}
+  .btn.warn{background:var(--warn);color:#fff}
+  .btn.ghost{background:#eef3f7;color:var(--ink)}
+  .btn.small{padding:6px 12px;font-size:13px}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .field{display:flex;flex-direction:column;gap:4px;margin-bottom:13px}
+  .field label{font-size:12px;font-weight:600;color:var(--ink2)}
+  .field select,.field input{border:1px solid var(--line);border-radius:7px;padding:9px 10px;font-size:14px;background:#fff}
+  .seg{display:flex;gap:8px}
+  .seg button{flex:1;border:1px solid var(--line);background:#fff;border-radius:8px;padding:10px;font-size:14px;
+    font-weight:600;cursor:pointer;color:var(--ink2)}
+  .seg button.on{border-color:var(--ink);background:var(--ink);color:#fff}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
+  th{background:#f4f7fa;font-size:12px;text-transform:uppercase;letter-spacing:.4px;color:var(--ink2)}
+  td.num,th.num{text-align:center}
+  .queue-no{display:inline-flex;width:24px;height:24px;border-radius:50%;background:var(--amber);color:#fff;
+    align-items:center;justify-content:center;font-weight:700;font-size:12px}
+  .empty{text-align:center;color:var(--ink2);padding:24px;font-size:13.5px}
+  .bar{height:8px;background:#eef3f7;border-radius:5px;overflow:hidden;min-width:70px;display:inline-block;vertical-align:middle}
+  .bar>span{display:block;height:100%;background:var(--etabs)}
+  .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;
+    padding:11px 18px;border-radius:8px;font-size:14px;box-shadow:var(--shadow);opacity:0;
+    transition:opacity .25s,transform .25s;pointer-events:none;z-index:99;max-width:90vw;text-align:center}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(-4px)}
+  .note{font-size:12.5px;color:var(--ink2);background:#eef3f7;border-radius:8px;padding:11px 13px;margin-bottom:14px}
+  .rules{font-size:13.5px;color:var(--ink);line-height:1.7}
+  .rules li{margin-bottom:3px}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  @media(max-width:680px){.row2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+  <h1>Quản lý License · ETABS &amp; SAFE</h1>
+  <span class="clock" id="clock"></span>
+</header>
+
+<div class="wrap">
+  <div class="tabs">
+    <button class="tab active" data-tab="dash">Dashboard</button>
+    <button class="tab" data-tab="reg">Đăng ký</button>
+    <button class="tab" data-tab="queue">Hàng chờ <span class="badge" id="qBadge" style="display:none">0</span></button>
+    <button class="tab" data-tab="report">Báo cáo</button>
+    <button class="tab" data-tab="machines">Máy</button>
+    <button class="tab" data-tab="rules">Quy định</button>
+  </div>
+
+  <!-- DASHBOARD -->
+  <section class="pane" id="pane-dash">
+    <div id="dashAlert"></div>
+    <div class="card recon">
+      <div class="recon-head">
+        <div><h2 style="margin:0">Đối chiếu với license server</h2>
+          <p class="sub" style="margin:2px 0 0">Admin đọc mã máy đang mở license trên server, tick vào đây. App tra tên theo mã máy và cảnh báo ai dùng mà chưa đăng ký.</p></div>
+        <button class="btn ghost small" id="openCheckin">Cập nhật máy đang mở</button>
+      </div>
+      <div id="reconBox"></div>
+      <div id="reconNames"></div>
+    </div>
+    <div class="card">
+      <div class="grp-title"><span class="pill etabs">ETABS</span> 5 license</div>
+      <div class="lic-grid" id="gridEtabs"></div>
+      <div class="grp-title"><span class="pill safe">SAFE</span> 3 license</div>
+      <div class="lic-grid" id="gridSafe"></div>
+    </div>
+  </section>
+
+  <!-- ĐĂNG KÝ -->
+  <section class="pane" id="pane-reg" style="display:none">
+    <div class="card" style="max-width:460px">
+      <h2>Đăng ký sử dụng</h2>
+      <p class="sub">Còn license thì nhận ngay. Hết thì vào hàng chờ. Mỗi lần chỉ giữ 01 buổi.</p>
+      <div class="field"><label>Họ tên</label><select id="rgName"></select></div>
+      <div class="field"><label>Phần mềm</label>
+        <div class="seg" id="rgSw">
+          <button data-v="ETABS" class="on">ETABS</button>
+          <button data-v="SAFE">SAFE</button>
+        </div></div>
+      <div class="field"><label>Buổi sử dụng</label>
+        <div class="seg" id="rgSess">
+          <button data-v="Sáng" class="on">Buổi sáng</button>
+          <button data-v="Chiều">Buổi chiều</button>
+        </div></div>
+      <div class="field"><label>Mức ưu tiên (khi phải vào hàng chờ)</label>
+        <div class="seg" id="rgPri">
+          <button data-v="Thường" class="on">Thường</button>
+          <button data-v="Gấp">Gấp</button>
+          <button data-v="Rất gấp">Rất gấp</button>
+        </div></div>
+      <div class="field"><label id="rgNoteLbl">Lý do dự án (bắt buộc nếu Gấp / Rất gấp)</label><input id="rgNote" placeholder="VD: chạy mô hình gấp cho hồ sơ thầu dự án GO Siêu Thị"></div>
+      <button class="btn primary" id="rgSubmit" style="width:100%">Đăng ký</button>
+      <div class="note" id="rgHint" style="margin-top:13px"></div>
+    </div>
+  </section>
+
+  <!-- HÀNG CHỜ -->
+  <section class="pane" id="pane-queue" style="display:none">
+    <div class="card">
+      <h2>Danh sách chờ</h2>
+      <p class="sub">Xếp theo mức ưu tiên (Rất gấp → Gấp → Thường); cùng mức thì ai đăng ký trước ra trước.</p>
+      <table><thead><tr><th class="num">#</th><th>Ưu tiên</th><th>Họ tên</th><th>Phần mềm</th><th>Buổi</th><th>Lý do dự án</th><th>Thời gian ĐK</th><th></th></tr></thead>
+        <tbody id="queueBody"></tbody></table>
+    </div>
+  </section>
+
+  <!-- BÁO CÁO -->
+  <section class="pane" id="pane-report" style="display:none">
+    <div class="row2">
+      <div class="card">
+        <h2>Ai dùng nhiều nhất</h2>
+        <p class="sub">Số lượt và tổng thời gian đã sử dụng theo người.</p>
+        <table><thead><tr><th>Người</th><th class="num">Lượt</th><th class="num">Tổng thời gian</th><th class="num">Quá hạn</th></tr></thead>
+          <tbody id="rpUser"></tbody></table>
+      </div>
+      <div class="card">
+        <h2>Tỷ lệ sử dụng phần mềm</h2>
+        <p class="sub">Số lượt sử dụng ETABS so với SAFE.</p>
+        <table><thead><tr><th>Phần mềm</th><th class="num">Lượt</th><th>Tỷ lệ</th></tr></thead>
+          <tbody id="rpSw"></tbody></table>
+        <h2 style="margin-top:18px">Thời điểm thường thiếu license</h2>
+        <p class="sub">Số lần rơi vào hàng chờ theo buổi.</p>
+        <table><thead><tr><th>Buổi</th><th class="num">Lần vào hàng chờ</th></tr></thead>
+          <tbody id="rpPeak"></tbody></table>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Lịch sử sử dụng license</h2>
+      <table><thead><tr><th>License</th><th>Người dùng</th><th>Buổi</th><th>Bắt đầu</th><th>Trả</th><th>Thời lượng</th><th>Ghi chú</th></tr></thead>
+        <tbody id="rpHist"></tbody></table>
+    </div>
+    <div><button class="btn ghost small" id="resetBtn">Xóa toàn bộ dữ liệu thử</button></div>
+  </section>
+
+  <!-- MÁY -->
+  <section class="pane" id="pane-machines" style="display:none">
+    <div class="card" style="max-width:560px">
+      <h2>Tra cứu mã máy</h2>
+      <p class="sub">Nhập mã máy để xem đang là của ai. Nếu người đó dùng license sai quyền hạn (không đăng ký), bấm Báo admin.</p>
+      <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap">
+        <div class="field" style="margin:0"><label>Mã máy</label>
+          <input id="lookupCode" placeholder="VD VNRHD054" style="text-transform:uppercase"></div>
+        <button class="btn primary" id="lookupBtn">Tra cứu</button>
+      </div>
+      <div id="lookupResult" style="margin-top:14px"></div>
+    </div>
+
+    <div class="card">
+      <h2>Bảng mã máy của từng người</h2>
+      <p class="sub">Mỗi người gắn cố định 1 mã máy (hostname, VD VNRHD054). Admin điền/sửa tại đây.</p>
+      <table><thead><tr><th>Họ tên</th><th>Mã máy</th></tr></thead>
+        <tbody id="machBody"></tbody></table>
+    </div>
+
+    <div class="card">
+      <h2>Báo cáo vi phạm <span class="badge" id="repBadge" style="display:none">0</span></h2>
+      <p class="sub">Các trường hợp được báo dùng license sai quyền. Admin xem và xử lý (cảnh báo người vi phạm).</p>
+      <table><thead><tr><th>Thời điểm</th><th>Mã máy</th><th>Người dùng</th><th>Người báo</th><th>Ghi chú</th><th></th></tr></thead>
+        <tbody id="repBody"></tbody></table>
+    </div>
+  </section>
+
+  <!-- QUY ĐỊNH -->
+  <section class="pane" id="pane-rules" style="display:none">
+    <div class="card">
+      <h2>Quy định sử dụng</h2>
+      <ul class="rules">
+        <li>Không giữ license khi không sử dụng.</li>
+        <li>Hoàn thành công việc phải trả key ngay.</li>
+        <li>Mỗi người chỉ được giữ tối đa 01 buổi mỗi lần đăng ký.</li>
+        <li>Giờ hết hạn: buổi Sáng đến 12:00, buổi Chiều đến 17:30. Quá giờ chưa trả sẽ bị đánh dấu <b style="color:var(--warn)">Quá hạn</b> trên Dashboard.</li>
+        <li>Không được đăng ký cả ngày ngay từ đầu — hết buổi phải trả key hoặc đăng ký lại.</li>
+        <li>Người đăng ký trước được ưu tiên trước.</li>
+        <li>Nếu có người đang chờ thì không được tự động gia hạn — phải trả key trước.</li>
+        <li>Mọi người chủ động liên hệ nhau qua Teams / Zalo / Telegram dựa trên thông tin hiển thị trên Dashboard.</li>
+      </ul>
+    </div>
+  </section>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="modal-bg" id="checkinBg">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 style="margin:0">Máy đang mở license</h2>
+      <button class="btn ghost small" id="closeCheckin">Đóng</button>
+    </div>
+    <p class="sub">Tick vào phần mềm mà máy đó đang mở trên license server. Chỉ hiện người đã có mã máy (điền ở tab "Máy").</p>
+    <div class="checkin-list" id="checkinList"></div>
+    <div style="margin-top:14px;text-align:right">
+      <button class="btn primary" id="applyCheckin">Lưu &amp; đối chiếu</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const EMPLOYEES = ["PHẠM ĐỨC TÀI","TRẦN VĂN ĐỊNH","NGUYỄN THÀNH PHI","NGUYỄN LINH TRƯỜNG",
+ "CÁI THỊ THẢO MY","NGUYỄN ĐĂNG QUANG","LÊ NGUYỄN ĐÌNH TUẤN","NGUYỄN TẤN LỢI",
+ "BÙI LONG PHỤNG","ĐOÀN PHÚC HIỆP","TRẦN ĐÌNH VŨ","PHẠM MINH KHANG","NGUYỄN HỮU THOẠI",
+ "NGUYỄN TRƯỜNG THỌ","NGUYỄN VIẾT HOÀNG","VÕ HỒNG HƯNG","NGUYỄN PHI GIA","TRẦN THẮNG",
+ "GIP NHẬT THANH"];
+const LICENSES = [
+ {id:"ETABS-01",sw:"ETABS"},{id:"ETABS-02",sw:"ETABS"},{id:"ETABS-03",sw:"ETABS"},
+ {id:"ETABS-04",sw:"ETABS"},{id:"ETABS-05",sw:"ETABS"},
+ {id:"SAFE-01",sw:"SAFE"},{id:"SAFE-02",sw:"SAFE"},{id:"SAFE-03",sw:"SAFE"}];
+
+// Bảng mã máy mặc định theo danh sách IT cung cấp (điền sẵn; admin sửa được)
+const MACHINE_MAP={
+ "NGUYỄN PHI GIA":"VNRHD054",
+ "NGUYỄN HỮU THOẠI":"VNRHD049",
+ "NGUYỄN THÀNH PHI":"VNRHD064",
+ "PHẠM ĐỨC TÀI":"VNRHD037",
+ "PHẠM MINH KHANG":"VNRHD033",
+ "ĐOÀN PHÚC HIỆP":"VNRHD065",
+ "VÕ HỒNG HƯNG":"VNRHD079",
+ "NGUYỄN LINH TRƯỜNG":"VNOOD116",
+ "NGUYỄN VIẾT HOÀNG":"VNRHD067",
+ "TRẦN THẮNG":"VNRHD053",
+ "LÊ NGUYỄN ĐÌNH TUẤN":"VNRHD063",
+ "CÁI THỊ THẢO MY":"VNOOD104",
+ "BÙI LONG PHỤNG":"VNRHD034",
+ "NGUYỄN TẤN LỢI":"VNRHD078",
+ "NGUYỄN ĐĂNG QUANG":"VNRHD084",
+ "NGUYỄN TRƯỜNG THỌ":"VNRHD080",
+ "GIP NHẬT THANH":"VNRHD068",
+ "TRẦN ĐÌNH VŨ":"VNRHD066",
+ "TRẦN VĂN ĐỊNH":"VNRHD036"
+};
+
+const LS="licmgr_v1";
+let db=fresh();               // sẽ được nạp từ server khi khởi động
+let SAVE_TIMER=null, LAST_SNAPSHOT="";
+function fresh(){
+  const st={};LICENSES.forEach(l=>st[l.id]=null); // null = trống; hoặc {user,sess,note,start}
+  const machines={};EMPLOYEES.forEach(n=>machines[n]=MACHINE_MAP[n]||"");
+  return {state:st, queue:[], history:[], queueLog:[], server:{ETABS:null,SAFE:null},
+          machines, open:{}, reports:[]};
+}
+// bổ sung mọi trường còn thiếu cho dữ liệu cũ
+function migrate(d){
+  if(!d||typeof d!=='object') d=fresh();
+  if(!d.state)d.state={};
+  LICENSES.forEach(l=>{if(!(l.id in d.state))d.state[l.id]=null;});
+  if(!Array.isArray(d.queue))d.queue=[];
+  if(!Array.isArray(d.history))d.history=[];
+  if(!Array.isArray(d.queueLog))d.queueLog=[];
+  if(!d.server||typeof d.server!=='object')d.server={ETABS:null,SAFE:null};
+  if(!('ETABS' in d.server))d.server.ETABS=null;
+  if(!('SAFE' in d.server))d.server.SAFE=null;
+  if(!d.machines||typeof d.machines!=='object')d.machines={};
+  EMPLOYEES.forEach(n=>{if(!d.machines[n])d.machines[n]=MACHINE_MAP[n]||"";});
+  if(!d.open||typeof d.open!=='object')d.open={};
+  if(!Array.isArray(d.reports))d.reports=[];
+  return d;
+}
+// ================== KẾT NỐI GOOGLE SHEET (Apps Script Web App) ==================
+// >>> DÁN URL WEB APP CỦA BẠN VÀO GIỮA HAI DẤU NHÁY DƯỚI ĐÂY <<<
+const API_URL = "https://script.google.com/macros/s/AKfycbxyujnHlbjUPN_mj4EBdbf28Quae4aqJTrhHX-Cd2b7EMf-351DiEGw1bUWmlQC3Xk-rg/exec";
+// Ví dụ: const API_URL = "https://script.google.com/macros/s/AKfy..../exec";
+// Nếu để trống, app sẽ chạy chế độ thử (lưu tạm trên máy này).
+
+const USE_API = !!API_URL;
+async function loadFromServer(){
+  if(!USE_API){ // chưa cấu hình -> dùng localStorage để thử
+    try{return migrate(JSON.parse(localStorage.getItem(LS)));}catch(e){return fresh();}
+  }
+  try{const r=await fetch(API_URL,{cache:'no-store'});const d=await r.json();return migrate(d);}
+  catch(e){console.error('load',e);toast('⚠ Không tải được dữ liệu — kiểm tra API_URL.');return fresh();}
+}
+async function save(){
+  const snap=JSON.stringify(db);
+  if(!USE_API){localStorage.setItem(LS,snap);LAST_SNAPSHOT=snap;return;}
+  // gộp các lần lưu liên tiếp trong 400ms
+  clearTimeout(SAVE_TIMER);
+  SAVE_TIMER=setTimeout(async()=>{
+    try{
+      // dùng text/plain để tránh preflight CORS với Apps Script
+      await fetch(API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:snap});
+      LAST_SNAPSHOT=snap;
+    }catch(e){console.error('save',e);toast('⚠ Không lưu được lên Google Sheet — kiểm tra kết nối.');}
+  },400);
+}
+// đồng bộ định kỳ: nếu người khác thay đổi, tự cập nhật màn hình
+async function syncFromServer(){
+  if(!USE_API)return;
+  try{const r=await fetch(API_URL,{cache:'no-store'});const d=await r.json();
+    const snap=JSON.stringify(migrate(d));
+    if(snap!==JSON.stringify(db)&&snap!==LAST_SNAPSHOT){
+      db=JSON.parse(snap);renderAll();
+    }
+  }catch(e){/* im lặng, thử lại lần sau */}
+}
+
+/* ---------- helpers ---------- */
+function pad(n){return('0'+n).slice(-2);}
+function nowStr(t){const d=new Date(t||Date.now());
+  return pad(d.getHours())+':'+pad(d.getMinutes())+' '+pad(d.getDate())+'/'+pad(d.getMonth()+1);}
+function dur(ms){const s=Math.floor(ms/1000),h=Math.floor(s/3600),m=Math.floor(s%3600/60);
+  return (h?h+'g ':'')+m+'p';}
+let tmo;function toast(m){const el=document.getElementById('toast');el.textContent=m;el.classList.add('show');
+  clearTimeout(tmo);tmo=setTimeout(()=>el.classList.remove('show'),2600);}
+
+/* ---------- giờ hết hạn theo buổi ---------- */
+const SESSION_END={"Sáng":{h:12,m:0},"Chiều":{h:17,m:30}};
+// mốc hết hạn = cuối buổi của NGÀY nhận key
+function deadlineOf(s){
+  const start=new Date(s.start);const e=SESSION_END[s.sess];
+  const dl=new Date(start.getFullYear(),start.getMonth(),start.getDate(),e.h,e.m,0,0);
+  return dl.getTime();
+}
+function isOverdue(s){return Date.now()>deadlineOf(s);}
+function endLabel(s){const e=SESSION_END[s.sess];return pad(e.h)+':'+pad(e.m);}
+
+/* ---------- clock + live timers ---------- */
+function tick(){
+  document.getElementById('clock').textContent='Bây giờ: '+nowStr();
+  document.querySelectorAll('[data-start]').forEach(el=>{
+    el.textContent=dur(Date.now()-Number(el.dataset.start));});
+  document.querySelectorAll('[data-over]').forEach(el=>{
+    el.textContent=dur(Date.now()-Number(el.dataset.over));});
+  // cập nhật lại thẻ để đổi màu khi vừa quá hạn (nhẹ: chỉ khi có phiên đang mở)
+  if(document.getElementById('pane-dash').style.display!=='none') refreshOverdueClasses();
+}
+setInterval(tick,1000);
+function refreshOverdueClasses(){
+  LICENSES.forEach(l=>{const s=db.state[l.id];const card=document.getElementById('lic-'+l.id);
+    if(card&&s){card.classList.toggle('overdue',isOverdue(s));}});
+}
+
+/* ---------- fill selects/segments ---------- */
+const rgName=document.getElementById('rgName');
+EMPLOYEES.forEach(n=>rgName.append(new Option(n,n)));
+function seg(id){const box=document.getElementById(id);let val=box.querySelector('.on').dataset.v;
+  box.querySelectorAll('button').forEach(b=>b.onclick=()=>{box.querySelectorAll('button').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');val=b.dataset.v;
+    if(id==='rgSw'||id==='rgSess')updateHint();
+    if(id==='rgPri')updateNoteLabel();});
+  return ()=>val;}
+const getSw=seg('rgSw'), getSess=seg('rgSess'), getPri=seg('rgPri');
+function updateNoteLabel(){
+  const lbl=document.getElementById('rgNoteLbl');const p=getPri();
+  if(p==='Thường')lbl.innerHTML='Lý do dự án (tùy chọn)';
+  else lbl.innerHTML='Lý do dự án <b style="color:var(--warn)">(bắt buộc — '+p+')</b>';
+}
+
+/* ---------- tabs ---------- */
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{
+  document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));t.classList.add('active');
+  document.querySelectorAll('.pane').forEach(p=>p.style.display='none');
+  document.getElementById('pane-'+t.dataset.tab).style.display='';renderAll();});
+
+/* ---------- dashboard ---------- */
+function licCard(l){
+  const s=db.state[l.id];
+  const div=document.createElement('div');
+  div.id='lic-'+l.id;
+  const over=s&&isOverdue(s);
+  div.className='lic'+(s?' busy':'')+(over?' overdue':'');
+  const swpill=`<span class="pill ${l.sw.toLowerCase()}">${l.sw}</span>`;
+  if(s){
+    // có ai đang chờ cùng phần mềm không?
+    const waiting=db.queue.filter(q=>q.sw===l.sw).length;
+    const overBlock = over
+      ? `<div class="over">🔴 QUÁ HẠN buổi ${s.sess} (hạn ${endLabel(s)}) · trễ <span data-over="${deadlineOf(s)}">—</span>
+          ${waiting?`<div class="over-strong">⚠ Có ${waiting} người đang chờ ${l.sw} — vui lòng trả key gấp!</div>`:''}</div>`
+      : `<div class="deadline">Hạn trả: <b>${endLabel(s)}</b> (cuối buổi ${s.sess})</div>`;
+    div.innerHTML=`<div class="top"><span class="name">${swpill} ${l.id}</span>
+        <span class="dot ${over?'over':'busy'}">${over?'🔴 Quá hạn':'🟢 Đang dùng'}</span></div>
+      <div class="body">👤 <b>${s.user}</b> · <span class="pill ${s.sess==='Sáng'?'sang':'chieu'}">${s.sess}</span><br>
+        Bắt đầu: <b>${nowStr(s.start)}</b> · đã dùng <span class="timer" data-start="${s.start}">—</span>
+        ${overBlock}</div>`;
+    const act=document.createElement('div');act.className='act';
+    const b=document.createElement('button');b.className='btn green small';b.textContent='Trả key (Release)';
+    b.onclick=()=>release(l.id);act.append(b);div.append(act);
+  }else{
+    div.innerHTML=`<div class="top"><span class="name">${swpill} ${l.id}</span>
+        <span class="dot free">⚪ Trống</span></div>
+      <div class="body">Sẵn sàng để đăng ký.</div>`;
+    const act=document.createElement('div');act.className='act';
+    const b=document.createElement('button');b.className='btn primary small';b.textContent='Nhận key này';
+    b.onclick=()=>quickTake(l.id);act.append(b);div.append(act);
+  }
+  return div;
+}
+/* ---------- đối chiếu server vs đăng ký (theo mã máy → tên) ---------- */
+function usedCount(sw){return LICENSES.filter(l=>l.sw===sw&&db.state[l.id]).length;}
+function capOf(sw){return LICENSES.filter(l=>l.sw===sw).length;}
+// tên người đang đăng ký giữ 1 phần mềm
+function registeredUsers(sw){return LICENSES.filter(l=>l.sw===sw&&db.state[l.id]).map(l=>db.state[l.id].user);}
+// mã máy → tên (đảo bảng machines)
+function nameByMachine(code){const e=Object.entries(db.machines).find(([n,c])=>c&&c.toUpperCase()===code.toUpperCase());return e?e[0]:null;}
+// người đang MỞ 1 phần mềm (theo tick server): trả về danh sách tên (hoặc mã máy nếu chưa map)
+function openUsers(sw){
+  const out=[];
+  Object.entries(db.open).forEach(([code,f])=>{ if(f&&f[sw]){ const nm=nameByMachine(code); out.push(nm||('máy '+code)); }});
+  return out;
+}
+function renderRecon(){
+  const box=document.getElementById('reconBox');box.innerHTML='';
+  const namesBox=document.getElementById('reconNames');namesBox.innerHTML='';
+  let anyOpen=Object.values(db.open).some(f=>f&&(f.ETABS||f.SAFE));
+  ["ETABS","SAFE"].forEach(sw=>{
+    const reg=registeredUsers(sw), cap=capOf(sw);
+    const open=openUsers(sw);
+    const row=document.createElement('div');row.className='recon-row';
+    // ai đang mở mà KHÔNG có trong đăng ký
+    const notReg=open.filter(u=>!reg.includes(u));
+    let flag;
+    if(!anyOpen){flag=`<span class="recon-flag under">Chưa cập nhật máy đang mở</span>`;}
+    else if(notReg.length){flag=`<span class="recon-flag bad">⚠ ${notReg.length} người dùng ${sw} chưa đăng ký</span>`;}
+    else{flag=`<span class="recon-flag ok">✓ Khớp</span>`;}
+    row.innerHTML=`<div class="lbl"><span class="pill ${sw.toLowerCase()}">${sw}</span></div>
+      <div class="val">Đang mở (server)<br><b>${open.length}</b> / ${cap}</div>
+      <div class="val">Đã đăng ký trên app<br><b>${reg.length}</b> / ${cap}</div>
+      <div class="val">${flag}</div>`;
+    box.append(row);
+    // liệt kê tên vi phạm
+    if(notReg.length){
+      namesBox.insertAdjacentHTML('beforeend',
+        `<div class="warn-name">🔴 <b>${sw}</b> — dùng nhưng CHƯA đăng ký: ${notReg.join(', ')}. Vui lòng yêu cầu đăng ký hoặc đóng phần mềm.</div>`);
+    }
+  });
+  if(anyOpen){
+    const totalViol=["ETABS","SAFE"].reduce((a,sw)=>a+openUsers(sw).filter(u=>!registeredUsers(sw).includes(u)).length,0);
+    if(totalViol===0) namesBox.insertAdjacentHTML('beforeend','<div class="ok-name">✓ Tất cả người đang mở license đều đã đăng ký.</div>');
+  }
+}
+
+function renderDash(){
+  renderRecon();
+  const ge=document.getElementById('gridEtabs'),gs=document.getElementById('gridSafe');
+  ge.innerHTML='';gs.innerHTML='';
+  LICENSES.forEach(l=>(l.sw==='ETABS'?ge:gs).append(licCard(l)));
+  // banner: các key quá hạn, ưu tiên cái đang có người chờ
+  const overdue=LICENSES.filter(l=>db.state[l.id]&&isOverdue(db.state[l.id]));
+  const alert=document.getElementById('dashAlert');
+  if(overdue.length){
+    const parts=overdue.map(l=>{const s=db.state[l.id];
+      const w=db.queue.filter(q=>q.sw===l.sw).length;
+      return `${l.id} — <b>${s.user}</b> (buổi ${s.sess}, hạn ${endLabel(s)})${w?` · <b>${w} người đang chờ</b>`:''}`;});
+    alert.innerHTML=`<div class="dash-alert">🔴 Có ${overdue.length} license quá hạn chưa trả:<br>`
+      +parts.join('<br>')+`<br><span style="font-weight:500">Vui lòng chủ động nhắc nhau trả key qua Teams/Zalo/Telegram.</span></div>`;
+  }else alert.innerHTML='';
+  tick();
+}
+
+/* ---------- nhận nhanh 1 license trống từ dashboard ---------- */
+let pendingQuick=null;
+function quickTake(licId){
+  pendingQuick=licId;
+  // chuyển sang tab đăng ký, khóa phần mềm theo license
+  document.querySelector('.tab[data-tab="reg"]').click();
+  const sw=LICENSES.find(l=>l.id===licId).sw;
+  const box=document.getElementById('rgSw');
+  box.querySelectorAll('button').forEach(x=>x.classList.toggle('on',x.dataset.v===sw));
+  updateHint(licId);
+  toast('Điền tên và buổi để nhận '+licId);
+}
+
+/* ---------- đăng ký ---------- */
+function freeLicenseOf(sw){return LICENSES.find(l=>l.sw===sw && !db.state[l.id]);}
+function updateHint(forceLic){
+  const sw=getSw();const free=freeLicenseOf(sw);
+  const h=document.getElementById('rgHint');
+  if(forceLic){h.innerHTML=`Sẽ nhận <b>${forceLic}</b> ngay khi bấm Đăng ký.`;return;}
+  if(free)h.innerHTML=`Còn license <b>${free.id}</b> — bạn sẽ nhận ngay.`;
+  else h.innerHTML=`Hết license ${sw} — bạn sẽ được đưa vào <b>hàng chờ</b>.`;
+}
+document.getElementById('rgSubmit').onclick=()=>{
+  const user=rgName.value, sw=getSw(), sess=getSess(), pri=getPri(), note=document.getElementById('rgNote').value.trim();
+  // bắt buộc lý do nếu Gấp/Rất gấp
+  if((pri==='Gấp'||pri==='Rất gấp')&&!note){
+    toast('Vui lòng nhập LÝ DO DỰ ÁN khi chọn mức '+pri+'.');
+    document.getElementById('rgNote').focus();return;
+  }
+  // chặn giữ 2 license cùng lúc
+  const already=Object.entries(db.state).find(([id,s])=>s&&s.user===user);
+  if(already){toast(user+' đang giữ '+already[0]+' — phải trả trước khi đăng ký mới.');return;}
+  // chặn đăng ký trùng khi đã ở trong hàng chờ
+  const inQ=db.queue.find(q=>q.user===user&&q.sw===sw);
+  if(inQ){toast(user+' đã ở trong hàng chờ '+sw+'.');document.querySelector('.tab[data-tab="queue"]').click();return;}
+  let lic=pendingQuick?LICENSES.find(l=>l.id===pendingQuick&&!db.state[l.id]):freeLicenseOf(sw);
+  pendingQuick=null;
+  if(lic){
+    db.state[lic.id]={user,sess,note,pri,start:Date.now()};
+    save();document.getElementById('rgNote').value='';
+    toast('✅ '+user+' đã nhận '+lic.id+' ('+sess+')');
+    document.querySelector('.tab[data-tab="dash"]').click();
+  }else{
+    db.queue.push({id:Date.now(),user,sw,sess,pri,note,at:Date.now()});
+    if(!db.queueLog)db.queueLog=[];
+    db.queueLog.push({sess,sw,at:Date.now()});
+    save();document.getElementById('rgNote').value='';
+    const pos=sortedQueue(sw).findIndex(q=>q.user===user)+1;
+    toast('⏳ Hết license '+sw+' — '+user+' vào hàng chờ (mức '+pri+', vị trí '+pos+').');
+    document.querySelector('.tab[data-tab="queue"]').click();
+  }
+};
+
+/* ---------- sắp xếp hàng chờ theo ưu tiên ---------- */
+const PRI_RANK={"Rất gấp":3,"Gấp":2,"Thường":1};
+function priRank(q){return PRI_RANK[q.pri]||1;}
+function sortedQueue(sw){
+  return db.queue.filter(q=>!sw||q.sw===sw)
+    .slice().sort((a,b)=>{
+      const d=priRank(b)-priRank(a); if(d)return d;   // ưu tiên cao trước
+      return a.at-b.at;                                // cùng mức: ai trước ra trước
+    });
+}
+
+/* ---------- trả key + ưu tiên hàng chờ ---------- */
+function release(licId){
+  const s=db.state[licId];if(!s)return;
+  db.history.push({lic:licId,sw:LICENSES.find(l=>l.id===licId).sw,user:s.user,sess:s.sess,
+    note:s.note,start:s.start,end:Date.now(),overdue:isOverdue(s)});
+  db.state[licId]=null;
+  // lấy người chờ ƯU TIÊN CAO NHẤT cùng phần mềm
+  const sw=LICENSES.find(l=>l.id===licId).sw;
+  const next=sortedQueue(sw)[0];
+  if(next){
+    db.queue=db.queue.filter(q=>q.id!==next.id);
+    db.state[licId]={user:next.user,sess:next.sess,note:next.note,pri:next.pri,start:Date.now()};
+    save();toast('🔁 '+licId+' đã trả → giao cho '+next.user+' (ưu tiên '+(next.pri||'Thường')+').');
+  }else{save();toast('⚪ '+licId+' đã trả, hiện đang trống.');}
+  renderAll();
+}
+
+/* ---------- hàng chờ ---------- */
+function priPill(p){p=p||'Thường';
+  const cls=p==='Rất gấp'?'pri-hot':(p==='Gấp'?'pri-warm':'pri-cool');
+  return `<span class="pill ${cls}">${p}</span>`;}
+function renderQueue(){
+  const b=document.getElementById('queueBody');b.innerHTML='';
+  const badge=document.getElementById('qBadge');
+  if(db.queue.length){badge.style.display='';badge.textContent=db.queue.length;}else badge.style.display='none';
+  if(!db.queue.length){b.innerHTML='<tr><td colspan="8" class="empty">Không có ai đang chờ.</td></tr>';return;}
+  sortedQueue().forEach((q,i)=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td class="num"><span class="queue-no">${i+1}</span></td>
+      <td>${priPill(q.pri)}</td><td>${q.user}</td>
+      <td><span class="pill ${q.sw.toLowerCase()}">${q.sw}</span></td>
+      <td><span class="pill ${q.sess==='Sáng'?'sang':'chieu'}">${q.sess}</span></td>
+      <td>${q.note||''}</td><td>${nowStr(q.at)}</td><td></td>`;
+    const btn=document.createElement('button');btn.className='btn ghost small';btn.textContent='Rút khỏi chờ';
+    btn.onclick=()=>{db.queue=db.queue.filter(x=>x.id!==q.id);save();renderAll();toast('Đã rút '+q.user+' khỏi hàng chờ.');};
+    tr.lastElementChild.append(btn);b.append(tr);
+  });
+}
+
+/* ---------- báo cáo ---------- */
+function renderReport(){
+  // per user: lượt + tổng thời gian + số lần quá hạn
+  const cnt={},time={},late={};
+  db.history.forEach(h=>{cnt[h.user]=(cnt[h.user]||0)+1;time[h.user]=(time[h.user]||0)+(h.end-h.start);
+    if(h.overdue)late[h.user]=(late[h.user]||0)+1;});
+  Object.entries(db.state).forEach(([id,s])=>{if(s){cnt[s.user]=(cnt[s.user]||0)+1;time[s.user]=(time[s.user]||0)+(Date.now()-s.start);
+    if(isOverdue(s))late[s.user]=(late[s.user]||0)+1;}});
+  const u=document.getElementById('rpUser');u.innerHTML='';
+  const names=Object.keys(cnt).sort((a,b)=>time[b]-time[a]);
+  if(!names.length)u.innerHTML='<tr><td colspan="4" class="empty">Chưa có dữ liệu.</td></tr>';
+  names.forEach(n=>u.insertAdjacentHTML('beforeend',
+    `<tr><td>${n}</td><td class="num">${cnt[n]}</td><td class="num">${dur(time[n])}</td>
+     <td class="num">${late[n]?`<b style="color:var(--warn)">${late[n]}</b>`:'0'}</td></tr>`));
+
+  // sw ratio
+  const sw={ETABS:0,SAFE:0};
+  db.history.forEach(h=>sw[h.sw]++);
+  Object.entries(db.state).forEach(([id,s])=>{if(s)sw[LICENSES.find(l=>l.id===id).sw]++;});
+  const total=(sw.ETABS+sw.SAFE)||1;
+  const sd=document.getElementById('rpSw');sd.innerHTML='';
+  [['ETABS',sw.ETABS],['SAFE',sw.SAFE]].forEach(([k,v])=>{const p=Math.round(v/total*100);
+    sd.insertAdjacentHTML('beforeend',
+     `<tr><td><span class="pill ${k.toLowerCase()}">${k}</span></td><td class="num">${v}</td>
+      <td><div class="bar"><span style="width:${p}%"></span></div> <small>${p}%</small></td></tr>`);});
+
+  const peak={Sáng:0,Chiều:0};
+  (db.queueLog||[]).forEach(q=>peak[q.sess]=(peak[q.sess]||0)+1);
+  const pd=document.getElementById('rpPeak');pd.innerHTML='';
+  [['Sáng',peak.Sáng||0],['Chiều',peak.Chiều||0]].forEach(([k,v])=>
+    pd.insertAdjacentHTML('beforeend',`<tr><td><span class="pill ${k==='Sáng'?'sang':'chieu'}">${k}</span></td><td class="num">${v}</td></tr>`));
+
+  const hd=document.getElementById('rpHist');hd.innerHTML='';
+  if(!db.history.length)hd.innerHTML='<tr><td colspan="7" class="empty">Chưa có lịch sử.</td></tr>';
+  [...db.history].reverse().forEach(h=>hd.insertAdjacentHTML('beforeend',
+    `<tr><td>${h.lic}</td><td>${h.user}</td><td>${h.sess}</td><td>${nowStr(h.start)}</td>
+     <td>${nowStr(h.end)}${h.overdue?' <span style="color:var(--warn);font-weight:700">(quá hạn)</span>':''}</td>
+     <td>${dur(h.end-h.start)}</td><td>${h.note||''}</td></tr>`));
+}
+
+document.getElementById('resetBtn').onclick=()=>{
+  if(confirm('Xóa toàn bộ dữ liệu thử trên máy này?')){db=fresh();save();renderAll();toast('Đã xóa.');}};
+
+/* ---------- tab Máy: bảng map người ↔ mã máy ---------- */
+function renderMachines(){
+  const b=document.getElementById('machBody');b.innerHTML='';
+  EMPLOYEES.forEach(n=>{
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td><b>${n}</b></td><td></td>`;
+    const inp=document.createElement('input');
+    inp.value=db.machines[n]||'';inp.placeholder='VD VNRHD054';
+    inp.onchange=e=>{db.machines[n]=e.target.value.trim().toUpperCase();save();renderRecon();
+      toast('Đã lưu mã máy cho '+n);};
+    tr.lastElementChild.append(inp);b.append(tr);
+  });
+}
+
+/* ---------- tra cứu mã máy → tên + báo vi phạm ---------- */
+// người đang mở phần mềm gì (theo tick server) cho 1 mã máy
+function openSwOfMachine(code){const f=db.open[code];if(!f)return[];return ['ETABS','SAFE'].filter(sw=>f[sw]);}
+document.getElementById('lookupBtn').onclick=doLookup;
+document.getElementById('lookupCode').addEventListener('keydown',e=>{if(e.key==='Enter')doLookup();});
+function doLookup(){
+  const code=document.getElementById('lookupCode').value.trim().toUpperCase();
+  const box=document.getElementById('lookupResult');box.innerHTML='';
+  if(!code)return;
+  const name=nameByMachine(code);
+  if(!name){
+    box.innerHTML=`<div class="lookup-card notfound">Mã máy <b>${code}</b> chưa gán cho ai.<br>
+      <span class="sub">Kiểm tra lại mã, hoặc thêm vào bảng bên dưới.</span></div>`;
+    return;
+  }
+  // người này đang mở gì (nếu admin đã tick) và có đăng ký không
+  const opening=openSwOfMachine(code);
+  const regSw=LICENSES.filter(l=>db.state[l.id]&&db.state[l.id].user===name).map(l=>db.state[l.id].sw);
+  let stLines='';
+  if(opening.length){
+    opening.forEach(sw=>{
+      const ok=regSw.includes(sw);
+      stLines+=`<div class="st ${ok?'reg':'notreg'}">${ok?'✓':'⚠'} Đang mở <b>${sw}</b> — ${ok?'đã đăng ký (đúng quyền)':'CHƯA đăng ký (sai quyền)'}</div>`;
+    });
+  }else{
+    stLines=`<div class="st">Hiện chưa ghi nhận máy này đang mở license (admin chưa tick).</div>`;
+  }
+  const card=document.createElement('div');
+  card.className='lookup-card found';
+  card.innerHTML=`<div class="sub">Mã máy ${code} là của:</div><div class="nm">👤 ${name}</div>${stLines}`;
+  // nút báo admin nếu có mở mà chưa đăng ký
+  const violating=opening.filter(sw=>!regSw.includes(sw));
+  if(violating.length){
+    const btn=document.createElement('button');btn.className='btn warn small';btn.style.marginTop='10px';
+    btn.textContent='Báo admin vi phạm';
+    btn.onclick=()=>reportViolation(code,name,violating);
+    card.append(btn);
+  }
+  box.append(card);
+}
+function reportViolation(code,name,sws){
+  const reporter=prompt('Bạn là ai? (để admin biết ai báo)','')||'(ẩn danh)';
+  db.reports.unshift({id:Date.now(),code,name,sws:sws.join(', '),reporter:reporter.trim()||'(ẩn danh)',
+    at:new Date().toLocaleString('vi-VN'),done:false});
+  save();renderReports();
+  toast('Đã gửi báo cáo vi phạm tới admin: '+name+' ('+sws.join(', ')+')');
+}
+function renderReports(){
+  const b=document.getElementById('repBody');b.innerHTML='';
+  const badge=document.getElementById('repBadge');
+  const pending=db.reports.filter(r=>!r.done).length;
+  if(pending){badge.style.display='';badge.textContent=pending;}else badge.style.display='none';
+  if(!db.reports.length){b.innerHTML='<tr><td colspan="6" class="empty">Chưa có báo cáo vi phạm.</td></tr>';return;}
+  db.reports.forEach(r=>{
+    const tr=document.createElement('tr');
+    if(r.done)tr.style.opacity='.5';
+    tr.innerHTML=`<td>${r.at}</td><td>${r.code}</td><td><b>${r.name}</b> (${r.sws})</td>
+      <td>${r.reporter}</td><td>${r.done?'✓ Đã xử lý':'⏳ Chờ admin'}</td><td></td>`;
+    const cell=tr.lastElementChild;
+    if(!r.done){const b1=document.createElement('button');b1.className='btn ghost small';b1.textContent='Đánh dấu đã xử lý';
+      b1.onclick=()=>{r.done=true;save();renderReports();toast('Đã đánh dấu xử lý.');};cell.append(b1);}
+    else{const b2=document.createElement('button');b2.className='btn ghost small';b2.textContent='Xóa';
+      b2.onclick=()=>{db.reports=db.reports.filter(x=>x.id!==r.id);save();renderReports();};cell.append(b2);}
+    b.append(tr);
+  });
+}
+
+/* ---------- modal: tick máy đang mở ---------- */
+const bg=document.getElementById('checkinBg');
+document.getElementById('openCheckin').onclick=()=>{renderCheckin();bg.classList.add('show');};
+document.getElementById('closeCheckin').onclick=()=>bg.classList.remove('show');
+bg.onclick=e=>{if(e.target===bg)bg.classList.remove('show');};
+function renderCheckin(){
+  const list=document.getElementById('checkinList');list.innerHTML='';
+  // header
+  list.insertAdjacentHTML('beforeend',
+    `<div class="checkin-row"><div>Người / Mã máy</div><div style="text-align:center">ETABS</div><div style="text-align:center">SAFE</div></div>`);
+  const mapped=EMPLOYEES.filter(n=>db.machines[n]);
+  if(!mapped.length){list.insertAdjacentHTML('beforeend',
+    '<div class="empty">Chưa có ai được gán mã máy. Vào tab "Máy" để điền trước.</div>');return;}
+  mapped.forEach(n=>{
+    const code=db.machines[n];const cur=db.open[code]||{ETABS:false,SAFE:false};
+    const row=document.createElement('div');row.className='checkin-row';
+    row.innerHTML=`<div class="who"><b>${n}</b><small>${code}</small></div>`;
+    ['ETABS','SAFE'].forEach(sw=>{
+      const cell=document.createElement('label');
+      const cb=document.createElement('input');cb.type='checkbox';cb.checked=!!cur[sw];
+      cb.onchange=()=>{ if(!db.open[code])db.open[code]={ETABS:false,SAFE:false};
+        db.open[code][sw]=cb.checked; };
+      cell.append(cb);row.append(cell);
+    });
+    list.append(row);
+  });
+}
+document.getElementById('applyCheckin').onclick=()=>{
+  save();bg.classList.remove('show');renderDash();
+  // đếm vi phạm để báo
+  let viol=[];
+  ['ETABS','SAFE'].forEach(sw=>{const reg=registeredUsers(sw);
+    openUsers(sw).forEach(u=>{if(!reg.includes(u))viol.push(u+' ('+sw+')');});});
+  if(viol.length)toast('⚠ Có '+viol.length+' người dùng chưa đăng ký: '+viol.join(', '));
+  else toast('Đã cập nhật máy đang mở — tất cả đều khớp.');
+};
+
+function renderAll(){
+  [renderDash,renderQueue,renderReport,renderMachines,renderReports].forEach(fn=>{
+    try{fn();}catch(e){console.error(fn.name,e);}
+  });
+}
+
+// ---- khởi động: nạp dữ liệu chung từ máy chủ, rồi hiển thị ----
+(async function init(){
+  db=await loadFromServer();
+  renderAll();updateHint();updateNoteLabel();
+  // tự đồng bộ mỗi 5 giây để thấy thay đổi của người khác
+  setInterval(syncFromServer,5000);
+})();
+</script>
+</body>
+</html>
