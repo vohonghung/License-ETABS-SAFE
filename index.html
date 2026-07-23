@@ -62,6 +62,18 @@
   .warn-name b{color:var(--warn)}
   .ok-name{background:var(--green-bg);border-radius:8px;padding:9px 13px;margin-top:8px;font-size:13px;color:var(--green);font-weight:600}
   #machBody input{width:180px;border:1px solid var(--line);border-radius:6px;padding:6px 9px;font-size:14px;text-transform:uppercase}
+  .wk-today{background:#fff;border:1px solid var(--line);border-left:4px solid var(--etabs);border-radius:10px;
+    padding:13px 15px;margin-bottom:16px;box-shadow:var(--shadow)}
+  .wk-today h3{margin:0 0 8px;font-size:14px}
+  .wk-chip{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;
+    padding:5px 11px;border-radius:20px;margin:3px 5px 3px 0}
+  .wk-chip.in{background:var(--green-bg);color:var(--green)}
+  .wk-chip.wait{background:#fdecea;color:var(--warn)}
+  .wk-chip.hold{background:#eef3f7;color:var(--ink2)}
+  .lock-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+  .lock-badge{font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px}
+  .lock-badge.on{background:#eef3f7;color:var(--ink2)}
+  .lock-badge.off{background:var(--amber-bg);color:var(--amber)}
   .modal-bg{position:fixed;inset:0;background:rgba(15,30,43,.5);display:none;align-items:flex-start;
     justify-content:center;padding:40px 16px;z-index:200;overflow:auto}
   .modal-bg.show{display:flex}
@@ -98,6 +110,13 @@
   .pill.pri-hot{background:#fdecea;color:#c0392b}
   .pill.pri-warm{background:#fdf3e2;color:#b7791f}
   .pill.pri-cool{background:#eef3f7;color:#42606f}
+  #weekTable th,#weekTable td{border:1px solid var(--line);text-align:center;padding:6px 8px;font-size:12px}
+  #weekTable th.day{background:var(--ink);color:#fff}
+  #weekTable th.sess{background:#f4f7fa}
+  #weekTable td.swcell{background:#fafcfe;font-weight:700;text-align:left;white-space:nowrap}
+  #weekTable td .who{font-size:11.5px;line-height:1.5;display:block}
+  #weekTable td.has{background:#eaf3ff}
+  #weekTable td .rm{cursor:pointer;color:var(--warn);font-weight:700;margin-left:3px}
   .btn{border:0;border-radius:7px;padding:9px 16px;font-size:14px;font-weight:600;cursor:pointer}
   .btn.primary{background:var(--ink);color:#fff}
   .btn.green{background:var(--green);color:#fff}
@@ -141,6 +160,7 @@
 <div class="wrap">
   <div class="tabs">
     <button class="tab active" data-tab="dash">Dashboard</button>
+    <button class="tab" data-tab="week">Lịch tuần</button>
     <button class="tab" data-tab="reg">Đăng ký</button>
     <button class="tab" data-tab="queue">Hàng chờ <span class="badge" id="qBadge" style="display:none">0</span></button>
     <button class="tab" data-tab="report">Báo cáo</button>
@@ -151,6 +171,7 @@
   <!-- DASHBOARD -->
   <section class="pane" id="pane-dash">
     <div id="dashAlert"></div>
+    <div id="wkToday"></div>
     <div class="card recon">
       <div class="recon-head">
         <div><h2 style="margin:0">Đối chiếu với license server</h2>
@@ -165,6 +186,33 @@
       <div class="lic-grid" id="gridEtabs"></div>
       <div class="grp-title"><span class="pill safe">SAFE</span> 3 license</div>
       <div class="lic-grid" id="gridSafe"></div>
+    </div>
+  </section>
+
+  <!-- LỊCH TUẦN -->
+  <section class="pane" id="pane-week" style="display:none">
+    <div class="card" style="max-width:520px">
+      <h2>Đăng ký lịch tuần</h2>
+      <p class="sub">Chọn tuần, rồi đăng ký buổi mình cần — người có lịch được <b>ưu tiên nhận key trước</b> trong buổi đó. Mỗi người tối đa <b>2 buổi/tuần</b>.</p>
+      <div class="field"><label>Tuần</label><select id="wkWeek"></select></div>
+      <div class="field"><label>Họ tên</label><select id="wkName"></select></div>
+      <div class="field"><label>Phần mềm</label>
+        <div class="seg" id="wkSw"><button data-v="ETABS" class="on">ETABS</button><button data-v="SAFE">SAFE</button></div></div>
+      <div class="field"><label>Ngày</label>
+        <div class="seg" id="wkDay">
+          <button data-v="Thứ 2" class="on">T2</button><button data-v="Thứ 3">T3</button>
+          <button data-v="Thứ 4">T4</button><button data-v="Thứ 5">T5</button><button data-v="Thứ 6">T6</button>
+        </div></div>
+      <div class="field"><label>Buổi</label>
+        <div class="seg" id="wkSess"><button data-v="Sáng" class="on">Sáng</button><button data-v="Chiều">Chiều</button></div></div>
+      <button class="btn primary" id="wkSubmit" style="width:100%">Đăng ký buổi này</button>
+      <div class="note" id="wkHint" style="margin-top:12px"></div>
+    </div>
+
+    <div class="card">
+      <h2>Lịch tuần: <span id="weekLabel"></span></h2>
+      <p class="sub">Bảng ai giữ buổi nào trong tuần đã chọn. Ô xanh = có người đăng ký ưu tiên. Bấm ✕ để xóa.</p>
+      <div style="overflow-x:auto"><table id="weekTable"><thead></thead><tbody></tbody></table></div>
     </div>
   </section>
 
@@ -231,6 +279,12 @@
       <table><thead><tr><th>License</th><th>Người dùng</th><th>Buổi</th><th>Bắt đầu</th><th>Trả</th><th>Thời lượng</th><th>Ghi chú</th></tr></thead>
         <tbody id="rpHist"></tbody></table>
     </div>
+    <div class="card">
+      <h2>Lịch sử nhường / tạm không dùng</h2>
+      <p class="sub">Ai nhường key cho ai, hoặc tạm không dùng dù đã đăng ký lịch tuần.</p>
+      <table><thead><tr><th>Thời điểm</th><th>License</th><th>Từ</th><th>Cho</th><th>Kiểu</th><th>Lịch tuần?</th></tr></thead>
+        <tbody id="rpHandover"></tbody></table>
+    </div>
     <div><button class="btn ghost small" id="resetBtn">Xóa toàn bộ dữ liệu thử</button></div>
   </section>
 
@@ -249,7 +303,11 @@
 
     <div class="card">
       <h2>Bảng mã máy của từng người</h2>
-      <p class="sub">Mỗi người gắn cố định 1 mã máy (hostname, VD VNRHD054). Admin điền/sửa tại đây.</p>
+      <p class="sub">Mỗi người gắn cố định 1 mã máy (hostname, VD VNRHD054). Bảng được khóa để tránh sửa nhầm.</p>
+      <div class="lock-row">
+        <span class="lock-badge" id="lockBadge"></span>
+        <button class="btn ghost small" id="lockBtn"></button>
+      </div>
       <table><thead><tr><th>Họ tên</th><th>Mã máy</th></tr></thead>
         <tbody id="machBody"></tbody></table>
     </div>
@@ -273,6 +331,7 @@
         <li>Giờ hết hạn: buổi Sáng đến 12:00, buổi Chiều đến 17:30. Quá giờ chưa trả sẽ bị đánh dấu <b style="color:var(--warn)">Quá hạn</b> trên Dashboard.</li>
         <li>Không được đăng ký cả ngày ngay từ đầu — hết buổi phải trả key hoặc đăng ký lại.</li>
         <li>Người đăng ký trước được ưu tiên trước.</li>
+        <li><b>Lịch tuần được ưu tiên nhất:</b> ai đã đăng ký lịch tuần cho buổi nào thì được nhận key trước trong buổi đó, trên cả hàng chờ trong ngày. Mỗi người tối đa 2 buổi/tuần.</li>
         <li>Nếu có người đang chờ thì không được tự động gia hạn — phải trả key trước.</li>
         <li>Mọi người chủ động liên hệ nhau qua Teams / Zalo / Telegram dựa trên thông tin hiển thị trên Dashboard.</li>
       </ul>
@@ -337,7 +396,8 @@ function fresh(){
   const st={};LICENSES.forEach(l=>st[l.id]=null); // null = trống; hoặc {user,sess,note,start}
   const machines={};EMPLOYEES.forEach(n=>machines[n]=MACHINE_MAP[n]||"");
   return {state:st, queue:[], history:[], queueLog:[], server:{ETABS:null,SAFE:null},
-          machines, open:{}, reports:[]};
+          machines, open:{}, reports:[], week:[], wkActivated:[], machLocked:true,
+          handovers:[], wkSkipped:[]};
 }
 // bổ sung mọi trường còn thiếu cho dữ liệu cũ
 function migrate(d){
@@ -354,11 +414,16 @@ function migrate(d){
   EMPLOYEES.forEach(n=>{if(!d.machines[n])d.machines[n]=MACHINE_MAP[n]||"";});
   if(!d.open||typeof d.open!=='object')d.open={};
   if(!Array.isArray(d.reports))d.reports=[];
+  if(!Array.isArray(d.week))d.week=[];
+  if(!Array.isArray(d.wkActivated))d.wkActivated=[];
+  if(typeof d.machLocked!=='boolean')d.machLocked=true;
+  if(!Array.isArray(d.handovers))d.handovers=[];
+  if(!Array.isArray(d.wkSkipped))d.wkSkipped=[];
   return d;
 }
 // ================== KẾT NỐI GOOGLE SHEET (Apps Script Web App) ==================
 // >>> DÁN URL WEB APP CỦA BẠN VÀO GIỮA HAI DẤU NHÁY DƯỚI ĐÂY <<<
-const API_URL = "https://script.google.com/macros/s/AKfycbxyujnHlbjUPN_mj4EBdbf28Quae4aqJTrhHX-Cd2b7EMf-351DiEGw1bUWmlQC3Xk-rg/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbyZnshM8weuuE9a0iMpYZImQRS9o8V0S_aOLflLRLr5TENqMhhcEgWgfh1VRF3oUcq5YQ/exec";
 // Ví dụ: const API_URL = "https://script.google.com/macros/s/AKfy..../exec";
 // Nếu để trống, app sẽ chạy chế độ thử (lưu tạm trên máy này).
 
@@ -469,12 +534,19 @@ function licCard(l){
       : `<div class="deadline">Hạn trả: <b>${endLabel(s)}</b> (cuối buổi ${s.sess})</div>`;
     div.innerHTML=`<div class="top"><span class="name">${swpill} ${l.id}</span>
         <span class="dot ${over?'over':'busy'}">${over?'🔴 Quá hạn':'🟢 Đang dùng'}</span></div>
-      <div class="body">👤 <b>${s.user}</b> · <span class="pill ${s.sess==='Sáng'?'sang':'chieu'}">${s.sess}</span><br>
+      <div class="body">👤 <b>${s.user}</b> · <span class="pill ${s.sess==='Sáng'?'sang':'chieu'}">${s.sess}</span>
+        ${holdsWeekToday(s.user,l.sw)?' <span class="pill pri-cool">lịch tuần</span>':''}
+        ${s.via?'<br><small style="color:var(--ink2)">'+s.via+'</small>':''}<br>
         Bắt đầu: <b>${nowStr(s.start)}</b> · đã dùng <span class="timer" data-start="${s.start}">—</span>
         ${overBlock}</div>`;
-    const act=document.createElement('div');act.className='act';
-    const b=document.createElement('button');b.className='btn green small';b.textContent='Trả key (Release)';
-    b.onclick=()=>release(l.id);act.append(b);div.append(act);
+    const act=document.createElement('div');act.className='act';act.style.flexWrap='wrap';
+    const b=document.createElement('button');b.className='btn green small';b.textContent='Trả key';
+    b.onclick=()=>release(l.id);act.append(b);
+    const bh=document.createElement('button');bh.className='btn ghost small';bh.textContent='Nhường cho…';
+    bh.onclick=()=>handoverTo(l.id);act.append(bh);
+    const bs=document.createElement('button');bs.className='btn ghost small';bs.textContent='Tạm không dùng';
+    bs.onclick=()=>markNotUse(l.id);act.append(bs);
+    div.append(act);div.append(act);
   }else{
     div.innerHTML=`<div class="top"><span class="name">${swpill} ${l.id}</span>
         <span class="dot free">⚪ Trống</span></div>
@@ -529,7 +601,27 @@ function renderRecon(){
   }
 }
 
+function renderWkToday(){
+  const box=document.getElementById('wkToday');if(!box)return;
+  const day=currentDayVN(), sess=currentSession();
+  if(!day){box.innerHTML='';return;}   // cuối tuần
+  const wk=currentWeekKey();
+  const due=db.week.filter(w=>w.wk===wk&&w.day===day&&w.sess===sess).sort((a,b)=>a.id-b.id);
+  if(!due.length){box.innerHTML='';return;}
+  const chips=due.map(w=>{
+    const holdingByThis=Object.entries(db.state).find(([id,s])=>s&&s.user===w.user&&LICENSES.find(l=>l.id===id).sw===w.sw);
+    if(holdingByThis) return `<span class="wk-chip in">✅ ${w.user} · ${w.sw} (${holdingByThis[0]})</span>`;
+    // chưa có key: còn trống hay bị kẹt?
+    const free=LICENSES.some(l=>l.sw===w.sw&&!db.state[l.id]);
+    return free
+      ? `<span class="wk-chip hold">⏳ ${w.user} · ${w.sw} (đang đưa vào…)</span>`
+      : `<span class="wk-chip wait">⚠ ${w.user} · ${w.sw} (kẹt — hết license)</span>`;
+  }).join('');
+  box.innerHTML=`<div class="wk-today"><h3>📅 Lịch tuần hôm nay — ${day}, buổi ${sess}</h3>${chips}</div>`;
+}
+
 function renderDash(){
+  renderWkToday();
   renderRecon();
   const ge=document.getElementById('gridEtabs'),gs=document.getElementById('gridSafe');
   ge.innerHTML='';gs.innerHTML='';
@@ -617,8 +709,16 @@ function release(licId){
   db.history.push({lic:licId,sw:LICENSES.find(l=>l.id===licId).sw,user:s.user,sess:s.sess,
     note:s.note,start:s.start,end:Date.now(),overdue:isOverdue(s)});
   db.state[licId]=null;
-  // lấy người chờ ƯU TIÊN CAO NHẤT cùng phần mềm
   const sw=LICENSES.find(l=>l.id===licId).sw;
+  // 1) ƯU TIÊN người có LỊCH TUẦN cho đúng buổi hiện tại, đang đợi trong hàng chờ
+  const wkCand=weekPriorityCandidate(sw);
+  if(wkCand){
+    db.queue=db.queue.filter(q=>q.id!==wkCand.id);
+    db.state[licId]={user:wkCand.user,sess:wkCand.sess,note:wkCand.note,pri:wkCand.pri,start:Date.now()};
+    save();toast('🔁 '+licId+' → giao cho '+wkCand.user+' (có lịch tuần buổi này).');
+    renderAll();return;
+  }
+  // 2) rồi mới tới hàng chờ theo mức ưu tiên
   const next=sortedQueue(sw)[0];
   if(next){
     db.queue=db.queue.filter(q=>q.id!==next.id);
@@ -626,6 +726,138 @@ function release(licId){
     save();toast('🔁 '+licId+' đã trả → giao cho '+next.user+' (ưu tiên '+(next.pri||'Thường')+').');
   }else{save();toast('⚪ '+licId+' đã trả, hiện đang trống.');}
   renderAll();
+}
+
+/* ---------- người đang giữ có lịch tuần buổi nay không ---------- */
+function holdsWeekToday(user,sw){
+  const day=currentDayVN(), sess=currentSession();
+  if(!day)return false;
+  return db.week.some(w=>w.wk===currentWeekKey()&&w.user===user&&w.sw===sw&&w.day===day&&w.sess===sess);
+}
+// gỡ lượt lịch tuần buổi nay của 1 người (khi họ nhường / tạm không dùng)
+function dropWeekToday(user,sw){
+  const day=currentDayVN(), sess=currentSession();
+  if(!day)return;
+  const wk=currentWeekKey();
+  db.week.filter(w=>w.wk===wk&&w.user===user&&w.sw===sw&&w.day===day&&w.sess===sess)
+    .forEach(w=>{if(!db.wkActivated.includes(w.id))db.wkActivated.push(w.id);});
+}
+
+/* ---------- NHƯỜNG đích danh cho người khác ---------- */
+function handoverTo(licId){
+  const s=db.state[licId];if(!s)return;
+  const others=EMPLOYEES.filter(n=>n!==s.user);
+  const name=pickName('Nhường '+licId+' cho ai?',others);
+  if(!name)return;
+  const byWeek=holdsWeekToday(s.user,licId.startsWith('ETABS')?'ETABS':'SAFE');
+  // ghi lịch sử phiên của người nhường
+  db.history.push({lic:licId,sw:LICENSES.find(l=>l.id===licId).sw,user:s.user,sess:s.sess,
+    note:(s.note||'')+' [nhường cho '+name+']',start:s.start,end:Date.now(),overdue:isOverdue(s)});
+  db.handovers.unshift({id:Date.now(),lic:licId,from:s.user,to:name,
+    kind:'Nhường đích danh',byWeek,at:new Date().toLocaleString('vi-VN')});
+  // chuyển key sang người nhận
+  db.state[licId]={user:name,sess:s.sess,note:'(được '+s.user+' nhường)',pri:s.pri,start:Date.now(),
+    via:'← '+s.user+' nhường lúc '+nowStr()};
+  // người nhường mất lượt ưu tiên buổi này
+  if(byWeek)dropWeekToday(s.user,LICENSES.find(l=>l.id===licId).sw);
+  // nếu người nhận đang trong hàng chờ thì rút ra
+  db.queue=db.queue.filter(q=>!(q.user===name&&q.sw===LICENSES.find(l=>l.id===licId).sw));
+  save();renderAll();
+  toast('🤝 '+s.user+' đã nhường '+licId+' cho '+name+'.');
+}
+
+/* ---------- TẠM KHÔNG DÙNG (trả key + đánh dấu) ---------- */
+function markNotUse(licId){
+  const s=db.state[licId];if(!s)return;
+  if(!confirm(s.user+' tạm không dùng '+licId+'? Key sẽ mở cho người khác.'))return;
+  const sw=LICENSES.find(l=>l.id===licId).sw;
+  const byWeek=holdsWeekToday(s.user,sw);
+  db.history.push({lic:licId,sw,user:s.user,sess:s.sess,
+    note:(s.note||'')+' [tạm không dùng]',start:s.start,end:Date.now(),overdue:isOverdue(s)});
+  db.handovers.unshift({id:Date.now(),lic:licId,from:s.user,to:'(để trống)',
+    kind:'Tạm không dùng',byWeek,at:new Date().toLocaleString('vi-VN')});
+  db.wkSkipped.unshift({id:Date.now(),user:s.user,sw,at:new Date().toLocaleString('vi-VN'),
+    note:byWeek?'có lịch tuần nhưng tạm không dùng':'tạm không dùng'});
+  if(byWeek)dropWeekToday(s.user,sw);
+  db.state[licId]=null;
+  // ưu tiên giao ngay cho người chờ (lịch tuần trước, rồi hàng chờ)
+  const wkCand=weekPriorityCandidate(sw);
+  const next=wkCand||sortedQueue(sw)[0];
+  if(next){
+    db.queue=db.queue.filter(q=>q.id!==next.id);
+    db.state[licId]={user:next.user,sess:next.sess,note:next.note,pri:next.pri,start:Date.now()};
+    toast('⏸ '+s.user+' tạm không dùng '+licId+' → giao cho '+next.user+'.');
+  }else{
+    toast('⏸ '+s.user+' tạm không dùng '+licId+' — key đang trống, ai cần có thể nhận.');
+  }
+  save();renderAll();
+}
+
+/* ---------- hộp chọn tên đơn giản (prompt số thứ tự) ---------- */
+function pickName(title,names){
+  const list=names.map((n,i)=>(i+1)+'. '+n).join('\n');
+  const ans=prompt(title+'\nNhập SỐ tương ứng:\n\n'+list,'');
+  if(ans===null)return null;
+  const idx=parseInt(ans.trim(),10)-1;
+  if(isNaN(idx)||idx<0||idx>=names.length){toast('Số không hợp lệ.');return null;}
+  return names[idx];
+}
+// buổi hiện tại theo giờ máy: Sáng nếu <12:00, còn lại Chiều
+function currentSession(){const h=new Date().getHours(),m=new Date().getMinutes();
+  return (h<12)?'Sáng':'Chiều';}
+function currentDayVN(){const d=new Date().getDay();// 0=CN..6=T7
+  return ({1:'Thứ 2',2:'Thứ 3',3:'Thứ 4',4:'Thứ 5',5:'Thứ 6'})[d]||null;}
+// người trong hàng chờ VÀ có lịch tuần đúng TUẦN HIỆN TẠI + buổi hiện tại; ai đăng ký lịch trước ưu tiên trước
+function weekPriorityCandidate(sw){
+  const day=currentDayVN(), sess=currentSession();
+  if(!day)return null; // cuối tuần thì không xét lịch tuần
+  const wk=currentWeekKey();
+  const holders=db.week.filter(w=>w.wk===wk&&w.sw===sw&&w.day===day&&w.sess===sess).map(w=>w.user);
+  if(!holders.length)return null;
+  const cand=db.queue.filter(q=>q.sw===sw&&holders.includes(q.user))
+    .sort((a,b)=>a.at-b.at);
+  return cand[0]||null;
+}
+
+/* ---------- TỰ ĐẨY người có lịch tuần vào Dashboard khi tới buổi ---------- */
+// chạy định kỳ; mỗi lịch chỉ kích hoạt 1 lần cho mỗi buổi (nhớ bằng wkActivated)
+function autoActivateWeek(){
+  const day=currentDayVN(), sess=currentSession();
+  if(!day)return false;                 // cuối tuần: bỏ qua
+  const wk=currentWeekKey();
+  let changed=false;
+  // lịch của đúng tuần+ngày+buổi hiện tại, sắp theo giờ đăng ký (ai đăng ký trước xử lý trước)
+  const due=db.week.filter(w=>w.wk===wk&&w.day===day&&w.sess===sess)
+    .sort((a,b)=>a.id-b.id);
+  due.forEach(w=>{
+    if(db.wkActivated.includes(w.id))return;             // đã xử lý lịch này rồi
+    // người này đang giữ license nào chưa? nếu rồi thì coi như đã kích hoạt
+    const holding=Object.values(db.state).some(s=>s&&s.user===w.user);
+    if(holding){db.wkActivated.push(w.id);changed=true;return;}
+    // còn license trống đúng phần mềm?
+    const lic=LICENSES.find(l=>l.sw===w.sw && !db.state[l.id]);
+    if(lic){
+      db.state[lic.id]={user:w.user,sess:w.sess,note:'(lịch tuần)',pri:'Lịch tuần',start:Date.now()};
+      db.wkActivated.push(w.id);changed=true;
+      toast('📅 '+w.user+' được đẩy vào '+lic.id+' theo lịch tuần ('+day+' '+sess+').');
+    }else{
+      // HẾT license trống -> không đuổi ai, ghi báo cáo + lịch sử
+      const holders=LICENSES.filter(l=>l.sw===w.sw&&db.state[l.id]).map(l=>db.state[l.id].user);
+      db.reports.unshift({id:Date.now()+Math.random(),code:'—',
+        name:holders.join(', ')||'(không rõ)',
+        sws:w.sw,
+        reporter:'HỆ THỐNG (lịch tuần)',
+        at:new Date().toLocaleString('vi-VN'),
+        done:false,
+        detail:w.user+' có lịch '+day+' '+sess+' nhưng hết license '+w.sw+' — người đang giữ chưa nhả key.'});
+      if(!Array.isArray(db.wkBlockedLog))db.wkBlockedLog=[];
+      db.wkBlockedLog.push({at:Date.now(),user:w.user,sw:w.sw,day,sess,holders:holders.slice()});
+      db.wkActivated.push(w.id);changed=true;
+      toast('⚠ '+w.user+' có lịch '+w.sw+' nhưng hết license — đã ghi báo cáo.');
+    }
+  });
+  if(changed)save();
+  return changed;
 }
 
 /* ---------- hàng chờ ---------- */
@@ -688,20 +920,50 @@ function renderReport(){
     `<tr><td>${h.lic}</td><td>${h.user}</td><td>${h.sess}</td><td>${nowStr(h.start)}</td>
      <td>${nowStr(h.end)}${h.overdue?' <span style="color:var(--warn);font-weight:700">(quá hạn)</span>':''}</td>
      <td>${dur(h.end-h.start)}</td><td>${h.note||''}</td></tr>`));
+
+  const ho=document.getElementById('rpHandover');
+  if(ho){ho.innerHTML='';
+    if(!db.handovers||!db.handovers.length)ho.innerHTML='<tr><td colspan="6" class="empty">Chưa có.</td></tr>';
+    else db.handovers.forEach(x=>ho.insertAdjacentHTML('beforeend',
+      `<tr><td>${x.at}</td><td>${x.lic}</td><td><b>${x.from}</b></td><td>${x.to}</td>
+       <td>${x.kind}</td><td>${x.byWeek?'✔':''}</td></tr>`));
+  }
 }
 
 document.getElementById('resetBtn').onclick=()=>{
   if(confirm('Xóa toàn bộ dữ liệu thử trên máy này?')){db=fresh();save();renderAll();toast('Đã xóa.');}};
 
-/* ---------- tab Máy: bảng map người ↔ mã máy ---------- */
+/* ---------- tab Máy: bảng map người ↔ mã máy (có khóa) ---------- */
 function renderMachines(){
+  // trạng thái khóa
+  const badge=document.getElementById('lockBadge');
+  const btn=document.getElementById('lockBtn');
+  if(badge&&btn){
+    if(db.machLocked){
+      badge.className='lock-badge on';badge.textContent='🔒 Đang khóa';
+      btn.textContent='Mở khóa để sửa';
+    }else{
+      badge.className='lock-badge off';badge.textContent='🔓 Đang mở khóa — có thể sửa';
+      btn.textContent='Khóa lại';
+    }
+    btn.onclick=()=>{
+      if(db.machLocked){
+        if(confirm('Mở khóa bảng mã máy để chỉnh sửa?')){db.machLocked=false;save();renderMachines();toast('Đã mở khóa bảng mã máy.');}
+      }else{
+        db.machLocked=true;save();renderMachines();toast('Đã khóa bảng mã máy.');
+      }
+    };
+  }
   const b=document.getElementById('machBody');b.innerHTML='';
   EMPLOYEES.forEach(n=>{
     const tr=document.createElement('tr');
     tr.innerHTML=`<td><b>${n}</b></td><td></td>`;
     const inp=document.createElement('input');
     inp.value=db.machines[n]||'';inp.placeholder='VD VNRHD054';
-    inp.onchange=e=>{db.machines[n]=e.target.value.trim().toUpperCase();save();renderRecon();
+    if(db.machLocked){inp.readOnly=true;inp.style.background='#f2f5f8';inp.style.color='#42606f';inp.title='Bảng đang khóa — bấm "Mở khóa để sửa"';}
+    inp.onchange=e=>{
+      if(db.machLocked){e.target.value=db.machines[n]||'';return;} // chặn sửa khi khóa
+      db.machines[n]=e.target.value.trim().toUpperCase();save();renderRecon();
       toast('Đã lưu mã máy cho '+n);};
     tr.lastElementChild.append(inp);b.append(tr);
   });
@@ -763,7 +1025,7 @@ function renderReports(){
   db.reports.forEach(r=>{
     const tr=document.createElement('tr');
     if(r.done)tr.style.opacity='.5';
-    tr.innerHTML=`<td>${r.at}</td><td>${r.code}</td><td><b>${r.name}</b> (${r.sws})</td>
+    tr.innerHTML=`<td>${r.at}</td><td>${r.code}</td><td><b>${r.name}</b> (${r.sws})${r.detail?'<br><small style="color:#8c1d13">'+r.detail+'</small>':''}</td>
       <td>${r.reporter}</td><td>${r.done?'✓ Đã xử lý':'⏳ Chờ admin'}</td><td></td>`;
     const cell=tr.lastElementChild;
     if(!r.done){const b1=document.createElement('button');b1.className='btn ghost small';b1.textContent='Đánh dấu đã xử lý';
@@ -811,8 +1073,89 @@ document.getElementById('applyCheckin').onclick=()=>{
   else toast('Đã cập nhật máy đang mở — tất cả đều khớp.');
 };
 
+/* ================== LỊCH TUẦN (đăng ký trước, ưu tiên) ================== */
+const WK_DAYS=["Thứ 2","Thứ 3","Thứ 4","Thứ 5","Thứ 6"];
+const MAX_WK_PER_PERSON=2;
+
+// danh sách các tuần (thứ 2 đầu tuần) từ tuần hiện tại đến hết 2026
+function mondayOf(d){const x=new Date(d);const wd=(x.getDay()+6)%7;x.setDate(x.getDate()-wd);x.setHours(0,0,0,0);return x;}
+function buildWeeks(){
+  const out=[];let d=mondayOf(new Date());
+  // nếu hôm nay đã qua thứ 6 thì vẫn tính tuần này
+  while(d.getFullYear()<=2026){out.push(new Date(d));d.setDate(d.getDate()+7);}
+  return out;
+}
+const WK_LIST=buildWeeks();
+function wkKey(d){return d.toISOString().slice(0,10);}                 // mã tuần = ngày thứ 2
+function wkFmt(d){return ('0'+d.getDate()).slice(-2)+'/'+('0'+(d.getMonth()+1)).slice(-2)+'/'+d.getFullYear();}
+function isoWeekNo(d){const t=new Date(d);t.setHours(0,0,0,0);t.setDate(t.getDate()+3-((t.getDay()+6)%7));
+  const w1=new Date(t.getFullYear(),0,4);return 1+Math.round(((t-w1)/864e5-3+((w1.getDay()+6)%7))/7);}
+function wkLabel(d){const e=new Date(d);e.setDate(e.getDate()+4);return 'Tuần '+isoWeekNo(d)+': '+wkFmt(d)+' → '+wkFmt(e);}
+function currentWeekKey(){return wkKey(mondayOf(new Date()));}
+
+// điền dropdown tuần + tên + segment
+const wkWeekSel=document.getElementById('wkWeek');
+WK_LIST.forEach(d=>wkWeekSel.append(new Option(wkLabel(d),wkKey(d))));
+wkWeekSel.value=currentWeekKey();
+wkWeekSel.onchange=renderWeek;
+const wkName=document.getElementById('wkName');
+EMPLOYEES.forEach(n=>wkName.append(new Option(n,n)));
+const getWkSw=seg('wkSw'), getWkDay=seg('wkDay'), getWkSess=seg('wkSess');
+
+document.getElementById('wkSubmit').onclick=()=>{
+  const wk=wkWeekSel.value;
+  const user=wkName.value, sw=getWkSw(), day=getWkDay(), sess=getWkSess();
+  const mineThisWeek=db.week.filter(w=>w.wk===wk && w.user===user);
+  // đã đăng ký đúng buổi này trong tuần này chưa
+  if(db.week.find(w=>w.wk===wk&&w.user===user&&w.day===day&&w.sess===sess&&w.sw===sw)){
+    toast(user+' đã đăng ký buổi này trong tuần đã chọn.');return;
+  }
+  // giới hạn 2 buổi/tuần (theo từng tuần)
+  if(mineThisWeek.length>=MAX_WK_PER_PERSON){
+    toast(user+' đã đăng ký đủ '+MAX_WK_PER_PERSON+' buổi trong tuần này. Xóa bớt để đăng ký buổi khác.');return;
+  }
+  const cap=LICENSES.filter(l=>l.sw===sw).length;
+  const taken=db.week.filter(w=>w.wk===wk&&w.day===day&&w.sess===sess&&w.sw===sw).length;
+  if(taken>=cap){toast('Buổi '+day+' '+sess+' đã đủ '+cap+' người đăng ký '+sw+' trong tuần này.');return;}
+  db.week.push({id:Date.now(),wk,user,sw,day,sess});
+  save();renderWeek();
+  toast('✅ '+user+' đã đăng ký '+day+' '+sess+' ('+sw+') tuần '+isoWeekNo(new Date(wk))+' — sẽ được ưu tiên.');
+};
+
+function renderWeek(){
+  const wk=wkWeekSel?wkWeekSel.value:currentWeekKey();
+  const lbl=document.getElementById('weekLabel'); if(lbl)lbl.textContent=wkLabel(new Date(wk));
+  const thead=document.querySelector('#weekTable thead');
+  const tbody=document.querySelector('#weekTable tbody');
+  let h1='<tr><th rowspan="2" class="swcell">Phần mềm</th>';
+  WK_DAYS.forEach((d,i)=>{const dd=new Date(wk);dd.setDate(dd.getDate()+i);
+    h1+=`<th class="day" colspan="2">${d}<br><small>${('0'+dd.getDate()).slice(-2)}/${('0'+(dd.getMonth()+1)).slice(-2)}</small></th>`;});
+  h1+='</tr><tr>';
+  WK_DAYS.forEach(()=>{h1+='<th class="sess">Sáng</th><th class="sess">Chiều</th>';});
+  h1+='</tr>';thead.innerHTML=h1;
+  tbody.innerHTML='';
+  ['ETABS','SAFE'].forEach(sw=>{
+    const cap=LICENSES.filter(l=>l.sw===sw).length;
+    const tr=document.createElement('tr');
+    tr.innerHTML=`<td class="swcell"><span class="pill ${sw.toLowerCase()}">${sw}</span> (${cap})</td>`;
+    WK_DAYS.forEach(day=>['Sáng','Chiều'].forEach(sess=>{
+      const list=db.week.filter(w=>w.wk===wk&&w.sw===sw&&w.day===day&&w.sess===sess);
+      const td=document.createElement('td');
+      if(list.length)td.className='has';
+      td.innerHTML=list.map(w=>`<span class="who">${w.user}<span class="rm" data-id="${w.id}">✕</span></span>`).join('')||'—';
+      tr.append(td);
+    }));
+    tbody.append(tr);
+  });
+  tbody.querySelectorAll('.rm').forEach(x=>x.onclick=()=>{
+    const id=Number(x.dataset.id);const w=db.week.find(v=>v.id===id);
+    db.week=db.week.filter(v=>v.id!==id);save();renderWeek();
+    if(w)toast('Đã xóa lịch '+w.user+' ('+w.day+' '+w.sess+').');
+  });
+}
+
 function renderAll(){
-  [renderDash,renderQueue,renderReport,renderMachines,renderReports].forEach(fn=>{
+  [renderDash,renderQueue,renderReport,renderMachines,renderReports,renderWeek].forEach(fn=>{
     try{fn();}catch(e){console.error(fn.name,e);}
   });
 }
@@ -820,9 +1163,13 @@ function renderAll(){
 // ---- khởi động: nạp dữ liệu chung từ máy chủ, rồi hiển thị ----
 (async function init(){
   db=await loadFromServer();
+  if(autoActivateWeek())renderAll();          // đẩy lịch tuần ngay khi mở
   renderAll();updateHint();updateNoteLabel();
-  // tự đồng bộ mỗi 5 giây để thấy thay đổi của người khác
-  setInterval(syncFromServer,5000);
+  // vòng lặp: đồng bộ với người khác + tự đẩy lịch tuần tới buổi
+  setInterval(async()=>{
+    await syncFromServer();
+    if(autoActivateWeek())renderAll();
+  },5000);
 })();
 </script>
 </body>
