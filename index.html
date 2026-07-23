@@ -74,6 +74,11 @@
   .lock-badge{font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px}
   .lock-badge.on{background:#eef3f7;color:var(--ink2)}
   .lock-badge.off{background:var(--amber-bg);color:var(--amber)}
+  #loginBg{position:fixed;inset:0;background:linear-gradient(135deg,#0f1e2b,#1d3141);display:flex;
+    align-items:center;justify-content:center;padding:20px;z-index:500}
+  .login-card{background:#fff;border-radius:14px;padding:26px 24px;max-width:380px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.35)}
+  .login-card h2{margin:0 0 4px;font-size:20px}
+  #meBox b{color:#fff}
   .modal-bg{position:fixed;inset:0;background:rgba(15,30,43,.5);display:none;align-items:flex-start;
     justify-content:center;padding:40px 16px;z-index:200;overflow:auto}
   .modal-bg.show{display:flex}
@@ -152,9 +157,27 @@
 </style>
 </head>
 <body>
+
+<!-- MÀN ĐĂNG NHẬP -->
+<div id="loginBg">
+  <div class="login-card">
+    <h2>Đăng nhập</h2>
+    <p class="sub">Nhập mã máy và mật khẩu của bạn. Mật khẩu mặc định là <b>123456</b> — đổi sau khi đăng nhập.</p>
+    <div class="field"><label>Mã máy</label><input id="lgCode" placeholder="VD VNRHD054" style="text-transform:uppercase" autocomplete="off"></div>
+    <div class="field"><label>Mật khẩu</label><input id="lgPw" type="password" placeholder="123456" autocomplete="off"></div>
+    <button class="btn primary" id="lgGo" style="width:100%">Đăng nhập</button>
+    <div class="note" id="lgMsg" style="margin-top:12px;display:none"></div>
+  </div>
+</div>
+
 <header>
   <h1>Quản lý License · ETABS &amp; SAFE</h1>
-  <span class="clock" id="clock"></span>
+  <div style="display:flex;align-items:center;gap:12px">
+    <span class="clock" id="clock"></span>
+    <span id="meBox" style="display:none;font-size:13px;color:#cfe0ec"></span>
+    <button class="btn ghost small" id="pwBtn" style="display:none">Đổi mật khẩu</button>
+    <button class="btn ghost small" id="logoutBtn" style="display:none">Thoát</button>
+  </div>
 </header>
 
 <div class="wrap">
@@ -395,9 +418,11 @@ let SAVE_TIMER=null, LAST_SNAPSHOT="";
 function fresh(){
   const st={};LICENSES.forEach(l=>st[l.id]=null); // null = trống; hoặc {user,sess,note,start}
   const machines={};EMPLOYEES.forEach(n=>machines[n]=MACHINE_MAP[n]||"");
+  // pw: mật khẩu theo MÃ MÁY. Mặc định "123456" cho mọi mã máy đã có.
+  const pw={};EMPLOYEES.forEach(n=>{if(MACHINE_MAP[n])pw[MACHINE_MAP[n]]="123456";});
   return {state:st, queue:[], history:[], queueLog:[], server:{ETABS:null,SAFE:null},
           machines, open:{}, reports:[], week:[], wkActivated:[], machLocked:true,
-          handovers:[], wkSkipped:[]};
+          handovers:[], wkSkipped:[], pw};
 }
 // bổ sung mọi trường còn thiếu cho dữ liệu cũ
 function migrate(d){
@@ -419,11 +444,14 @@ function migrate(d){
   if(typeof d.machLocked!=='boolean')d.machLocked=true;
   if(!Array.isArray(d.handovers))d.handovers=[];
   if(!Array.isArray(d.wkSkipped))d.wkSkipped=[];
+  if(!d.pw||typeof d.pw!=='object')d.pw={};
+  // mã máy nào có trong bảng mà chưa có mật khẩu -> mặc định 123456
+  EMPLOYEES.forEach(n=>{const code=d.machines[n];if(code&&!(code in d.pw))d.pw[code]="123456";});
   return d;
 }
 // ================== KẾT NỐI GOOGLE SHEET (Apps Script Web App) ==================
 // >>> DÁN URL WEB APP CỦA BẠN VÀO GIỮA HAI DẤU NHÁY DƯỚI ĐÂY <<<
-const API_URL = "https://script.google.com/macros/s/AKfycbyZnshM8weuuE9a0iMpYZImQRS9o8V0S_aOLflLRLr5TENqMhhcEgWgfh1VRF3oUcq5YQ/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwaszShNT6XUdU3cZFrsrC3j_htfw7HfV2udwWdmJB-79ldHFYS4Ig9YSVESpn-mw07gw/exec";
 // Ví dụ: const API_URL = "https://script.google.com/macros/s/AKfy..../exec";
 // Nếu để trống, app sẽ chạy chế độ thử (lưu tạm trên máy này).
 
@@ -1160,14 +1188,78 @@ function renderAll(){
   });
 }
 
+/* ================== ĐĂNG NHẬP THEO MÃ MÁY + MẬT KHẨU ================== */
+let ME=null;            // {code, name}
+const LS_ME="licmgr_me";
+function nameOfCode(code){
+  const e=Object.entries(db.machines).find(([n,c])=>c&&c.toUpperCase()===code.toUpperCase());
+  return e?e[0]:null;
+}
+function applyIdentity(){
+  // khóa các dropdown chọn tên = người đăng nhập
+  if(ME){
+    if(rgName){rgName.value=ME.name;rgName.disabled=true;}
+    if(wkName){wkName.value=ME.name;wkName.disabled=true;}
+    document.getElementById('meBox').style.display='';
+    document.getElementById('meBox').innerHTML='👤 <b>'+ME.name+'</b> · '+ME.code;
+    document.getElementById('pwBtn').style.display='';
+    document.getElementById('logoutBtn').style.display='';
+  }
+}
+function doLogin(code,pw,silent){
+  code=(code||'').trim().toUpperCase();
+  const name=nameOfCode(code);
+  const msg=document.getElementById('lgMsg');
+  const showErr=t=>{if(msg){msg.style.display='';msg.textContent=t;}};
+  if(!name){showErr('Mã máy không có trong danh sách.');return false;}
+  const real=(db.pw&&db.pw[code]!==undefined)?db.pw[code]:'123456';
+  if(String(pw)!==String(real)){showErr('Sai mật khẩu. Mặc định là 123456.');return false;}
+  ME={code,name};
+  try{localStorage.setItem(LS_ME,code);}catch(e){}
+  document.getElementById('loginBg').style.display='none';
+  applyIdentity();
+  if(!silent){toast('Xin chào '+name+'!');}
+  // nếu mật khẩu vẫn là mặc định, nhắc đổi
+  if(real==='123456'){setTimeout(()=>toast('Bạn đang dùng mật khẩu mặc định — nên đổi mật khẩu.'),1500);}
+  return true;
+}
+document.getElementById('lgGo').onclick=()=>doLogin(
+  document.getElementById('lgCode').value, document.getElementById('lgPw').value,false);
+document.getElementById('lgPw').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('lgGo').click();});
+document.getElementById('lgCode').addEventListener('keydown',e=>{if(e.key==='Enter')document.getElementById('lgPw').focus();});
+
+document.getElementById('logoutBtn').onclick=()=>{
+  ME=null;try{localStorage.removeItem(LS_ME);}catch(e){}
+  location.reload();
+};
+document.getElementById('pwBtn').onclick=()=>{
+  if(!ME)return;
+  const cur=prompt('Nhập mật khẩu hiện tại:','');if(cur===null)return;
+  const real=(db.pw&&db.pw[ME.code]!==undefined)?db.pw[ME.code]:'123456';
+  if(String(cur)!==String(real)){toast('Sai mật khẩu hiện tại.');return;}
+  const nw=prompt('Nhập mật khẩu MỚI (ít nhất 4 ký tự):','');if(nw===null)return;
+  if(nw.trim().length<4){toast('Mật khẩu quá ngắn.');return;}
+  if(!db.pw)db.pw={};db.pw[ME.code]=nw.trim();save();
+  toast('Đã đổi mật khẩu cho máy '+ME.code+'.');
+};
+
+// tự động đăng nhập nếu máy này đã lưu mã (?may=... hoặc localStorage), vẫn hỏi mật khẩu
+function autoFillCode(){
+  const u=new URLSearchParams(location.search).get('may');
+  let code=u||null;
+  if(!code){try{code=localStorage.getItem(LS_ME);}catch(e){}}
+  if(code){document.getElementById('lgCode').value=code.toUpperCase();document.getElementById('lgPw').focus();}
+}
+
 // ---- khởi động: nạp dữ liệu chung từ máy chủ, rồi hiển thị ----
 (async function init(){
   db=await loadFromServer();
-  if(autoActivateWeek())renderAll();          // đẩy lịch tuần ngay khi mở
+  autoFillCode();                              // điền sẵn mã máy nếu có
+  if(autoActivateWeek())renderAll();
   renderAll();updateHint();updateNoteLabel();
-  // vòng lặp: đồng bộ với người khác + tự đẩy lịch tuần tới buổi
   setInterval(async()=>{
     await syncFromServer();
+    if(ME)applyIdentity();                     // giữ khóa danh tính sau mỗi lần đồng bộ
     if(autoActivateWeek())renderAll();
   },5000);
 })();
