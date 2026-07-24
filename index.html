@@ -216,7 +216,7 @@
   <section class="pane" id="pane-week" style="display:none">
     <div class="card" style="max-width:520px">
       <h2>Đăng ký lịch tuần</h2>
-      <p class="sub">Chọn tuần, rồi đăng ký buổi mình cần — người có lịch được <b>ưu tiên nhận key trước</b> trong buổi đó. Mỗi người tối đa <b>2 buổi/tuần</b>.</p>
+      <p class="sub">Chọn tuần, rồi đăng ký buổi mình cần — người có lịch được <b>ưu tiên nhận key trước</b> trong buổi đó.</p>
       <div class="field"><label>Tuần</label><select id="wkWeek"></select></div>
       <div class="field"><label>Họ tên</label><select id="wkName"></select></div>
       <div class="field"><label>Phần mềm</label>
@@ -279,6 +279,14 @@
 
   <!-- BÁO CÁO -->
   <section class="pane" id="pane-report" style="display:none">
+    <div class="card">
+      <h2>Biểu đồ đăng ký &amp; sử dụng</h2>
+      <p class="sub">Trực quan hóa lượt sử dụng theo người và nhu cầu đăng ký theo buổi.</p>
+      <h3 style="font-size:13.5px;margin:14px 0 6px">Lượt sử dụng theo người (nhiều → ít)</h3>
+      <div id="chartUsers" style="overflow-x:auto"></div>
+      <h3 style="font-size:13.5px;margin:20px 0 6px">Nhu cầu đăng ký lịch tuần theo buổi (tất cả các tuần)</h3>
+      <div id="chartDemand" style="overflow-x:auto"></div>
+    </div>
     <div class="row2">
       <div class="card">
         <h2>Ai dùng nhiều nhất</h2>
@@ -354,7 +362,7 @@
         <li>Giờ hết hạn: buổi Sáng đến 12:00, buổi Chiều đến 17:30. Quá giờ chưa trả sẽ bị đánh dấu <b style="color:var(--warn)">Quá hạn</b> trên Dashboard.</li>
         <li>Không được đăng ký cả ngày ngay từ đầu — hết buổi phải trả key hoặc đăng ký lại.</li>
         <li>Người đăng ký trước được ưu tiên trước.</li>
-        <li><b>Lịch tuần được ưu tiên nhất:</b> ai đã đăng ký lịch tuần cho buổi nào thì được nhận key trước trong buổi đó, trên cả hàng chờ trong ngày. Mỗi người tối đa 2 buổi/tuần.</li>
+        <li><b>Lịch tuần được ưu tiên nhất:</b> ai đã đăng ký lịch tuần cho buổi nào thì được nhận key trước trong buổi đó, trên cả hàng chờ trong ngày.</li>
         <li>Nếu có người đang chờ thì không được tự động gia hạn — phải trả key trước.</li>
         <li>Mọi người chủ động liên hệ nhau qua Teams / Zalo / Telegram dựa trên thông tin hiển thị trên Dashboard.</li>
       </ul>
@@ -451,7 +459,7 @@ function migrate(d){
 }
 // ================== KẾT NỐI GOOGLE SHEET (Apps Script Web App) ==================
 // >>> DÁN URL WEB APP CỦA BẠN VÀO GIỮA HAI DẤU NHÁY DƯỚI ĐÂY <<<
-const API_URL = "https://script.google.com/macros/s/AKfycbwaszShNT6XUdU3cZFrsrC3j_htfw7HfV2udwWdmJB-79ldHFYS4Ig9YSVESpn-mw07gw/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbzcKWaibgdoaYs3-CObHrwTISL82qnu6L0XBEyESjTYzUdhi0ezp5biBrs1iL8shg1Clg/exec";
 // Ví dụ: const API_URL = "https://script.google.com/macros/s/AKfy..../exec";
 // Nếu để trống, app sẽ chạy chế độ thử (lưu tạm trên máy này).
 
@@ -568,13 +576,19 @@ function licCard(l){
         Bắt đầu: <b>${nowStr(s.start)}</b> · đã dùng <span class="timer" data-start="${s.start}">—</span>
         ${overBlock}</div>`;
     const act=document.createElement('div');act.className='act';act.style.flexWrap='wrap';
-    const b=document.createElement('button');b.className='btn green small';b.textContent='Trả key';
-    b.onclick=()=>release(l.id);act.append(b);
-    const bh=document.createElement('button');bh.className='btn ghost small';bh.textContent='Nhường cho…';
-    bh.onclick=()=>handoverTo(l.id);act.append(bh);
-    const bs=document.createElement('button');bs.className='btn ghost small';bs.textContent='Tạm không dùng';
-    bs.onclick=()=>markNotUse(l.id);act.append(bs);
-    div.append(act);div.append(act);
+    if(canManage(s.user)){
+      const b=document.createElement('button');b.className='btn green small';b.textContent='Trả key';
+      b.onclick=()=>release(l.id);act.append(b);
+      const bh=document.createElement('button');bh.className='btn ghost small';bh.textContent='Nhường cho…';
+      bh.onclick=()=>handoverTo(l.id);act.append(bh);
+      const bs=document.createElement('button');bs.className='btn ghost small';bs.textContent='Tạm không dùng';
+      bs.onclick=()=>markNotUse(l.id);act.append(bs);
+    }else{
+      const note=document.createElement('div');note.style.fontSize='12px';note.style.color='var(--ink2)';
+      note.textContent='Chỉ '+s.user+' hoặc admin thao tác được key này.';
+      act.append(note);
+    }
+    div.append(act);
   }else{
     div.innerHTML=`<div class="top"><span class="name">${swpill} ${l.id}</span>
         <span class="dot free">⚪ Trống</span></div>
@@ -734,6 +748,7 @@ function sortedQueue(sw){
 /* ---------- trả key + ưu tiên hàng chờ ---------- */
 function release(licId){
   const s=db.state[licId];if(!s)return;
+  if(!canManage(s.user)){toast('Chỉ '+s.user+' hoặc admin mới trả key này.');return;}
   db.history.push({lic:licId,sw:LICENSES.find(l=>l.id===licId).sw,user:s.user,sess:s.sess,
     note:s.note,start:s.start,end:Date.now(),overdue:isOverdue(s)});
   db.state[licId]=null;
@@ -774,6 +789,7 @@ function dropWeekToday(user,sw){
 /* ---------- NHƯỜNG đích danh cho người khác ---------- */
 function handoverTo(licId){
   const s=db.state[licId];if(!s)return;
+  if(!canManage(s.user)){toast('Chỉ '+s.user+' hoặc admin mới nhường key này.');return;}
   const others=EMPLOYEES.filter(n=>n!==s.user);
   const name=pickName('Nhường '+licId+' cho ai?',others);
   if(!name)return;
@@ -797,6 +813,7 @@ function handoverTo(licId){
 /* ---------- TẠM KHÔNG DÙNG (trả key + đánh dấu) ---------- */
 function markNotUse(licId){
   const s=db.state[licId];if(!s)return;
+  if(!canManage(s.user)){toast('Chỉ '+s.user+' hoặc admin mới thao tác key này.');return;}
   if(!confirm(s.user+' tạm không dùng '+licId+'? Key sẽ mở cho người khác.'))return;
   const sw=LICENSES.find(l=>l.id===licId).sw;
   const byWeek=holdsWeekToday(s.user,sw);
@@ -904,9 +921,12 @@ function renderQueue(){
       <td><span class="pill ${q.sw.toLowerCase()}">${q.sw}</span></td>
       <td><span class="pill ${q.sess==='Sáng'?'sang':'chieu'}">${q.sess}</span></td>
       <td>${q.note||''}</td><td>${nowStr(q.at)}</td><td></td>`;
-    const btn=document.createElement('button');btn.className='btn ghost small';btn.textContent='Rút khỏi chờ';
-    btn.onclick=()=>{db.queue=db.queue.filter(x=>x.id!==q.id);save();renderAll();toast('Đã rút '+q.user+' khỏi hàng chờ.');};
-    tr.lastElementChild.append(btn);b.append(tr);
+    if(canManage(q.user)){
+      const btn=document.createElement('button');btn.className='btn ghost small';btn.textContent='Rút khỏi chờ';
+      btn.onclick=()=>{db.queue=db.queue.filter(x=>x.id!==q.id);save();renderAll();toast('Đã rút '+q.user+' khỏi hàng chờ.');};
+      tr.lastElementChild.append(btn);
+    }
+    b.append(tr);
   });
 }
 
@@ -955,6 +975,69 @@ function renderReport(){
     else db.handovers.forEach(x=>ho.insertAdjacentHTML('beforeend',
       `<tr><td>${x.at}</td><td>${x.lic}</td><td><b>${x.from}</b></td><td>${x.to}</td>
        <td>${x.kind}</td><td>${x.byWeek?'✔':''}</td></tr>`));
+  }
+  renderCharts();
+}
+
+/* ---------- BIỂU ĐỒ (SVG thuần) ---------- */
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function renderCharts(){
+  // 1) Lượt sử dụng theo người: từ history + phiên đang mở
+  const cnt={};
+  db.history.forEach(h=>cnt[h.user]=(cnt[h.user]||0)+1);
+  Object.values(db.state).forEach(s=>{if(s)cnt[s.user]=(cnt[s.user]||0)+1;});
+  const rows=Object.entries(cnt).sort((a,b)=>b[1]-a[1]);
+  const cu=document.getElementById('chartUsers');
+  if(cu){
+    if(!rows.length){cu.innerHTML='<div class="empty">Chưa có lượt sử dụng nào.</div>';}
+    else{
+      const max=Math.max(...rows.map(r=>r[1]),1);
+      const rowH=26, labelW=170, barW=360, pad=8;
+      const h=rows.length*rowH+pad*2;
+      let svg=`<svg viewBox="0 0 ${labelW+barW+50} ${h}" width="100%" style="max-width:640px" xmlns="http://www.w3.org/2000/svg" font-family="Arial" font-size="12">`;
+      rows.forEach((r,i)=>{
+        const y=pad+i*rowH; const w=Math.round(r[1]/max*barW);
+        svg+=`<text x="${labelW-6}" y="${y+16}" text-anchor="end" fill="#12212e">${esc(r[0])}</text>`;
+        svg+=`<rect x="${labelW}" y="${y+4}" width="${w}" height="16" rx="3" fill="#1f6feb"/>`;
+        svg+=`<text x="${labelW+w+6}" y="${y+16}" fill="#42606f" font-weight="700">${r[1]}</text>`;
+      });
+      svg+=`</svg>`; cu.innerHTML=svg;
+    }
+  }
+  // 2) Nhu cầu đăng ký lịch tuần theo buổi (gộp tất cả tuần): 10 cột T2Sáng..T6Chiều, tách ETABS/SAFE
+  const cd=document.getElementById('chartDemand');
+  if(cd){
+    const days=['Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6'];
+    const cats=[]; days.forEach(d=>['Sáng','Chiều'].forEach(s=>cats.push({d,s,label:d.replace('Thứ ','T')+' '+s})));
+    const de=cats.map(c=>db.week.filter(w=>w.day===c.d&&w.sess===c.s&&w.sw==='ETABS').length);
+    const ds=cats.map(c=>db.week.filter(w=>w.day===c.d&&w.sess===c.s&&w.sw==='SAFE').length);
+    const totalMax=Math.max(...cats.map((c,i)=>de[i]+ds[i]),1);
+    if(!db.week.length){cd.innerHTML='<div class="empty">Chưa có ai đăng ký lịch tuần.</div>';}
+    else{
+      const n=cats.length, colW=54, gap=10, chartH=180, base=chartH+8, left=34;
+      const W=left+n*(colW+gap)+10, H=base+40;
+      let svg=`<svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:720px" xmlns="http://www.w3.org/2000/svg" font-family="Arial" font-size="11">`;
+      // trục
+      svg+=`<line x1="${left}" y1="${base}" x2="${W-6}" y2="${base}" stroke="#d9e2ea"/>`;
+      // vạch cap = 8 (tổng license) để so sánh nhu cầu vs cung
+      const capY=base-Math.round(8/totalMax*chartH);
+      if(8<=totalMax*1.2){svg+=`<line x1="${left}" y1="${capY}" x2="${W-6}" y2="${capY}" stroke="#c0392b" stroke-dasharray="4 3"/>
+        <text x="${W-6}" y="${capY-3}" text-anchor="end" fill="#c0392b" font-weight="700">Cung: 8</text>`;}
+      cats.forEach((c,i)=>{
+        const x=left+i*(colW+gap);
+        const hE=Math.round(de[i]/totalMax*chartH), hS=Math.round(ds[i]/totalMax*chartH);
+        const yS=base-hS, yE=yS-hE;
+        svg+=`<rect x="${x}" y="${base-hS}" width="${colW}" height="${hS}" fill="#12855a"/>`;
+        svg+=`<rect x="${x}" y="${yE}" width="${colW}" height="${hE}" fill="#1f6feb"/>`;
+        const tot=de[i]+ds[i];
+        if(tot)svg+=`<text x="${x+colW/2}" y="${yE-4}" text-anchor="middle" fill="#12212e" font-weight="700">${tot}</text>`;
+        svg+=`<text x="${x+colW/2}" y="${base+14}" text-anchor="middle" fill="#42606f">${c.label}</text>`;
+      });
+      // chú giải
+      svg+=`<rect x="${left}" y="${H-14}" width="11" height="11" fill="#1f6feb"/><text x="${left+15}" y="${H-4}" fill="#42606f">ETABS</text>`;
+      svg+=`<rect x="${left+70}" y="${H-14}" width="11" height="11" fill="#12855a"/><text x="${left+85}" y="${H-4}" fill="#42606f">SAFE</text>`;
+      svg+=`</svg>`; cd.innerHTML=svg;
+    }
   }
 }
 
@@ -1103,7 +1186,6 @@ document.getElementById('applyCheckin').onclick=()=>{
 
 /* ================== LỊCH TUẦN (đăng ký trước, ưu tiên) ================== */
 const WK_DAYS=["Thứ 2","Thứ 3","Thứ 4","Thứ 5","Thứ 6"];
-const MAX_WK_PER_PERSON=2;
 
 // danh sách các tuần (thứ 2 đầu tuần) từ tuần hiện tại đến hết 2026
 function mondayOf(d){const x=new Date(d);const wd=(x.getDay()+6)%7;x.setDate(x.getDate()-wd);x.setHours(0,0,0,0);return x;}
@@ -1133,14 +1215,9 @@ const getWkSw=seg('wkSw'), getWkDay=seg('wkDay'), getWkSess=seg('wkSess');
 document.getElementById('wkSubmit').onclick=()=>{
   const wk=wkWeekSel.value;
   const user=wkName.value, sw=getWkSw(), day=getWkDay(), sess=getWkSess();
-  const mineThisWeek=db.week.filter(w=>w.wk===wk && w.user===user);
   // đã đăng ký đúng buổi này trong tuần này chưa
   if(db.week.find(w=>w.wk===wk&&w.user===user&&w.day===day&&w.sess===sess&&w.sw===sw)){
     toast(user+' đã đăng ký buổi này trong tuần đã chọn.');return;
-  }
-  // giới hạn 2 buổi/tuần (theo từng tuần)
-  if(mineThisWeek.length>=MAX_WK_PER_PERSON){
-    toast(user+' đã đăng ký đủ '+MAX_WK_PER_PERSON+' buổi trong tuần này. Xóa bớt để đăng ký buổi khác.');return;
   }
   const cap=LICENSES.filter(l=>l.sw===sw).length;
   const taken=db.week.filter(w=>w.wk===wk&&w.day===day&&w.sess===sess&&w.sw===sw).length;
@@ -1170,13 +1247,14 @@ function renderWeek(){
       const list=db.week.filter(w=>w.wk===wk&&w.sw===sw&&w.day===day&&w.sess===sess);
       const td=document.createElement('td');
       if(list.length)td.className='has';
-      td.innerHTML=list.map(w=>`<span class="who">${w.user}<span class="rm" data-id="${w.id}">✕</span></span>`).join('')||'—';
+      td.innerHTML=list.map(w=>`<span class="who">${w.user}${canManage(w.user)?`<span class="rm" data-id="${w.id}">✕</span>`:''}</span>`).join('')||'—';
       tr.append(td);
     }));
     tbody.append(tr);
   });
   tbody.querySelectorAll('.rm').forEach(x=>x.onclick=()=>{
     const id=Number(x.dataset.id);const w=db.week.find(v=>v.id===id);
+    if(w&&!canManage(w.user)){toast('Chỉ '+w.user+' hoặc admin mới xóa lịch này.');return;}
     db.week=db.week.filter(v=>v.id!==id);save();renderWeek();
     if(w)toast('Đã xóa lịch '+w.user+' ('+w.day+' '+w.sess+').');
   });
@@ -1190,6 +1268,10 @@ function renderAll(){
 
 /* ================== ĐĂNG NHẬP THEO MÃ MÁY + MẬT KHẨU ================== */
 let ME=null;            // {code, name}
+const ADMIN_CODE="VNRHD079";        // máy admin
+function isAdmin(){return ME&&ME.code===ADMIN_CODE;}
+// có quyền thao tác lên phiên/mục của "owner" không? (chính chủ hoặc admin)
+function canManage(owner){return ME&&(ME.name===owner||isAdmin());}
 const LS_ME="licmgr_me";
 function nameOfCode(code){
   const e=Object.entries(db.machines).find(([n,c])=>c&&c.toUpperCase()===code.toUpperCase());
@@ -1218,7 +1300,9 @@ function doLogin(code,pw,silent){
   try{localStorage.setItem(LS_ME,code);}catch(e){}
   document.getElementById('loginBg').style.display='none';
   applyIdentity();
-  if(!silent){toast('Xin chào '+name+'!');}
+  renderAll();                                 // vẽ lại để nút theo đúng quyền
+  if(isAdmin())document.getElementById('meBox').innerHTML+=' <b style="color:#ffd27a">(ADMIN)</b>';
+  if(!silent){toast('Xin chào '+name+(isAdmin()?' (Admin)':'')+'!');}
   // nếu mật khẩu vẫn là mặc định, nhắc đổi
   if(real==='123456'){setTimeout(()=>toast('Bạn đang dùng mật khẩu mặc định — nên đổi mật khẩu.'),1500);}
   return true;
