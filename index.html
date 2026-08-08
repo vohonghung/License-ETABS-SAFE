@@ -362,8 +362,9 @@
         <li>Giờ hết hạn: buổi Sáng đến 12:00, buổi Chiều đến 17:30. Quá giờ chưa trả sẽ bị đánh dấu <b style="color:var(--warn)">Quá hạn</b> trên Dashboard.</li>
         <li>Không được đăng ký cả ngày ngay từ đầu — hết buổi phải trả key hoặc đăng ký lại.</li>
         <li>Người đăng ký trước được ưu tiên trước.</li>
-        <li><b>Lịch tuần được ưu tiên nhất:</b> ai đã đăng ký lịch tuần cho buổi nào thì được nhận key trước trong buổi đó, trên cả hàng chờ trong ngày.</li>
+        <li><b>Lịch tuần được ưu tiên nhất:</b> ai đã đăng ký lịch tuần cho buổi nào thì được nhận key trước trong buổi đó, trên cả hàng chờ trong ngày — kể cả khi chưa vào hàng chờ.</li>
         <li>Nếu có người đang chờ thì không được tự động gia hạn — phải trả key trước.</li>
+        <li><b>Tự động thu hồi khi quá hạn:</b> nếu đến giờ hết hạn buổi (12:00 / 17:30) mà license vẫn đang bị giữ, và có người khác đăng ký lịch tuần đúng buổi đó, hệ thống sẽ tự động thu hồi và giao lại license cho người có lịch tuần mà không cần đợi người cũ chủ động trả key.</li>
         <li>Mọi người chủ động liên hệ nhau qua Teams / Zalo / Telegram dựa trên thông tin hiển thị trên Dashboard.</li>
       </ul>
     </div>
@@ -430,7 +431,7 @@ function fresh(){
   const pw={};EMPLOYEES.forEach(n=>{if(MACHINE_MAP[n])pw[MACHINE_MAP[n]]="123456";});
   return {state:st, queue:[], history:[], queueLog:[], server:{ETABS:null,SAFE:null},
           machines, open:{}, reports:[], week:[], wkActivated:[], machLocked:true,
-          handovers:[], wkSkipped:[], pw};
+          handovers:[], wkSkipped:[], pw, wkMigratedV2:true};
 }
 // bổ sung mọi trường còn thiếu cho dữ liệu cũ
 function migrate(d){
@@ -455,6 +456,17 @@ function migrate(d){
   if(!d.pw||typeof d.pw!=='object')d.pw={};
   // mã máy nào có trong bảng mà chưa có mật khẩu -> mặc định 123456
   EMPLOYEES.forEach(n=>{const code=d.machines[n];if(code&&!(code in d.pw))d.pw[code]="123456";});
+  // sửa lỗi 1 lần: trước đây wkKey() dùng toISOString() nên mã tuần bị lùi 1 ngày (múi giờ VN).
+  // các bản ghi lịch tuần cũ cộng lại đúng 1 ngày để khớp với wkKey() mới (đúng ngày thứ 2 thật).
+  if(!d.wkMigratedV2){
+    d.week.forEach(w=>{
+      if(!w.wk)return;
+      const [y,m,day]=w.wk.split('-').map(Number);
+      const fixed=new Date(y,m-1,day);fixed.setDate(fixed.getDate()+1);
+      w.wk=fixed.getFullYear()+'-'+('0'+(fixed.getMonth()+1)).slice(-2)+'-'+('0'+fixed.getDate()).slice(-2);
+    });
+    d.wkMigratedV2=true;
+  }
   return d;
 }
 // ================== KẾT NỐI GOOGLE SHEET (Apps Script Web App) ==================
@@ -756,7 +768,7 @@ function release(licId){
   // 1) ƯU TIÊN người có LỊCH TUẦN cho đúng buổi hiện tại, đang đợi trong hàng chờ
   const wkCand=weekPriorityCandidate(sw);
   if(wkCand){
-    db.queue=db.queue.filter(q=>q.id!==wkCand.id);
+    if(wkCand.fromQueue)db.queue=db.queue.filter(q=>q.id!==wkCand.id);
     db.state[licId]={user:wkCand.user,sess:wkCand.sess,note:wkCand.note,pri:wkCand.pri,start:Date.now()};
     save();toast('🔁 '+licId+' → giao cho '+wkCand.user+' (có lịch tuần buổi này).');
     renderAll();return;
@@ -829,7 +841,7 @@ function markNotUse(licId){
   const wkCand=weekPriorityCandidate(sw);
   const next=wkCand||sortedQueue(sw)[0];
   if(next){
-    db.queue=db.queue.filter(q=>q.id!==next.id);
+    if(!wkCand||wkCand.fromQueue)db.queue=db.queue.filter(q=>q.id!==next.id);
     db.state[licId]={user:next.user,sess:next.sess,note:next.note,pri:next.pri,start:Date.now()};
     toast('⏸ '+s.user+' tạm không dùng '+licId+' → giao cho '+next.user+'.');
   }else{
@@ -852,16 +864,25 @@ function currentSession(){const h=new Date().getHours(),m=new Date().getMinutes(
   return (h<12)?'Sáng':'Chiều';}
 function currentDayVN(){const d=new Date().getDay();// 0=CN..6=T7
   return ({1:'Thứ 2',2:'Thứ 3',3:'Thứ 4',4:'Thứ 5',5:'Thứ 6'})[d]||null;}
-// người trong hàng chờ VÀ có lịch tuần đúng TUẦN HIỆN TẠI + buổi hiện tại; ai đăng ký lịch trước ưu tiên trước
+// người có lịch tuần đúng TUẦN HIỆN TẠI + buổi hiện tại, chưa đang giữ license nào.
+// Ưu tiên: ai đã có trong hàng chờ thì lấy theo thứ tự vào chờ trước; nếu không ai trong hàng chờ
+// thì vẫn trả về người đăng ký lịch tuần sớm nhất — KHÔNG bắt buộc phải vào hàng chờ trước mới được ưu tiên.
 function weekPriorityCandidate(sw){
   const day=currentDayVN(), sess=currentSession();
   if(!day)return null; // cuối tuần thì không xét lịch tuần
   const wk=currentWeekKey();
-  const holders=db.week.filter(w=>w.wk===wk&&w.sw===sw&&w.day===day&&w.sess===sess).map(w=>w.user);
+  const holders=db.week.filter(w=>w.wk===wk&&w.sw===sw&&w.day===day&&w.sess===sess).sort((a,b)=>a.id-b.id);
   if(!holders.length)return null;
-  const cand=db.queue.filter(q=>q.sw===sw&&holders.includes(q.user))
-    .sort((a,b)=>a.at-b.at);
-  return cand[0]||null;
+  const already=Object.values(db.state).filter(Boolean).map(s=>s.user);
+  const free=holders.filter(w=>!already.includes(w.user));
+  if(!free.length)return null;
+  const queued=db.queue.filter(q=>q.sw===sw&&free.some(w=>w.user===q.user)).sort((a,b)=>a.at-b.at);
+  if(queued.length){
+    const q=queued[0];const w=free.find(x=>x.user===q.user);
+    return {id:q.id,user:q.user,sess:w.sess,pri:q.pri,note:q.note,fromQueue:true};
+  }
+  const w=free[0];
+  return {id:null,user:w.user,sess:w.sess,pri:'Lịch tuần',note:'(lịch tuần)',fromQueue:false};
 }
 
 /* ---------- TỰ ĐẨY người có lịch tuần vào Dashboard khi tới buổi ---------- */
@@ -900,6 +921,30 @@ function autoActivateWeek(){
       db.wkActivated.push(w.id);changed=true;
       toast('⚠ '+w.user+' có lịch '+w.sw+' nhưng hết license — đã ghi báo cáo.');
     }
+  });
+  if(changed)save();
+  return changed;
+}
+
+/* ---------- TỰ ĐỘNG THU HỒI license quá hạn để nhường cho người có lịch tuần ---------- */
+// chạy định kỳ cùng autoActivateWeek: hết giờ buổi (12:00/17:30) mà license vẫn bị giữ (quá hạn)
+// và có người khác đăng ký lịch tuần đúng buổi đó đang chờ -> tự động thu hồi, không cần người cũ tự trả key.
+function autoReclaimOverdueForWeek(){
+  let changed=false;
+  LICENSES.forEach(l=>{
+    const s=db.state[l.id];
+    if(!s||!isOverdue(s))return;
+    const cand=weekPriorityCandidate(l.sw);
+    if(!cand||cand.user===s.user)return;
+    db.history.push({lic:l.id,sw:l.sw,user:s.user,sess:s.sess,
+      note:(s.note||'')+' [hệ thống tự động thu hồi do quá hạn — nhường cho '+cand.user+' theo lịch tuần]',
+      start:s.start,end:Date.now(),overdue:true});
+    db.handovers.unshift({id:Date.now()+Math.random(),lic:l.id,from:s.user,to:cand.user,
+      kind:'Tự động thu hồi (quá hạn, lịch tuần)',byWeek:true,at:new Date().toLocaleString('vi-VN')});
+    if(cand.fromQueue)db.queue=db.queue.filter(q=>q.id!==cand.id);
+    db.state[l.id]={user:cand.user,sess:cand.sess,note:cand.note,pri:cand.pri,start:Date.now()};
+    toast('⏰ '+l.id+' quá hạn — hệ thống tự động thu hồi từ '+s.user+' và giao cho '+cand.user+' (lịch tuần).');
+    changed=true;
   });
   if(changed)save();
   return changed;
@@ -1191,12 +1236,14 @@ const WK_DAYS=["Thứ 2","Thứ 3","Thứ 4","Thứ 5","Thứ 6"];
 function mondayOf(d){const x=new Date(d);const wd=(x.getDay()+6)%7;x.setDate(x.getDate()-wd);x.setHours(0,0,0,0);return x;}
 function buildWeeks(){
   const out=[];let d=mondayOf(new Date());
-  // nếu hôm nay đã qua thứ 6 thì vẫn tính tuần này
-  while(d.getFullYear()<=2026){out.push(new Date(d));d.setDate(d.getDate()+7);}
+  // luôn tạo sẵn 52 tuần (1 năm) kể từ tuần hiện tại, không phụ thuộc năm cố định
+  for(let i=0;i<52;i++){out.push(new Date(d));d.setDate(d.getDate()+7);}
   return out;
 }
 const WK_LIST=buildWeeks();
-function wkKey(d){return d.toISOString().slice(0,10);}                 // mã tuần = ngày thứ 2
+function wkKey(d){return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);}
+                                                                        // mã tuần = ngày thứ 2 (giờ địa phương, KHÔNG dùng toISOString
+                                                                        // vì toISOString quy đổi sang UTC sẽ lùi mất 1 ngày ở múi giờ VN)
 function wkFmt(d){return ('0'+d.getDate()).slice(-2)+'/'+('0'+(d.getMonth()+1)).slice(-2)+'/'+d.getFullYear();}
 function isoWeekNo(d){const t=new Date(d);t.setHours(0,0,0,0);t.setDate(t.getDate()+3-((t.getDay()+6)%7));
   const w1=new Date(t.getFullYear(),0,4);return 1+Math.round(((t-w1)/864e5-3+((w1.getDay()+6)%7))/7);}
@@ -1339,12 +1386,16 @@ function autoFillCode(){
 (async function init(){
   db=await loadFromServer();
   autoFillCode();                              // điền sẵn mã máy nếu có
-  if(autoActivateWeek())renderAll();
+  let bootChanged=autoActivateWeek();
+  if(autoReclaimOverdueForWeek())bootChanged=true;
+  if(bootChanged)renderAll();
   renderAll();updateHint();updateNoteLabel();
   setInterval(async()=>{
     await syncFromServer();
     if(ME)applyIdentity();                     // giữ khóa danh tính sau mỗi lần đồng bộ
-    if(autoActivateWeek())renderAll();
+    let tickChanged=autoActivateWeek();
+    if(autoReclaimOverdueForWeek())tickChanged=true;
+    if(tickChanged)renderAll();
   },5000);
 })();
 </script>
