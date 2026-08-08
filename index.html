@@ -1236,8 +1236,8 @@ const WK_DAYS=["Thứ 2","Thứ 3","Thứ 4","Thứ 5","Thứ 6"];
 function mondayOf(d){const x=new Date(d);const wd=(x.getDay()+6)%7;x.setDate(x.getDate()-wd);x.setHours(0,0,0,0);return x;}
 function buildWeeks(){
   const out=[];let d=mondayOf(new Date());
-  // luôn tạo sẵn 52 tuần (1 năm) kể từ tuần hiện tại, không phụ thuộc năm cố định
-  for(let i=0;i<52;i++){out.push(new Date(d));d.setDate(d.getDate()+7);}
+  // chỉ cho đăng ký tuần này và tuần kế tiếp (1 tuần tới) — không cho đăng ký xa hơn tuần thứ 2
+  for(let i=0;i<2;i++){out.push(new Date(d));d.setDate(d.getDate()+7);}
   return out;
 }
 const WK_LIST=buildWeeks();
