@@ -435,6 +435,13 @@
       </div>
       <table><thead><tr><th>Họ tên</th><th>Mã máy</th></tr></thead>
         <tbody id="machBody"></tbody></table>
+      <div id="addPersonRow" style="display:none;gap:8px;align-items:flex-end;flex-wrap:wrap;margin-top:14px;padding-top:12px;border-top:1px solid var(--line)">
+        <div class="field" style="margin:0"><label>Thêm người mới — Họ tên</label>
+          <input id="newPersonName" placeholder="VD NGUYỄN VĂN A" style="text-transform:uppercase"></div>
+        <div class="field" style="margin:0"><label>Mã máy</label>
+          <input id="newPersonCode" placeholder="VD VNRHD090" style="text-transform:uppercase"></div>
+        <button class="btn primary" id="addPersonBtn">+ Thêm người</button>
+      </div>
     </div>
 
     <div class="card">
@@ -541,7 +548,14 @@ function fresh(){
   return {state:st, queue:[], history:[], queueLog:[], server:{ETABS:null,SAFE:null},
           machines, open:{}, reports:[], week:[], wkActivated:[], machLocked:true,
           handovers:[], wkSkipped:[], pw, wkMigratedV2:true,
-          backlog:seedBacklog(), training:seedTraining(), itemsSeeded:true};
+          backlog:seedBacklog(), training:seedTraining(), itemsSeeded:true,
+          employees:[]};
+}
+// EMPLOYEES là danh sách gốc cố định; db.employees là người được thêm sau (qua tab Thiết bị) — gộp lại, không trùng
+function allEmployees(){
+  const set=new Set(EMPLOYEES);
+  (db.employees||[]).forEach(n=>{if(n)set.add(n);});
+  return Array.from(set).sort((a,b)=>a.localeCompare(b,'vi'));
 }
 // dữ liệu mẫu ban đầu cho 2 bảng mới — chỉ dùng lần đầu tiên (Sheet còn trống)
 function seedBacklog(){
@@ -599,6 +613,7 @@ function migrate(d){
   if(!d.server||typeof d.server!=='object')d.server={ETABS:null,SAFE:null};
   if(!('ETABS' in d.server))d.server.ETABS=null;
   if(!('SAFE' in d.server))d.server.SAFE=null;
+  if(!Array.isArray(d.employees))d.employees=[];
   if(!d.machines||typeof d.machines!=='object')d.machines={};
   EMPLOYEES.forEach(n=>{if(!d.machines[n])d.machines[n]=MACHINE_MAP[n]||"";});
   if(!d.open||typeof d.open!=='object')d.open={};
@@ -704,7 +719,7 @@ function refreshOverdueClasses(){
 
 /* ---------- fill selects/segments ---------- */
 const rgName=document.getElementById('rgName');
-EMPLOYEES.forEach(n=>rgName.append(new Option(n,n)));
+allEmployees().forEach(n=>rgName.append(new Option(n,n)));
 function seg(id){const box=document.getElementById(id);let val=box.querySelector('.on').dataset.v;
   box.querySelectorAll('button').forEach(b=>b.onclick=()=>{box.querySelectorAll('button').forEach(x=>x.classList.remove('on'));
     b.classList.add('on');val=b.dataset.v;
@@ -1340,9 +1355,10 @@ function renderMachines(){
     };
   }
   const b=document.getElementById('machBody');b.innerHTML='';
-  EMPLOYEES.forEach(n=>{
+  allEmployees().forEach(n=>{
+    const isExtra=!EMPLOYEES.includes(n);
     const tr=document.createElement('tr');
-    tr.innerHTML=`<td><b>${n}</b></td><td></td>`;
+    tr.innerHTML=`<td><b>${n}</b>${isExtra?' <span class="pill pri-cool">mới</span>':''}</td><td></td>`;
     const inp=document.createElement('input');
     inp.value=db.machines[n]||'';inp.placeholder='VD VNRHD054';
     if(db.machLocked){inp.readOnly=true;inp.style.background='#efede7';inp.style.color='#6b6f76';inp.title='Bảng đang khóa — bấm "Mở khóa để sửa"';}
@@ -1350,9 +1366,45 @@ function renderMachines(){
       if(db.machLocked){e.target.value=db.machines[n]||'';return;} // chặn sửa khi khóa
       db.machines[n]=e.target.value.trim().toUpperCase();save();renderRecon();
       toast('Đã lưu mã máy cho '+n);};
-    tr.lastElementChild.append(inp);b.append(tr);
+    tr.lastElementChild.append(inp);
+    if(isExtra&&!db.machLocked){
+      const del=document.createElement('button');
+      del.type='button';del.className='btn ghost small';del.textContent='Xóa';del.style.marginLeft='6px';
+      del.onclick=()=>{
+        if(!confirm('Xóa người "'+n+'" khỏi danh sách?'))return;
+        db.employees=(db.employees||[]).filter(x=>x!==n);
+        delete db.machines[n];
+        save();populatePeopleSelects();renderAll();
+        toast('Đã xóa '+n+'.');
+      };
+      tr.lastElementChild.append(del);
+    }
+    b.append(tr);
   });
+  const addRow=document.getElementById('addPersonRow');
+  if(addRow)addRow.style.display=db.machLocked?'none':'flex';
 }
+document.getElementById('addPersonBtn').onclick=()=>{
+  if(db.machLocked){toast('Hãy mở khóa bảng mã máy trước (nút "Mở khóa để sửa").');return;}
+  const nameInp=document.getElementById('newPersonName');
+  const codeInp=document.getElementById('newPersonCode');
+  const name=nameInp.value.trim().toUpperCase();
+  const code=codeInp.value.trim().toUpperCase();
+  if(!name||!code){toast('Nhập đủ Họ tên và Mã máy.');return;}
+  if(allEmployees().includes(name)){toast('Người này đã có trong danh sách.');return;}
+  const already=nameOfCode(code);
+  if(already){toast('Mã máy '+code+' đã gán cho '+already+'.');return;}
+  if(!db.employees)db.employees=[];
+  db.employees.push(name);
+  db.machines[name]=code;
+  if(!db.pw)db.pw={};
+  db.pw[code]='123456';
+  save();
+  nameInp.value='';codeInp.value='';
+  populatePeopleSelects();
+  renderAll();
+  toast('Đã thêm '+name+' — mã máy '+code+', mật khẩu mặc định 123456.');
+};
 
 /* ---------- tra cứu mã máy → tên + báo vi phạm ---------- */
 // người đang mở phần mềm gì (theo tick server) cho 1 mã máy
@@ -1485,7 +1537,7 @@ WK_LIST.forEach(d=>wkWeekSel.append(new Option(wkLabel(d),wkKey(d))));
 wkWeekSel.value=currentWeekKey();
 wkWeekSel.onchange=renderWeek;
 const wkName=document.getElementById('wkName');
-EMPLOYEES.forEach(n=>wkName.append(new Option(n,n)));
+allEmployees().forEach(n=>wkName.append(new Option(n,n)));
 const getWkSw=seg('wkSw'), getWkDay=seg('wkDay'), getWkSess=seg('wkSess');
 
 document.getElementById('wkSubmit').onclick=()=>{
@@ -1555,7 +1607,20 @@ const ITEM_TAB={backlog:'all',training:'all'};
 function fillPersonSelect(sel,withEmpty){
   const keep=withEmpty?'<option value="">— Chưa có —</option>':'';
   sel.innerHTML=keep;
-  EMPLOYEES.forEach(n=>sel.append(new Option(n,n)));
+  allEmployees().forEach(n=>sel.append(new Option(n,n)));
+}
+function populatePeopleSelects(){
+  [rgName,wkName].forEach(sel=>{
+    if(!sel)return;
+    const cur=sel.value;
+    sel.innerHTML='';
+    allEmployees().forEach(n=>sel.append(new Option(n,n)));
+    if(allEmployees().includes(cur))sel.value=cur;
+  });
+  fillPersonSelect(document.getElementById('itemProposer'),false);
+  fillPersonSelect(document.getElementById('itemOwner'),true);
+  fillPersonSelect(document.getElementById('itemSupport'),true);
+  fillPersonSelect(document.getElementById('itemReviewer'),true);
 }
 fillPersonSelect(document.getElementById('itemProposer'),false);
 fillPersonSelect(document.getElementById('itemOwner'),true);
@@ -1788,6 +1853,7 @@ function autoFillCode(){
 // ---- khởi động: nạp dữ liệu chung từ máy chủ, rồi hiển thị ----
 (async function init(){
   db=await loadFromServer();
+  populatePeopleSelects();                     // nạp thêm người đã đăng ký từ trước (nếu có)
   autoFillCode();                              // điền sẵn mã máy nếu có
   let bootChanged=autoActivateWeek();
   if(autoReclaimOverdueForWeek())bootChanged=true;
@@ -1795,6 +1861,7 @@ function autoFillCode(){
   renderAll();updateHint();updateNoteLabel();
   setInterval(async()=>{
     await syncFromServer();
+    populatePeopleSelects();                   // đồng bộ danh sách người mới do người khác thêm
     if(ME)applyIdentity();                     // giữ khóa danh tính sau mỗi lần đồng bộ
     let tickChanged=autoActivateWeek();
     if(autoReclaimOverdueForWeek())tickChanged=true;
