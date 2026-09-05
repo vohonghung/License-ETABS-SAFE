@@ -265,77 +265,12 @@
       color: var(--warn)
     }
 
-    .recon-row {
-      display: grid;
-      grid-template-columns: 90px 1fr 1fr 1fr;
-      gap: 10px;
-      align-items: center;
-      padding: 10px 0;
-      border-bottom: 1px solid var(--line)
-    }
-
-    .recon-row:last-child {
-      border-bottom: 0
-    }
-
-    .recon-row .lbl {
-      font-size: 12px;
-      color: var(--ink2);
-      font-weight: 600;
-      text-transform: uppercase
-    }
-
-    .recon-row .val {
-      font-size: 13px
-    }
-
-    .recon-row .val b {
-      font-size: 20px;
-      font-variant-numeric: tabular-nums
-    }
-
-    .recon-row input {
-      width: 70px;
-      border: 1px solid var(--line);
-      border-radius: var(--r-sm);
-      padding: 6px 8px;
-      font-size: 15px;
-      text-align: center
-    }
-
-    .recon-flag {
-      font-size: 12.5px;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 20px;
-      display: inline-block
-    }
-
-    .recon-flag.ok {
-      background: var(--green-bg);
-      color: var(--green)
-    }
-
-    .recon-flag.bad {
-      background: #fdecea;
-      color: var(--warn)
-    }
-
-    .recon-flag.under {
-      background: var(--amber-bg);
-      color: var(--amber)
-    }
-
     .recon-head {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
       gap: 12px;
       margin-bottom: 6px
-    }
-
-    #reconNames {
-      margin-top: 10px
     }
 
     .warn-name {
@@ -361,15 +296,6 @@
       font-size: 13px;
       color: var(--green);
       font-weight: 600
-    }
-
-    #machBody input {
-      width: 180px;
-      border: 1px solid var(--line);
-      border-radius: var(--r-sm);
-      padding: 6px 9px;
-      font-size: 14px;
-      text-transform: uppercase
     }
 
     .wk-today {
@@ -411,30 +337,6 @@
     .wk-chip.hold {
       background: var(--surface-2);
       color: var(--ink2)
-    }
-
-    .lock-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 10px
-    }
-
-    .lock-badge {
-      font-size: 12px;
-      font-weight: 700;
-      padding: 3px 10px;
-      border-radius: 20px
-    }
-
-    .lock-badge.on {
-      background: var(--surface-2);
-      color: var(--ink2)
-    }
-
-    .lock-badge.off {
-      background: var(--amber-bg);
-      color: var(--amber)
     }
 
     #loginBg {
@@ -512,88 +414,6 @@
       justify-content: space-between;
       align-items: center;
       margin-bottom: 4px
-    }
-
-    .checkin-list {
-      margin-top: 8px
-    }
-
-    .checkin-row {
-      display: grid;
-      grid-template-columns: 1fr 90px 90px;
-      gap: 8px;
-      align-items: center;
-      padding: 9px 4px;
-      border-bottom: 1px solid var(--line)
-    }
-
-    .checkin-row:first-child {
-      font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
-      color: var(--ink2);
-      border-bottom: 2px solid var(--line)
-    }
-
-    .checkin-row .who b {
-      display: block
-    }
-
-    .checkin-row .who small {
-      color: var(--ink2)
-    }
-
-    .checkin-row label {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 5px;
-      cursor: pointer;
-      font-size: 13px;
-      font-weight: 600
-    }
-
-    .checkin-row input[type=checkbox] {
-      width: 17px;
-      height: 17px;
-      cursor: pointer
-    }
-
-    .lookup-card {
-      border: 1px solid rgba(var(--text-rgb), .06);
-      border-radius: var(--r-md);
-      padding: 14px
-    }
-
-    .lookup-card.found {
-      border-left: 4px solid var(--green);
-      background: #fbfefc
-    }
-
-    .lookup-card.notfound {
-      border-left: 4px solid var(--amber);
-      background: #fffdf6
-    }
-
-    .lookup-card .nm {
-      font-size: 18px;
-      font-weight: 700;
-      margin: 2px 0
-    }
-
-    .lookup-card .st {
-      font-size: 13px;
-      margin-top: 6px
-    }
-
-    .lookup-card .st.reg {
-      color: var(--green);
-      font-weight: 600
-    }
-
-    .lookup-card .st.notreg {
-      color: var(--warn);
-      font-weight: 600
     }
 
     .lic .top {
@@ -700,65 +520,153 @@
       color: var(--col-done)
     }
 
-    .item-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 12px
-    }
-
-    .item-card {
-      border: 1px solid rgba(var(--text-rgb), .06);
-      border-radius: var(--r-md);
-      padding: 13px 14px;
-      background: #fff;
-      cursor: pointer;
-      transition: box-shadow .25s var(--ease), transform .25s var(--ease)
-    }
-
-    .item-card:hover {
-      box-shadow: var(--shadow-lift);
-      transform: translateY(-2px)
-    }
-
-    .item-card .top {
+    .item-note {
+      margin: 4px 0 14px;
+      padding: 10px 14px;
+      border: 1px dashed var(--line);
+      border-radius: var(--r-sm);
+      font-size: 13px;
+      color: var(--ink2);
       display: flex;
-      justify-content: space-between;
+      gap: 8px;
+      align-items: baseline;
+      flex-wrap: wrap
+    }
+
+    .item-note strong {
+      color: var(--ink)
+    }
+
+    .item-filters {
+      display: flex;
       align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 14px
+    }
+
+    .item-tabs {
+      display: flex;
       gap: 6px;
       flex-wrap: wrap
     }
 
-    .item-card .title {
-      font-weight: 700;
-      font-size: 14px;
-      margin-top: 9px
+    .item-tab {
+      border: 1px solid var(--line);
+      background: var(--surface);
+      color: var(--ink2);
+      border-radius: var(--r-pill);
+      padding: 6px 13px;
+      font-size: 12.5px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background .2s var(--ease), color .2s var(--ease), border-color .2s var(--ease)
     }
 
-    .item-card .row {
-      margin-top: 6px;
+    .item-tab:hover {
+      border-color: var(--accent)
+    }
+
+    .item-tab.active {
+      background: var(--ink);
+      border-color: var(--ink);
+      color: #fff
+    }
+
+    .item-priority-filter {
+      display: flex;
+      align-items: center;
+      gap: 7px
+    }
+
+    .item-priority-filter label {
       font-size: 12.5px;
       color: var(--ink2)
     }
 
-    .item-card .row b {
-      color: var(--ink);
-      font-weight: 600
+    .item-priority-filter select {
+      width: auto;
+      padding: 6px 9px;
+      font-size: 13px
     }
 
-    .item-card .meta {
-      margin-top: 9px;
-      padding-top: 9px;
-      border-top: 1px solid var(--line);
+    .item-table-wrap {
+      overflow-x: auto;
+      overflow-y: auto;
+      max-height: 420px;
+      border: 1px solid var(--line);
+      border-radius: var(--r-md);
+      background: var(--surface)
+    }
+
+    table.item-table {
+      border-collapse: collapse;
+      width: 100%;
+      min-width: 1180px;
+      font-size: 13px
+    }
+
+    table.item-table thead th {
+      position: sticky;
+      top: 0;
+      background: var(--surface-2);
+      text-align: left;
+      padding: 9px 12px;
       font-size: 11.5px;
       color: var(--ink2);
-      display: flex;
-      justify-content: space-between;
-      gap: 8px;
-      flex-wrap: wrap
+      font-weight: 650;
+      border-bottom: 1px solid var(--line);
+      white-space: nowrap;
+      z-index: 1
     }
 
-    .item-card .meta a {
-      color: var(--accent)
+    table.item-table tbody td {
+      padding: 9px 12px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top
+    }
+
+    table.item-table tbody tr:last-child td {
+      border-bottom: none
+    }
+
+    table.item-table tbody tr {
+      cursor: pointer;
+      transition: background-color .15s var(--ease)
+    }
+
+    table.item-table tbody tr:hover {
+      background: var(--surface-2)
+    }
+
+    .item-cell-ellipsis {
+      max-width: 200px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap
+    }
+
+    .item-cell-muted {
+      color: var(--ink2)
+    }
+
+    .i18n {
+      color: var(--ink2);
+      font-weight: 400;
+      font-style: italic
+    }
+
+    th .i18n {
+      text-transform: none;
+      font-size: 10.5px
+    }
+
+    .item-cell-mono {
+      font-family: var(--font-mono, ui-monospace, monospace);
+      font-variant-numeric: tabular-nums;
+      color: var(--ink2);
+      white-space: nowrap
     }
 
     #weekTable th,
@@ -1044,9 +952,10 @@
   <div id="loginBg">
     <div class="login-card">
       <h2>Đăng nhập</h2>
-      <p class="sub">Nhập mã máy và mật khẩu của bạn. Mật khẩu mặc định là <b>123456</b> — đổi sau khi đăng nhập.</p>
-      <div class="field"><label>Mã máy</label><input id="lgCode" placeholder="VD VNRHD054"
-          style="text-transform:uppercase" autocomplete="off"></div>
+      <p class="sub">Nhập tên đăng nhập và mật khẩu của bạn. Mật khẩu mặc định là <b>123456</b> — đổi sau khi đăng nhập.
+      </p>
+      <div class="field"><label>Tên đăng nhập</label><input id="lgCode" placeholder="VD hhvo"
+          style="text-transform:lowercase" autocomplete="off"></div>
       <div class="field"><label>Mật khẩu</label><input id="lgPw" type="password" placeholder="123456"
           autocomplete="off"></div>
       <button class="btn primary" id="lgGo" style="width:100%">Đăng nhập</button>
@@ -1069,10 +978,8 @@
       <button class="tab active" data-tab="dash">Dashboard</button>
       <button class="tab" data-tab="reg">Đăng ký &amp; Lịch tuần <span class="badge" id="qBadge"
           style="display:none">0</span></button>
-      <button class="tab" data-tab="backlog">Optimization</button>
-      <button class="tab" data-tab="training">Đào tạo</button>
+      <button class="tab" data-tab="backlog">Optimization &amp; Đào tạo <span class="i18n">(Training)</span></button>
       <button class="tab" data-tab="report">Báo cáo</button>
-      <button class="tab" data-tab="machines">Thiết bị</button>
     </div>
 
     <!-- DASHBOARD -->
@@ -1086,17 +993,20 @@
           <div id="dashTrainingSummary"></div>
         </div>
       </div>
-      <div class="card recon">
+      <div class="card" id="adminAddUserCard" style="display:none">
         <div class="recon-head">
           <div>
-            <h2 style="margin:0">Đối chiếu với license server</h2>
-            <p class="sub" style="margin:2px 0 0">Admin đọc mã máy đang mở license trên server, tick vào đây. App tra
-              tên theo mã máy và cảnh báo ai dùng mà chưa đăng ký.</p>
+            <h2 style="margin:0">👤 Thêm người dùng <span class="i18n">(Admin)</span></h2>
+            <p class="sub" style="margin:2px 0 0">Chỉ admin thấy mục này. Nhập họ tên đầy đủ — hệ thống tự sinh tên đăng
+              nhập và đặt mật khẩu mặc định 123456.</p>
           </div>
-          <button class="btn ghost small" id="openCheckin">Cập nhật máy đang mở</button>
         </div>
-        <div id="reconBox"></div>
-        <div id="reconNames"></div>
+        <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap">
+          <div class="field" style="margin:0;flex:1;min-width:220px"><label>Họ tên</label>
+            <input id="newPersonName" placeholder="VD NGUYỄN VĂN A" style="text-transform:uppercase">
+          </div>
+          <button class="btn primary" id="addPersonBtn">+ Thêm người dùng</button>
+        </div>
       </div>
       <div class="card">
         <div class="grp-title"><span class="pill etabs">ETABS</span> 5 license</div>
@@ -1195,36 +1105,120 @@
       </div>
     </section>
 
-    <!-- BÁO CÁO -->
-    <!-- BACKLOG CẢI TIẾN (Optimization) -->
+    <!-- OPTIMIZATION & TRAINING (gộp 1 sheet, song ngữ Việt/Anh) -->
     <section class="pane" id="pane-backlog" style="display:none">
       <div class="card">
         <div class="recon-head">
           <div>
             <h2 style="margin:0">🛠️ Optimization Backlog</h2>
             <p class="sub" style="margin:2px 0 0">Việc thủ công, lặp lại, tốn thời gian — từ lúc đề xuất tới khi thành
-              quy trình chuẩn. Dùng chung cho cả team.</p>
+              quy trình chuẩn <span class="i18n">(Manual, repetitive, time-consuming work — from proposal to a
+                standardized fix)</span>. Dùng chung cho cả team.</p>
           </div>
-          <button class="btn primary small" id="backlog-btn-add">+ Thêm việc</button>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <button class="btn ghost small" id="backlog-btn-import">⭱ Import <span class="i18n">(Nhập)</span></button>
+            <button class="btn ghost small" id="backlog-btn-export">⭳ Export <span class="i18n">(Xuất)</span></button>
+            <button class="btn primary small" id="backlog-btn-add">+ Thêm việc <span class="i18n">(Add task)</span></button>
+          </div>
         </div>
-        <div class="tabs" id="backlog-tabs" style="margin:10px 0 10px"></div>
-        <div class="item-grid" id="backlog-body"></div>
+        <input type="file" id="backlog-import-input" accept="application/json" style="display:none">
+        <div class="item-note">
+          <span>📅 Review hàng tuần — ưu tiên xử lý các việc <strong style="color:var(--warn)">ưu tiên Cao (đỏ)</strong>
+            trước <span class="i18n">(Review weekly — tackle high-priority (red) items first)</span>.</span>
+          <span>·</span>
+          <span>Bấm vào 1 dòng để sửa hoặc đổi trạng thái <span class="i18n">(Click a row to edit)</span>.</span>
+        </div>
+        <div class="item-filters">
+          <div class="item-tabs" id="backlog-tabs"></div>
+          <div class="item-priority-filter">
+            <label for="backlog-priority-select">Ưu tiên <span class="i18n">(Priority)</span>:</label>
+            <select id="backlog-priority-select">
+              <option value="all">Tất cả (All)</option>
+              <option value="high">Cao (High)</option>
+              <option value="mid">Vừa (Medium)</option>
+              <option value="low">Thấp (Low)</option>
+            </select>
+          </div>
+        </div>
+        <div class="item-table-wrap">
+          <table class="item-table">
+            <thead>
+              <tr>
+                <th>Đề xuất <span class="i18n">(Proposer)</span></th>
+                <th>Việc / vấn đề <span class="i18n">(Task/issue)</span></th>
+                <th>Hiện trạng <span class="i18n">(Current state)</span></th>
+                <th>Ý tưởng / giải pháp <span class="i18n">(Idea/solution)</span></th>
+                <th>Phụ trách <span class="i18n">(Owner)</span></th>
+                <th>Hỗ trợ <span class="i18n">(Support)</span></th>
+                <th>Người soát <span class="i18n">(Reviewer)</span></th>
+                <th>Trạng thái <span class="i18n">(Status)</span></th>
+                <th>Link/file</th>
+                <th>Cập nhật <span class="i18n">(Updated)</span></th>
+              </tr>
+            </thead>
+            <tbody id="backlog-body"></tbody>
+          </table>
+        </div>
+        <p class="sub" style="text-align:center;margin-top:14px">Dữ liệu đồng bộ trực tiếp cho cả team qua Firestore.
+          Dùng <b>Export</b> để tải bản sao lưu trữ, <b>Import</b> để nạp/ghép thêm dữ liệu từ file JSON.</p>
       </div>
-    </section>
 
-    <!-- NHU CẦU ĐÀO TẠO -->
-    <section class="pane" id="pane-training" style="display:none">
       <div class="card">
         <div class="recon-head">
           <div>
             <h2 style="margin:0">📚 Training Needs</h2>
             <p class="sub" style="margin:2px 0 0">Kỹ năng / kiến thức còn thiếu của team — từ lúc phát hiện tới khi hoàn
-              thành đào tạo. Dùng chung cho cả team.</p>
+              thành đào tạo <span class="i18n">(Skills or knowledge gaps the team needs training on, from spotting the
+                gap to a completed session)</span>. Dùng chung cho cả team.</p>
           </div>
-          <button class="btn primary small" id="training-btn-add">+ Thêm chủ đề</button>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <button class="btn ghost small" id="training-btn-import">⭱ Import <span class="i18n">(Nhập)</span></button>
+            <button class="btn ghost small" id="training-btn-export">⭳ Export <span class="i18n">(Xuất)</span></button>
+            <button class="btn primary small" id="training-btn-add">+ Thêm chủ đề <span class="i18n">(Add
+                topic)</span></button>
+          </div>
         </div>
-        <div class="tabs" id="training-tabs" style="margin:10px 0 10px"></div>
-        <div class="item-grid" id="training-body"></div>
+        <input type="file" id="training-import-input" accept="application/json" style="display:none">
+        <div class="item-note">
+          <span>📅 Review hàng tuần — ưu tiên xếp lịch các chủ đề <strong style="color:var(--warn)">ưu tiên Cao
+              (đỏ)</strong> trước <span class="i18n">(Review weekly — schedule high-priority (red) topics
+              first)</span>.</span>
+          <span>·</span>
+          <span>Bấm vào 1 dòng để sửa hoặc đổi trạng thái <span class="i18n">(Click a row to edit)</span>.</span>
+        </div>
+        <div class="item-filters">
+          <div class="item-tabs" id="training-tabs"></div>
+          <div class="item-priority-filter">
+            <label for="training-priority-select">Ưu tiên <span class="i18n">(Priority)</span>:</label>
+            <select id="training-priority-select">
+              <option value="all">Tất cả (All)</option>
+              <option value="high">Cao (High)</option>
+              <option value="mid">Vừa (Medium)</option>
+              <option value="low">Thấp (Low)</option>
+            </select>
+          </div>
+        </div>
+        <div class="item-table-wrap">
+          <table class="item-table">
+            <thead>
+              <tr>
+                <th>Đề xuất <span class="i18n">(Proposer)</span></th>
+                <th>Chủ đề / vấn đề <span class="i18n">(Topic/issue)</span></th>
+                <th>Hiện trạng <span class="i18n">(Current state)</span></th>
+                <th>Kế hoạch đào tạo <span class="i18n">(Training plan)</span></th>
+                <th>Phụ trách <span class="i18n">(Owner)</span></th>
+                <th>Hỗ trợ <span class="i18n">(Support)</span></th>
+                <th>Người soát <span class="i18n">(Reviewer)</span></th>
+                <th>Trạng thái <span class="i18n">(Status)</span></th>
+                <th>Link/file</th>
+                <th>Cập nhật <span class="i18n">(Updated)</span></th>
+              </tr>
+            </thead>
+            <tbody id="training-body"></tbody>
+          </table>
+        </div>
+        <p class="sub" style="text-align:center;margin-top:14px">Dữ liệu đồng bộ trực tiếp cho cả team qua Firestore.
+          Dùng <b>Export</b> để tải bản sao lưu trữ, <b>Import</b> để nạp/ghép thêm dữ liệu từ file JSON.</p>
       </div>
     </section>
 
@@ -1370,108 +1364,34 @@
       <div><button class="btn ghost small" id="resetBtn">Xóa toàn bộ dữ liệu thử</button></div>
     </section>
 
-    <!-- THIẾT BỊ -->
-    <section class="pane" id="pane-machines" style="display:none">
-      <div class="card" style="max-width:560px">
-        <h2>Tra cứu mã máy</h2>
-        <p class="sub">Nhập mã máy để xem đang là của ai. Nếu người đó dùng license sai quyền hạn (không đăng ký), bấm
-          Báo admin.</p>
-        <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap">
-          <div class="field" style="margin:0"><label>Mã máy</label>
-            <input id="lookupCode" placeholder="VD VNRHD054" style="text-transform:uppercase">
-          </div>
-          <button class="btn primary" id="lookupBtn">Tra cứu</button>
-        </div>
-        <div id="lookupResult" style="margin-top:14px"></div>
-      </div>
-
-      <div class="card">
-        <h2>Bảng mã máy của từng người</h2>
-        <p class="sub">Mỗi người gắn cố định 1 mã máy (hostname, VD VNRHD054). Bảng được khóa để tránh sửa nhầm.</p>
-        <div class="lock-row">
-          <span class="lock-badge" id="lockBadge"></span>
-          <button class="btn ghost small" id="lockBtn"></button>
-        </div>
-        <table>
-          <thead>
-            <tr>
-              <th>Họ tên</th>
-              <th>Mã máy</th>
-            </tr>
-          </thead>
-          <tbody id="machBody"></tbody>
-        </table>
-        <div id="addPersonRow"
-          style="display:none;gap:8px;align-items:flex-end;flex-wrap:wrap;margin-top:14px;padding-top:12px;border-top:1px solid var(--line)">
-          <div class="field" style="margin:0"><label>Thêm người mới — Họ tên</label>
-            <input id="newPersonName" placeholder="VD NGUYỄN VĂN A" style="text-transform:uppercase">
-          </div>
-          <div class="field" style="margin:0"><label>Mã máy</label>
-            <input id="newPersonCode" placeholder="VD VNRHD090" style="text-transform:uppercase">
-          </div>
-          <button class="btn primary" id="addPersonBtn">+ Thêm người</button>
-        </div>
-      </div>
-
-      <div class="card">
-        <h2>Báo cáo vi phạm <span class="badge" id="repBadge" style="display:none">0</span></h2>
-        <p class="sub">Các trường hợp được báo dùng license sai quyền. Admin xem và xử lý (cảnh báo người vi phạm).</p>
-        <table>
-          <thead>
-            <tr>
-              <th>Thời điểm</th>
-              <th>Mã máy</th>
-              <th>Người dùng</th>
-              <th>Người báo</th>
-              <th>Ghi chú</th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody id="repBody"></tbody>
-        </table>
-      </div>
-    </section>
-
   </div>
 
   <div class="toast" id="toast"></div>
 
-  <div class="modal-bg" id="checkinBg">
-    <div class="modal">
-      <div class="modal-head">
-        <h2 style="margin:0">Máy đang mở license</h2>
-        <button class="btn ghost small" id="closeCheckin">Đóng</button>
-      </div>
-      <p class="sub">Tick vào phần mềm mà máy đó đang mở trên license server. Chỉ hiện người đã có mã máy (điền ở tab
-        "Máy").</p>
-      <div class="checkin-list" id="checkinList"></div>
-      <div style="margin-top:14px;text-align:right">
-        <button class="btn primary" id="applyCheckin">Lưu &amp; đối chiếu</button>
-      </div>
-    </div>
-  </div>
 
   <div class="modal-bg" id="itemBg">
     <div class="modal">
       <div class="modal-head">
         <h2 id="itemTitle" style="margin:0">Thêm việc</h2>
-        <button class="btn ghost small" id="itemClose">Đóng</button>
+        <button class="btn ghost small" id="itemClose">Đóng <span class="i18n">(Close)</span></button>
       </div>
       <p class="sub" id="itemReadonlyNote" style="display:none;color:var(--warn);font-weight:600">Chỉ người đề xuất hoặc
         admin mới sửa được mục này.</p>
       <div class="sub" id="itemMeta" style="display:none"></div>
       <div class="row2">
-        <div class="field"><label>Người đề xuất (tự động = người đăng nhập)</label><select id="itemProposer"></select>
+        <div class="field"><label>Người đề xuất <span class="i18n">(Proposer, auto = logged-in user)</span></label>
+          <select id="itemProposer"></select>
         </div>
-        <div class="field"><label>Phụ trách (tùy chọn)</label><select id="itemOwner">
+        <div class="field"><label>Phụ trách <span class="i18n">(Owner, optional)</span></label><select id="itemOwner">
             <option value="">— Chưa có —</option>
           </select></div>
       </div>
       <div class="row2">
-        <div class="field"><label>Hỗ trợ (tùy chọn)</label><select id="itemSupport">
+        <div class="field"><label>Hỗ trợ <span class="i18n">(Support, optional)</span></label><select id="itemSupport">
             <option value="">— Chưa có —</option>
           </select></div>
-        <div class="field"><label>Người soát (tùy chọn)</label><select id="itemReviewer">
+        <div class="field"><label>Người soát <span class="i18n">(Reviewer, optional)</span></label><select
+            id="itemReviewer">
             <option value="">— Chưa có —</option>
           </select></div>
       </div>
@@ -1479,20 +1399,20 @@
       <div class="field"><label id="itemStatusLbl">Hiện trạng</label><input id="itemStatus" placeholder=""></div>
       <div class="field"><label id="itemIdeaLbl">Ý tưởng / giải pháp</label><input id="itemIdea" placeholder=""></div>
       <div class="row2">
-        <div class="field"><label>Mức ưu tiên</label>
-          <div class="seg" id="itemPri"><button data-v="high">Cao</button><button data-v="mid"
-              class="on">Vừa</button><button data-v="low">Thấp</button></div>
+        <div class="field"><label>Mức ưu tiên <span class="i18n">(Priority)</span></label>
+          <div class="seg" id="itemPri"><button data-v="high">Cao (High)</button><button data-v="mid"
+              class="on">Vừa (Medium)</button><button data-v="low">Thấp (Low)</button></div>
         </div>
-        <div class="field"><label>Trạng thái</label>
+        <div class="field"><label>Trạng thái <span class="i18n">(Status)</span></label>
           <div class="seg" id="itemCol"><button data-v="todo" class="on">Đã ghi nhận</button><button data-v="idea">Đang
               làm</button><button data-v="done">Đã xong</button></div>
         </div>
       </div>
-      <div class="field"><label>Link / file (tùy chọn)</label><input id="itemLink"
+      <div class="field"><label>Link / file <span class="i18n">(optional)</span></label><input id="itemLink"
           placeholder="VD \\server\tools\... hoặc link SharePoint"></div>
       <div class="modal-head" style="margin-top:6px">
-        <button class="btn warn small" id="itemDelete" style="display:none">Xóa mục</button>
-        <button class="btn primary" id="itemSave">Lưu</button>
+        <button class="btn warn small" id="itemDelete" style="display:none">Xóa mục <span class="i18n">(Delete)</span></button>
+        <button class="btn primary" id="itemSave">Lưu <span class="i18n">(Save)</span></button>
       </div>
     </div>
   </div>
@@ -1510,40 +1430,30 @@
       { id: "ETABS-04", sw: "ETABS" }, { id: "ETABS-05", sw: "ETABS" },
       { id: "SAFE-01", sw: "SAFE" }, { id: "SAFE-02", sw: "SAFE" }, { id: "SAFE-03", sw: "SAFE" }];
 
-    // Bảng mã máy mặc định theo danh sách IT cung cấp (điền sẵn; admin sửa được)
-    const MACHINE_MAP = {
-      "NGUYỄN PHI GIA": "VNRHD054",
-      "NGUYỄN HỮU THOẠI": "VNRHD049",
-      "NGUYỄN THÀNH PHI": "VNRHD064",
-      "PHẠM ĐỨC TÀI": "VNRHD037",
-      "PHẠM MINH KHANG": "VNRHD033",
-      "ĐOÀN PHÚC HIỆP": "VNRHD065",
-      "VÕ HỒNG HƯNG": "VNRHD079",
-      "NGUYỄN LINH TRƯỜNG": "VNOOD116",
-      "NGUYỄN VIẾT HOÀNG": "VNRHD067",
-      "TRẦN THẮNG": "VNRHD053",
-      "LÊ NGUYỄN ĐÌNH TUẤN": "VNRHD063",
-      "CÁI THỊ THẢO MY": "VNOOD104",
-      "BÙI LONG PHỤNG": "VNRHD034",
-      "NGUYỄN TẤN LỢI": "VNRHD078",
-      "NGUYỄN ĐĂNG QUANG": "VNRHD084",
-      "NGUYỄN TRƯỜNG THỌ": "VNRHD080",
-      "GIP NHẬT THANH": "VNRHD068",
-      "TRẦN ĐÌNH VŨ": "VNRHD066",
-      "TRẦN VĂN ĐỊNH": "VNRHD036"
-    };
+
+    // Tên đăng nhập tự sinh từ họ tên: chữ cái đầu của (tên đệm + tên) + họ (không dấu, viết thường).
+    // VD: "Võ Hồng Hưng" -> "hh" + "vo" = "hhvo". "Nguyễn Tấn Lợi" -> "tl" + "nguyen" = "tlnguyen".
+    function toAsciiLower(s) {
+      return String(s || '').normalize('NFD').replace(/[̀-ͯ]/g, '')
+        .replace(/[đĐ]/g, 'd').toLowerCase();
+    }
+    function usernameOf(fullName) {
+      const words = String(fullName || '').trim().split(/\s+/).filter(Boolean);
+      if (words.length < 2) return toAsciiLower(words[0] || '');
+      const family = words[0];
+      const initials = words.slice(1).map(w => toAsciiLower(w).charAt(0)).join('');
+      return initials + toAsciiLower(family);
+    }
 
     const LS = "licmgr_v1";
     let db = fresh();               // sẽ được nạp từ server khi khởi động
     let SAVE_TIMER = null, LAST_SNAPSHOT = "";
     function fresh() {
       const st = {}; LICENSES.forEach(l => st[l.id] = null); // null = trống; hoặc {user,sess,note,start}
-      const machines = {}; EMPLOYEES.forEach(n => machines[n] = MACHINE_MAP[n] || "");
-      // pw: mật khẩu theo MÃ MÁY. Mặc định "123456" cho mọi mã máy đã có.
-      const pw = {}; EMPLOYEES.forEach(n => { if (MACHINE_MAP[n]) pw[MACHINE_MAP[n]] = "123456"; });
+      // pw: mật khẩu theo TÊN ĐĂNG NHẬP (username tự sinh từ họ tên). Mặc định "123456".
+      const pw = {}; EMPLOYEES.forEach(n => { pw[usernameOf(n)] = "123456"; });
       return {
-        state: st, queue: [], history: [], queueLog: [], server: { ETABS: null, SAFE: null },
-        machines, open: {}, reports: [], week: [], wkActivated: [], machLocked: true,
+        state: st, queue: [], history: [], queueLog: [], week: [], wkActivated: [],
         handovers: [], wkSkipped: [], pw, wkMigratedV2: true,
         backlog: seedBacklog(), training: seedTraining(), itemsSeeded: true,
         employees: []
@@ -1620,22 +1530,14 @@
       if (!Array.isArray(d.queue)) d.queue = [];
       if (!Array.isArray(d.history)) d.history = [];
       if (!Array.isArray(d.queueLog)) d.queueLog = [];
-      if (!d.server || typeof d.server !== 'object') d.server = { ETABS: null, SAFE: null };
-      if (!('ETABS' in d.server)) d.server.ETABS = null;
-      if (!('SAFE' in d.server)) d.server.SAFE = null;
       if (!Array.isArray(d.employees)) d.employees = [];
-      if (!d.machines || typeof d.machines !== 'object') d.machines = {};
-      EMPLOYEES.forEach(n => { if (!d.machines[n]) d.machines[n] = MACHINE_MAP[n] || ""; });
-      if (!d.open || typeof d.open !== 'object') d.open = {};
-      if (!Array.isArray(d.reports)) d.reports = [];
       if (!Array.isArray(d.week)) d.week = [];
       if (!Array.isArray(d.wkActivated)) d.wkActivated = [];
-      if (typeof d.machLocked !== 'boolean') d.machLocked = true;
       if (!Array.isArray(d.handovers)) d.handovers = [];
       if (!Array.isArray(d.wkSkipped)) d.wkSkipped = [];
       if (!d.pw || typeof d.pw !== 'object') d.pw = {};
-      // mã máy nào có trong bảng mà chưa có mật khẩu -> mặc định 123456
-      EMPLOYEES.forEach(n => { const code = d.machines[n]; if (code && !(code in d.pw)) d.pw[code] = "123456"; });
+      // ai chưa có mật khẩu theo username -> mặc định 123456 (áp dụng cho cả người mới thêm)
+      EMPLOYEES.concat(d.employees || []).forEach(n => { const u = usernameOf(n); if (!(u in d.pw)) d.pw[u] = "123456"; });
       // dữ liệu cũ (trước khi có 2 bảng Backlog/Training) -> nạp dữ liệu mẫu đúng 1 lần duy nhất
       if (!Array.isArray(d.backlog)) d.backlog = d.itemsSeeded ? [] : seedBacklog();
       if (!Array.isArray(d.training)) d.training = d.itemsSeeded ? [] : seedTraining();
@@ -1836,49 +1738,6 @@
       }
       return div;
     }
-    /* ---------- đối chiếu server vs đăng ký (theo mã máy → tên) ---------- */
-    function usedCount(sw) { return LICENSES.filter(l => l.sw === sw && db.state[l.id]).length; }
-    function capOf(sw) { return LICENSES.filter(l => l.sw === sw).length; }
-    // tên người đang đăng ký giữ 1 phần mềm
-    function registeredUsers(sw) { return LICENSES.filter(l => l.sw === sw && db.state[l.id]).map(l => db.state[l.id].user); }
-    // mã máy → tên (đảo bảng machines)
-    function nameByMachine(code) { const e = Object.entries(db.machines).find(([n, c]) => c && c.toUpperCase() === code.toUpperCase()); return e ? e[0] : null; }
-    // người đang MỞ 1 phần mềm (theo tick server): trả về danh sách tên (hoặc mã máy nếu chưa map)
-    function openUsers(sw) {
-      const out = [];
-      Object.entries(db.open).forEach(([code, f]) => { if (f && f[sw]) { const nm = nameByMachine(code); out.push(nm || ('máy ' + code)); } });
-      return out;
-    }
-    function renderRecon() {
-      const box = document.getElementById('reconBox'); box.innerHTML = '';
-      const namesBox = document.getElementById('reconNames'); namesBox.innerHTML = '';
-      let anyOpen = Object.values(db.open).some(f => f && (f.ETABS || f.SAFE));
-      ["ETABS", "SAFE"].forEach(sw => {
-        const reg = registeredUsers(sw), cap = capOf(sw);
-        const open = openUsers(sw);
-        const row = document.createElement('div'); row.className = 'recon-row';
-        // ai đang mở mà KHÔNG có trong đăng ký
-        const notReg = open.filter(u => !reg.includes(u));
-        let flag;
-        if (!anyOpen) { flag = `<span class="recon-flag under">Chưa cập nhật máy đang mở</span>`; }
-        else if (notReg.length) { flag = `<span class="recon-flag bad">⚠ ${notReg.length} người dùng ${sw} chưa đăng ký</span>`; }
-        else { flag = `<span class="recon-flag ok">✓ Khớp</span>`; }
-        row.innerHTML = `<div class="lbl"><span class="pill ${sw.toLowerCase()}">${sw}</span></div>
-      <div class="val">Đang mở (server)<br><b>${open.length}</b> / ${cap}</div>
-      <div class="val">Đã đăng ký trên app<br><b>${reg.length}</b> / ${cap}</div>
-      <div class="val">${flag}</div>`;
-        box.append(row);
-        // liệt kê tên vi phạm
-        if (notReg.length) {
-          namesBox.insertAdjacentHTML('beforeend',
-            `<div class="warn-name">🔴 <b>${sw}</b> — dùng nhưng CHƯA đăng ký: ${notReg.join(', ')}. Vui lòng yêu cầu đăng ký hoặc đóng phần mềm.</div>`);
-        }
-      });
-      if (anyOpen) {
-        const totalViol = ["ETABS", "SAFE"].reduce((a, sw) => a + openUsers(sw).filter(u => !registeredUsers(sw).includes(u)).length, 0);
-        if (totalViol === 0) namesBox.insertAdjacentHTML('beforeend', '<div class="ok-name">✓ Tất cả người đang mở license đều đã đăng ký.</div>');
-      }
-    }
 
     function renderWkToday() {
       const box = document.getElementById('wkToday'); if (!box) return;
@@ -1902,7 +1761,7 @@
     function renderDashItemsSummary() {
       const specs = [
         { kind: 'backlog', box: document.getElementById('dashBacklogSummary'), label: '🛠️ Backlog cải tiến', tab: 'backlog', word: 'việc' },
-        { kind: 'training', box: document.getElementById('dashTrainingSummary'), label: '📚 Đào tạo', tab: 'training', word: 'chủ đề' }
+        { kind: 'training', box: document.getElementById('dashTrainingSummary'), label: '📚 Đào tạo', tab: 'backlog', word: 'chủ đề' }
       ];
       specs.forEach(s => {
         if (!s.box) return;
@@ -1929,7 +1788,8 @@
     function renderDash() {
       renderWkToday();
       renderDashItemsSummary();
-      renderRecon();
+      const addCard = document.getElementById('adminAddUserCard');
+      if (addCard) addCard.style.display = isAdmin() ? '' : 'none';
       const ge = document.getElementById('gridEtabs'), gs = document.getElementById('gridSafe');
       ge.innerHTML = ''; gs.innerHTML = '';
       LICENSES.forEach(l => (l.sw === 'ETABS' ? ge : gs).append(licCard(l)));
@@ -2180,21 +2040,9 @@
           db.wkActivated.push(w.id); changed = true;
           toast('📅 ' + w.user + ' được đẩy vào ' + lic.id + ' theo lịch tuần (' + day + ' ' + sess + ').');
         } else {
-          // HẾT license trống -> không đuổi ai, ghi báo cáo + lịch sử
-          const holders = LICENSES.filter(l => l.sw === w.sw && db.state[l.id]).map(l => db.state[l.id].user);
-          db.reports.unshift({
-            id: Date.now() + Math.random(), code: '—',
-            name: holders.join(', ') || '(không rõ)',
-            sws: w.sw,
-            reporter: 'HỆ THỐNG (lịch tuần)',
-            at: new Date().toLocaleString('vi-VN'),
-            done: false,
-            detail: w.user + ' có lịch ' + day + ' ' + sess + ' nhưng hết license ' + w.sw + ' — người đang giữ chưa nhả key.'
-          });
-          if (!Array.isArray(db.wkBlockedLog)) db.wkBlockedLog = [];
-          db.wkBlockedLog.push({ at: Date.now(), user: w.user, sw: w.sw, day, sess, holders: holders.slice() });
+          // HẾT license trống -> không đuổi ai, chỉ báo cho người đang mở trang biết
           db.wkActivated.push(w.id); changed = true;
-          toast('⚠ ' + w.user + ' có lịch ' + w.sw + ' nhưng hết license — đã ghi báo cáo.');
+          toast('⚠ ' + w.user + ' có lịch ' + w.sw + ' nhưng hết license — người đang giữ chưa nhả key.');
         }
       });
       if (changed) save();
@@ -2424,194 +2272,24 @@
       if (confirm('Xóa toàn bộ dữ liệu thử trên máy này?')) { db = fresh(); save(); renderAll(); toast('Đã xóa.'); }
     };
 
-    /* ---------- tab Máy: bảng map người ↔ mã máy (có khóa) ---------- */
-    function renderMachines() {
-      // trạng thái khóa
-      const badge = document.getElementById('lockBadge');
-      const btn = document.getElementById('lockBtn');
-      if (badge && btn) {
-        if (db.machLocked) {
-          badge.className = 'lock-badge on'; badge.textContent = '🔒 Đang khóa';
-          btn.textContent = 'Mở khóa để sửa';
-        } else {
-          badge.className = 'lock-badge off'; badge.textContent = '🔓 Đang mở khóa — có thể sửa';
-          btn.textContent = 'Khóa lại';
-        }
-        btn.onclick = () => {
-          if (db.machLocked) {
-            if (confirm('Mở khóa bảng mã máy để chỉnh sửa?')) { db.machLocked = false; save(); renderMachines(); toast('Đã mở khóa bảng mã máy.'); }
-          } else {
-            db.machLocked = true; save(); renderMachines(); toast('Đã khóa bảng mã máy.');
-          }
-        };
-      }
-      const b = document.getElementById('machBody'); b.innerHTML = '';
-      allEmployees().forEach(n => {
-        const isExtra = !EMPLOYEES.includes(n);
-        const tr = document.createElement('tr');
-        tr.innerHTML = `<td><b>${n}</b>${isExtra ? ' <span class="pill pri-cool">mới</span>' : ''}</td><td></td>`;
-        const inp = document.createElement('input');
-        inp.value = db.machines[n] || ''; inp.placeholder = 'VD VNRHD054';
-        if (db.machLocked) { inp.readOnly = true; inp.style.background = '#efede7'; inp.style.color = '#6b6f76'; inp.title = 'Bảng đang khóa — bấm "Mở khóa để sửa"'; }
-        inp.onchange = e => {
-          if (db.machLocked) { e.target.value = db.machines[n] || ''; return; } // chặn sửa khi khóa
-          db.machines[n] = e.target.value.trim().toUpperCase(); save(); renderRecon();
-          toast('Đã lưu mã máy cho ' + n);
-        };
-        tr.lastElementChild.append(inp);
-        if (isExtra && !db.machLocked) {
-          const del = document.createElement('button');
-          del.type = 'button'; del.className = 'btn ghost small'; del.textContent = 'Xóa'; del.style.marginLeft = '6px';
-          del.onclick = () => {
-            if (!confirm('Xóa người "' + n + '" khỏi danh sách?')) return;
-            db.employees = (db.employees || []).filter(x => x !== n);
-            delete db.machines[n];
-            save(); populatePeopleSelects(); renderAll();
-            toast('Đã xóa ' + n + '.');
-          };
-          tr.lastElementChild.append(del);
-        }
-        b.append(tr);
-      });
-      const addRow = document.getElementById('addPersonRow');
-      if (addRow) addRow.style.display = db.machLocked ? 'none' : 'flex';
-    }
+    /* ---------- thêm người dùng mới (chỉ admin) ---------- */
     document.getElementById('addPersonBtn').onclick = () => {
-      if (db.machLocked) { toast('Hãy mở khóa bảng mã máy trước (nút "Mở khóa để sửa").'); return; }
+      if (!isAdmin()) { toast('Chỉ admin mới thêm được người dùng.'); return; }
       const nameInp = document.getElementById('newPersonName');
-      const codeInp = document.getElementById('newPersonCode');
       const name = nameInp.value.trim().toUpperCase();
-      const code = codeInp.value.trim().toUpperCase();
-      if (!name || !code) { toast('Nhập đủ Họ tên và Mã máy.'); return; }
+      if (!name) { toast('Nhập họ tên.'); return; }
       if (allEmployees().includes(name)) { toast('Người này đã có trong danh sách.'); return; }
-      const already = nameOfCode(code);
-      if (already) { toast('Mã máy ' + code + ' đã gán cho ' + already + '.'); return; }
+      const username = usernameOf(name);
+      if (nameOfUsername(username)) { toast('Trùng tên đăng nhập "' + username + '" với người đã có — đổi cách nhập tên khác.'); return; }
       if (!db.employees) db.employees = [];
       db.employees.push(name);
-      db.machines[name] = code;
       if (!db.pw) db.pw = {};
-      db.pw[code] = '123456';
+      db.pw[username] = '123456';
       save();
-      nameInp.value = ''; codeInp.value = '';
+      nameInp.value = '';
       populatePeopleSelects();
       renderAll();
-      toast('Đã thêm ' + name + ' — mã máy ' + code + ', mật khẩu mặc định 123456.');
-    };
-
-    /* ---------- tra cứu mã máy → tên + báo vi phạm ---------- */
-    // người đang mở phần mềm gì (theo tick server) cho 1 mã máy
-    function openSwOfMachine(code) { const f = db.open[code]; if (!f) return []; return ['ETABS', 'SAFE'].filter(sw => f[sw]); }
-    document.getElementById('lookupBtn').onclick = doLookup;
-    document.getElementById('lookupCode').addEventListener('keydown', e => { if (e.key === 'Enter') doLookup(); });
-    function doLookup() {
-      const code = document.getElementById('lookupCode').value.trim().toUpperCase();
-      const box = document.getElementById('lookupResult'); box.innerHTML = '';
-      if (!code) return;
-      const name = nameByMachine(code);
-      if (!name) {
-        box.innerHTML = `<div class="lookup-card notfound">Mã máy <b>${code}</b> chưa gán cho ai.<br>
-      <span class="sub">Kiểm tra lại mã, hoặc thêm vào bảng bên dưới.</span></div>`;
-        return;
-      }
-      // người này đang mở gì (nếu admin đã tick) và có đăng ký không
-      const opening = openSwOfMachine(code);
-      const regSw = LICENSES.filter(l => db.state[l.id] && db.state[l.id].user === name).map(l => db.state[l.id].sw);
-      let stLines = '';
-      if (opening.length) {
-        opening.forEach(sw => {
-          const ok = regSw.includes(sw);
-          stLines += `<div class="st ${ok ? 'reg' : 'notreg'}">${ok ? '✓' : '⚠'} Đang mở <b>${sw}</b> — ${ok ? 'đã đăng ký (đúng quyền)' : 'CHƯA đăng ký (sai quyền)'}</div>`;
-        });
-      } else {
-        stLines = `<div class="st">Hiện chưa ghi nhận máy này đang mở license (admin chưa tick).</div>`;
-      }
-      const card = document.createElement('div');
-      card.className = 'lookup-card found';
-      card.innerHTML = `<div class="sub">Mã máy ${code} là của:</div><div class="nm">👤 ${name}</div>${stLines}`;
-      // nút báo admin nếu có mở mà chưa đăng ký
-      const violating = opening.filter(sw => !regSw.includes(sw));
-      if (violating.length) {
-        const btn = document.createElement('button'); btn.className = 'btn warn small'; btn.style.marginTop = '10px';
-        btn.textContent = 'Báo admin vi phạm';
-        btn.onclick = () => reportViolation(code, name, violating);
-        card.append(btn);
-      }
-      box.append(card);
-    }
-    function reportViolation(code, name, sws) {
-      const reporter = prompt('Bạn là ai? (để admin biết ai báo)', '') || '(ẩn danh)';
-      db.reports.unshift({
-        id: Date.now(), code, name, sws: sws.join(', '), reporter: reporter.trim() || '(ẩn danh)',
-        at: new Date().toLocaleString('vi-VN'), done: false
-      });
-      save(); renderReports();
-      toast('Đã gửi báo cáo vi phạm tới admin: ' + name + ' (' + sws.join(', ') + ')');
-    }
-    function renderReports() {
-      const b = document.getElementById('repBody'); b.innerHTML = '';
-      const badge = document.getElementById('repBadge');
-      const pending = db.reports.filter(r => !r.done).length;
-      if (pending) { badge.style.display = ''; badge.textContent = pending; } else badge.style.display = 'none';
-      if (!db.reports.length) { b.innerHTML = '<tr><td colspan="6" class="empty">Chưa có báo cáo vi phạm.</td></tr>'; return; }
-      db.reports.forEach(r => {
-        const tr = document.createElement('tr');
-        if (r.done) tr.style.opacity = '.5';
-        tr.innerHTML = `<td>${r.at}</td><td>${r.code}</td><td><b>${r.name}</b> (${r.sws})${r.detail ? '<br><small style="color:#8c1d13">' + r.detail + '</small>' : ''}</td>
-      <td>${r.reporter}</td><td>${r.done ? '✓ Đã xử lý' : '⏳ Chờ admin'}</td><td></td>`;
-        const cell = tr.lastElementChild;
-        if (!r.done) {
-          const b1 = document.createElement('button'); b1.className = 'btn ghost small'; b1.textContent = 'Đánh dấu đã xử lý';
-          b1.onclick = () => { r.done = true; save(); renderReports(); toast('Đã đánh dấu xử lý.'); }; cell.append(b1);
-        }
-        else {
-          const b2 = document.createElement('button'); b2.className = 'btn ghost small'; b2.textContent = 'Xóa';
-          b2.onclick = () => { db.reports = db.reports.filter(x => x.id !== r.id); save(); renderReports(); }; cell.append(b2);
-        }
-        b.append(tr);
-      });
-    }
-
-    /* ---------- modal: tick máy đang mở ---------- */
-    const bg = document.getElementById('checkinBg');
-    document.getElementById('openCheckin').onclick = () => { renderCheckin(); bg.classList.add('show'); };
-    document.getElementById('closeCheckin').onclick = () => bg.classList.remove('show');
-    bg.onclick = e => { if (e.target === bg) bg.classList.remove('show'); };
-    function renderCheckin() {
-      const list = document.getElementById('checkinList'); list.innerHTML = '';
-      // header
-      list.insertAdjacentHTML('beforeend',
-        `<div class="checkin-row"><div>Người / Mã máy</div><div style="text-align:center">ETABS</div><div style="text-align:center">SAFE</div></div>`);
-      const mapped = EMPLOYEES.filter(n => db.machines[n]);
-      if (!mapped.length) {
-        list.insertAdjacentHTML('beforeend',
-          '<div class="empty">Chưa có ai được gán mã máy. Vào tab "Máy" để điền trước.</div>'); return;
-      }
-      mapped.forEach(n => {
-        const code = db.machines[n]; const cur = db.open[code] || { ETABS: false, SAFE: false };
-        const row = document.createElement('div'); row.className = 'checkin-row';
-        row.innerHTML = `<div class="who"><b>${n}</b><small>${code}</small></div>`;
-        ['ETABS', 'SAFE'].forEach(sw => {
-          const cell = document.createElement('label');
-          const cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = !!cur[sw];
-          cb.onchange = () => {
-            if (!db.open[code]) db.open[code] = { ETABS: false, SAFE: false };
-            db.open[code][sw] = cb.checked;
-          };
-          cell.append(cb); row.append(cell);
-        });
-        list.append(row);
-      });
-    }
-    document.getElementById('applyCheckin').onclick = () => {
-      save(); bg.classList.remove('show'); renderDash();
-      // đếm vi phạm để báo
-      let viol = [];
-      ['ETABS', 'SAFE'].forEach(sw => {
-        const reg = registeredUsers(sw);
-        openUsers(sw).forEach(u => { if (!reg.includes(u)) viol.push(u + ' (' + sw + ')'); });
-      });
-      if (viol.length) toast('⚠ Có ' + viol.length + ' người dùng chưa đăng ký: ' + viol.join(', '));
-      else toast('Đã cập nhật máy đang mở — tất cả đều khớp.');
+      toast('Đã thêm ' + name + ' — tên đăng nhập "' + username + '", mật khẩu mặc định 123456.');
     };
 
     /* ================== LỊCH TUẦN (đăng ký trước, ưu tiên) ================== */
@@ -2697,24 +2375,29 @@
     }
 
     /* ================== BACKLOG CẢI TIẾN & NHU CẦU ĐÀO TẠO ================== */
-    const ITEM_COLS = [{ key: 'todo', icon: '📌', name: 'Đã ghi nhận', cls: 'st-todo' },
-    { key: 'idea', icon: '💡', name: 'Đang làm', cls: 'st-idea' },
-    { key: 'done', icon: '🏆', name: 'Đã xong', cls: 'st-done' }];
+    const ITEM_COLS = [{ key: 'todo', icon: '📌', name: 'Đã ghi nhận (Identified)', cls: 'st-todo' },
+    { key: 'idea', icon: '💡', name: 'Đang làm (In progress)', cls: 'st-idea' },
+    { key: 'done', icon: '🏆', name: 'Đã xong (Done)', cls: 'st-done' }];
     const ITEM_LABELS = {
       backlog: {
-        title: 'Việc / vấn đề', status: 'Hiện trạng', idea: 'Ý tưởng / giải pháp',
+        title: 'Việc / vấn đề (Task/issue)', status: 'Hiện trạng (Current state)', idea: 'Ý tưởng / giải pháp (Idea/solution)',
         titleHint: 'VD: Nhập số liệu quan trắc từ ảnh chụp vào Excel',
         statusHint: 'VD: Mỗi thứ 2 mất ~2h gõ tay từ ảnh chụp máy đo',
         ideaHint: 'VD: Thử OCR số liệu tự động, chưa test'
       },
       training: {
-        title: 'Chủ đề / vấn đề', status: 'Hiện trạng', idea: 'Kế hoạch đào tạo',
+        title: 'Chủ đề / vấn đề (Topic/issue)', status: 'Hiện trạng (Current state)', idea: 'Kế hoạch đào tạo (Training plan)',
         titleHint: 'VD: Nhiều bạn chưa biết dùng Pivot Table',
         statusHint: 'VD: Hay tổng hợp số liệu thủ công, dễ sai',
         ideaHint: 'VD: Xếp lịch buổi training 1h, người dạy, tài liệu kèm theo'
       }
     };
     const ITEM_TAB = { backlog: 'all', training: 'all' };
+    const ITEM_PRI_FILTER = { backlog: 'all', training: 'all' };
+    ['backlog', 'training'].forEach(kind => {
+      const sel = document.getElementById(kind + '-priority-select');
+      if (sel) sel.addEventListener('change', e => { ITEM_PRI_FILTER[kind] = e.target.value; renderItemBody(kind); });
+    });
 
     function fillPersonSelect(sel, withEmpty) {
       const keep = withEmpty ? '<option value="">— Chưa có —</option>' : '';
@@ -2751,61 +2434,57 @@
 
     function renderItemTabs(kind) {
       const box = document.getElementById(kind + '-tabs'); box.innerHTML = '';
-      const list = db[kind] || [];
-      const defs = [{ key: 'all', icon: '', name: 'Tất cả' }].concat(ITEM_COLS);
+      const list = (db[kind] || []).filter(it => ITEM_PRI_FILTER[kind] === 'all' || it.priority === ITEM_PRI_FILTER[kind]);
+      const defs = [{ key: 'all', icon: '', name: 'Tất cả (All)' }].concat(ITEM_COLS);
       defs.forEach(d => {
         const n = d.key === 'all' ? list.length : list.filter(x => x.column === d.key).length;
-        const b = document.createElement('button'); b.type = 'button'; b.className = 'btn ghost small';
-        if (ITEM_TAB[kind] === d.key) { b.classList.remove('ghost'); b.classList.add('primary'); }
-        b.textContent = (d.icon ? d.icon + ' ' : '') + d.name + ' (' + n + ')';
+        const b = document.createElement('button'); b.type = 'button'; b.className = 'item-tab';
+        if (ITEM_TAB[kind] === d.key) b.classList.add('active');
+        b.textContent = (d.icon ? d.icon + ' ' : '') + d.name + ' ' + n;
         b.onclick = () => { ITEM_TAB[kind] = d.key; renderItemTabs(kind); renderItemBody(kind); };
         box.append(b);
       });
     }
     function renderItemBody(kind) {
       const box = document.getElementById(kind + '-body'); box.innerHTML = '';
-      const filter = ITEM_TAB[kind];
-      const items = (db[kind] || []).filter(it => filter === 'all' || it.column === filter);
-      if (!items.length) { box.innerHTML = '<div class="empty">Chưa có mục nào.</div>'; return; }
+      const tabFilter = ITEM_TAB[kind], priFilter = ITEM_PRI_FILTER[kind];
+      const items = (db[kind] || []).filter(it =>
+        (tabFilter === 'all' || it.column === tabFilter) && (priFilter === 'all' || it.priority === priFilter));
+      if (!items.length) { box.innerHTML = '<tr><td colspan="10" class="empty">Chưa có mục nào.</td></tr>'; return; }
       items.forEach(it => {
         const col = ITEM_COLS.find(c => c.key === it.column) || ITEM_COLS[0];
-        const pri = it.priority === 'high' ? 'pri-hot' : (it.priority === 'low' ? 'pri-cool' : 'pri-warm');
-        let linkRow = '';
+        const priClass = it.priority === 'high' ? 'pri-hot' : (it.priority === 'low' ? 'pri-cool' : 'pri-warm');
+        let linkCell = '—';
         if (it.link && it.link.trim()) {
           const safe = esc(it.link);
-          const linkHtml = /^https?:\/\//i.test(it.link.trim())
+          linkCell = /^https?:\/\//i.test(it.link.trim())
             ? `<a href="${safe}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">${safe}</a>`
             : safe;
-          linkRow = `<div class="row">🔗 ${linkHtml}</div>`;
         }
-        const card = document.createElement('div');
-        card.className = 'item-card';
-        card.innerHTML = `
-      <div class="top">
-        <span class="pill ${col.cls}">${col.icon} ${col.name}</span>
-        <span class="pill ${pri}">${ITEM_PRI_LABEL[it.priority] || 'Vừa'}</span>
-      </div>
-      <div class="title">${esc(it.title || '')}</div>
-      <div class="row"><b>Hiện trạng:</b> ${esc(it.status || '—')}</div>
-      <div class="row"><b>Ý tưởng/kế hoạch:</b> ${esc(it.idea || '—')}</div>
-      <div class="row">👤 Đề xuất: <b>${esc(it.proposer || '—')}</b> · Phụ trách: <b>${esc(it.owner || '—')}</b></div>
-      <div class="row">Hỗ trợ: ${esc(it.support || '—')} · Người soát: ${esc(it.reviewer || '—')}</div>
-      ${linkRow}
-      <div class="meta">
-        <span>Cập nhật: ${it.updatedAt ? nowStr(new Date(it.updatedAt).getTime()) : '—'} bởi ${esc(it.updatedBy || '')}</span>
-      </div>`;
-        card.onclick = () => openItemModal(kind, it.id);
-        box.append(card);
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+        <td>${esc(it.proposer || '')}</td>
+        <td class="item-cell-ellipsis" title="${esc(it.title || '')}">${esc(it.title || '')}</td>
+        <td class="item-cell-ellipsis" title="${esc(it.status || '')}">${esc(it.status || '—')}</td>
+        <td class="item-cell-ellipsis item-cell-muted" title="${esc(it.idea || '')}">${esc(it.idea || '—')}</td>
+        <td>${esc(it.owner || '—')}</td>
+        <td class="item-cell-muted">${esc(it.support || '—')}</td>
+        <td class="item-cell-muted">${esc(it.reviewer || '—')}</td>
+        <td><span class="pill ${col.cls}">${col.icon} ${col.name}</span> <span class="pill ${priClass}" title="Ưu tiên: ${ITEM_PRI_LABEL[it.priority] || 'Vừa'}">${ITEM_PRI_LABEL[it.priority] || 'Vừa'}</span></td>
+        <td class="item-cell-ellipsis">${linkCell}</td>
+        <td class="item-cell-mono">${it.updatedAt ? nowStr(new Date(it.updatedAt).getTime()) : '—'}<br><small>${esc(it.updatedBy || '')}</small></td>`;
+        tr.onclick = () => openItemModal(kind, it.id);
+        box.append(tr);
       });
     }
-    const ITEM_PRI_LABEL = { high: 'Cao', mid: 'Vừa', low: 'Thấp' };
+    const ITEM_PRI_LABEL = { high: 'Cao (High)', mid: 'Vừa (Medium)', low: 'Thấp (Low)' };
 
     function openItemModal(kind, id) {
       if (!ME) { toast('Vui lòng đăng nhập trước.'); return; }
       itemKind = kind; itemEditingId = id || null;
       const it = id ? (db[kind] || []).find(x => x.id === id) : null;
       const L = ITEM_LABELS[kind];
-      document.getElementById('itemTitle').textContent = it ? 'Sửa mục' : (kind === 'backlog' ? 'Thêm việc' : 'Thêm chủ đề');
+      document.getElementById('itemTitle').textContent = it ? 'Sửa mục (Edit)' : (kind === 'backlog' ? 'Thêm việc (Add task)' : 'Thêm chủ đề (Add topic)');
       document.getElementById('itemTitleLbl').textContent = L.title;
       document.getElementById('itemStatusLbl').textContent = L.status;
       document.getElementById('itemIdeaLbl').textContent = L.idea;
@@ -2845,6 +2524,38 @@
     document.getElementById('training-btn-add').onclick = () => openItemModal('training', null);
     document.getElementById('itemClose').onclick = () => document.getElementById('itemBg').classList.remove('show');
     document.getElementById('itemBg').onclick = e => { if (e.target === document.getElementById('itemBg')) document.getElementById('itemBg').classList.remove('show'); };
+
+    ['backlog', 'training'].forEach(kind => {
+      document.getElementById(kind + '-btn-export').onclick = () => {
+        const payload = JSON.stringify(db[kind] || [], null, 2);
+        const filename = kind + '-' + new Date().toISOString().slice(0, 10) + '.json';
+        const blob = new Blob([payload], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url; a.download = filename; a.click();
+        URL.revokeObjectURL(url);
+      };
+      const importInput = document.getElementById(kind + '-import-input');
+      document.getElementById(kind + '-btn-import').onclick = () => importInput.click();
+      importInput.addEventListener('change', () => {
+        const file = importInput.files && importInput.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          try {
+            const incoming = JSON.parse(reader.result);
+            if (!Array.isArray(incoming)) throw new Error('bad shape');
+            const list = db[kind] || (db[kind] = []);
+            const byId = {}; list.forEach(x => { if (x && x.id) byId[x.id] = x; });
+            incoming.forEach(x => { if (x && x.id) byId[x.id] = x; });
+            db[kind] = Object.values(byId);
+            save(); renderAll();
+            toast('Đã nạp/ghép ' + incoming.length + ' mục từ file.');
+          } catch (e) { alert('File này không phải JSON export hợp lệ cho bảng ' + kind + '.'); }
+        };
+        reader.readAsText(file);
+        importInput.value = '';
+      });
+    });
 
     document.getElementById('itemSave').onclick = () => {
       if (!ME) return;
@@ -2887,22 +2598,21 @@
     function renderTraining() { renderItemTabs('training'); renderItemBody('training'); }
 
     function renderAll() {
-      [renderDash, renderQueue, renderReport, renderMachines, renderReports, renderWeek, renderBacklog, renderTraining].forEach(fn => {
+      [renderDash, renderQueue, renderReport, renderWeek, renderBacklog, renderTraining].forEach(fn => {
         try { fn(); } catch (e) { console.error(fn.name, e); }
       });
     }
 
-    /* ================== ĐĂNG NHẬP THEO MÃ MÁY + MẬT KHẨU ================== */
-    let ME = null;            // {code, name}
-    const ADMIN_CODE = "VNRHD079";        // máy admin
-    const ADMIN_NAMES = ["VÕ HỒNG HƯNG", "NGUYỄN PHI GIA"]; // admin theo tên (Backlog/Training), không phụ thuộc mã máy
-    function isAdmin() { return !!ME && (ME.code === ADMIN_CODE || ADMIN_NAMES.indexOf(ME.name) !== -1); }
+    /* ================== ĐĂNG NHẬP THEO TÊN ĐĂNG NHẬP (USERNAME) + MẬT KHẨU ================== */
+    let ME = null;            // {username, name}
+    const ADMIN_NAMES = ["VÕ HỒNG HƯNG", "NGUYỄN PHI GIA"]; // admin theo tên, không phụ thuộc username
+    function isAdmin() { return !!ME && ADMIN_NAMES.indexOf(ME.name) !== -1; }
     // có quyền thao tác lên phiên/mục của "owner" không? (chính chủ hoặc admin)
     function canManage(owner) { return ME && (ME.name === owner || isAdmin()); }
     const LS_ME = "licmgr_me";
-    function nameOfCode(code) {
-      const e = Object.entries(db.machines).find(([n, c]) => c && c.toUpperCase() === code.toUpperCase());
-      return e ? e[0] : null;
+    function nameOfUsername(username) {
+      const n = allEmployees().find(name => usernameOf(name) === username);
+      return n || null;
     }
     function applyIdentity() {
       // khóa các dropdown chọn tên = người đăng nhập
@@ -2910,21 +2620,21 @@
         if (rgName) { rgName.value = ME.name; rgName.disabled = true; }
         if (wkName) { wkName.value = ME.name; wkName.disabled = true; }
         document.getElementById('meBox').style.display = '';
-        document.getElementById('meBox').innerHTML = '👤 <b>' + ME.name + '</b> · ' + ME.code;
+        document.getElementById('meBox').innerHTML = '👤 <b>' + ME.name + '</b> · @' + ME.username;
         document.getElementById('pwBtn').style.display = '';
         document.getElementById('logoutBtn').style.display = '';
       }
     }
-    function doLogin(code, pw, silent) {
-      code = (code || '').trim().toUpperCase();
-      const name = nameOfCode(code);
+    function doLogin(username, pw, silent) {
+      username = (username || '').trim().toLowerCase();
+      const name = nameOfUsername(username);
       const msg = document.getElementById('lgMsg');
       const showErr = t => { if (msg) { msg.style.display = ''; msg.textContent = t; } };
-      if (!name) { showErr('Mã máy không có trong danh sách.'); return false; }
-      const real = (db.pw && db.pw[code] !== undefined) ? db.pw[code] : '123456';
+      if (!name) { showErr('Tên đăng nhập không có trong danh sách.'); return false; }
+      const real = (db.pw && db.pw[username] !== undefined) ? db.pw[username] : '123456';
       if (String(pw) !== String(real)) { showErr('Sai mật khẩu. Mặc định là 123456.'); return false; }
-      ME = { code, name };
-      try { localStorage.setItem(LS_ME, code); } catch (e) { }
+      ME = { username, name };
+      try { localStorage.setItem(LS_ME, username); } catch (e) { }
       document.getElementById('loginBg').style.display = 'none';
       applyIdentity();
       renderAll();                                 // vẽ lại để nút theo đúng quyền
@@ -2946,20 +2656,20 @@
     document.getElementById('pwBtn').onclick = () => {
       if (!ME) return;
       const cur = prompt('Nhập mật khẩu hiện tại:', ''); if (cur === null) return;
-      const real = (db.pw && db.pw[ME.code] !== undefined) ? db.pw[ME.code] : '123456';
+      const real = (db.pw && db.pw[ME.username] !== undefined) ? db.pw[ME.username] : '123456';
       if (String(cur) !== String(real)) { toast('Sai mật khẩu hiện tại.'); return; }
       const nw = prompt('Nhập mật khẩu MỚI (ít nhất 4 ký tự):', ''); if (nw === null) return;
       if (nw.trim().length < 4) { toast('Mật khẩu quá ngắn.'); return; }
-      if (!db.pw) db.pw = {}; db.pw[ME.code] = nw.trim(); save();
-      toast('Đã đổi mật khẩu cho máy ' + ME.code + '.');
+      if (!db.pw) db.pw = {}; db.pw[ME.username] = nw.trim(); save();
+      toast('Đã đổi mật khẩu cho @' + ME.username + '.');
     };
 
-    // tự động đăng nhập nếu máy này đã lưu mã (?may=... hoặc localStorage), vẫn hỏi mật khẩu
+    // tự động điền tên đăng nhập nếu máy này đã lưu (?user=... hoặc localStorage), vẫn hỏi mật khẩu
     function autoFillCode() {
-      const u = new URLSearchParams(location.search).get('may');
-      let code = u || null;
-      if (!code) { try { code = localStorage.getItem(LS_ME); } catch (e) { } }
-      if (code) { document.getElementById('lgCode').value = code.toUpperCase(); document.getElementById('lgPw').focus(); }
+      const u = new URLSearchParams(location.search).get('user');
+      let username = u || null;
+      if (!username) { try { username = localStorage.getItem(LS_ME); } catch (e) { } }
+      if (username) { document.getElementById('lgCode').value = username.toLowerCase(); document.getElementById('lgPw').focus(); }
     }
 
     // ---- khởi động: nạp dữ liệu chung từ máy chủ, rồi hiển thị ----
