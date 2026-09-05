@@ -3,37 +3,57 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Quản lý License · ETABS &amp; SAFE</title>
+<title>Trao đổi &amp; Học Tập</title>
 <style>
   :root{
-    --ink:#0f1e2b; --ink2:#42606f; --line:#dde5ec; --bg:#eef2f6; --card:#fff;
-    --etabs:#1f6feb; --etabs-bg:#e8f1ff; --safe:#12855a; --safe-bg:#e3f5ec;
-    --green:#18a058; --green-bg:#e6f7ee; --gray:#9fb1bd;
-    --warn:#c0392b; --amber:#b7791f; --amber-bg:#fdf3e2;
-    --shadow:0 1px 3px rgba(15,30,43,.08),0 8px 24px rgba(15,30,43,.06);
+    /* main palette — sampled straight from the Rankine&Hill Vietnam logo (rankine-hill.com):
+       brand orange #FF5100 + brand slate #4D5858. Orange is reserved for accents/primary
+       actions/brand highlights; slate carries the header and body text for a calmer, more
+       professional read across a data-dense internal tool. */
+    --bg:#f3f5f5; --surface:#ffffff; --surface-2:#e9ecec; --border:#d7dcdc;
+    --text:#1d2425; --text-muted:#4d5858; --accent:#ff5100; --accent-ink:#ffffff; --accent-soft:#ffe4d6;
+    --col-todo:#b5541d; --col-todo-soft:#fbe9dc;
+    --col-idea:#0f7a72; --col-idea-soft:#dcf1ee;
+    --col-done:#1e7b4d; --col-done-soft:#dff1e5;
+    --pri-high:#c1391f; --pri-mid:#a3790a; --pri-low:#8a8f98;
+    --shadow:0 1px 2px rgba(20,26,27,.06),0 2px 10px rgba(20,26,27,.05);
+    --shadow-lift:0 4px 10px rgba(20,26,27,.08),0 14px 32px rgba(20,26,27,.10);
+    --text-rgb:29,36,37; --accent-rgb:255,81,0;
+    --r-sm:8px; --r-md:14px; --r-lg:20px; --r-pill:980px;
+    --ease:cubic-bezier(.4,0,.2,1);
+    /* aliases so the rest of this file's existing rules (written against these names) pick up the palette above */
+    --ink:var(--text); --ink2:var(--text-muted); --line:var(--border); --card:var(--surface);
+    --etabs:var(--accent); --etabs-bg:var(--accent-soft);
+    --safe:var(--col-idea); --safe-bg:var(--col-idea-soft);
+    --green:var(--col-done); --green-bg:var(--col-done-soft); --gray:var(--pri-low);
+    --warn:var(--pri-high); --amber:var(--pri-mid); --amber-bg:var(--col-todo-soft);
   }
   *{box-sizing:border-box}
-  body{margin:0;font-family:"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink);
-    -webkit-font-smoothing:antialiased;font-size:15px;line-height:1.45}
-  header{background:var(--ink);color:#fff;padding:14px 20px;display:flex;justify-content:space-between;
-    align-items:center;flex-wrap:wrap;gap:8px}
-  header h1{font-size:17px;margin:0;font-weight:600}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",Roboto,Arial,sans-serif;
+    background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;font-size:15px;line-height:1.45;
+    letter-spacing:-0.005em}
+  header{position:sticky;top:0;z-index:100;background:rgba(var(--text-rgb),.86);backdrop-filter:saturate(180%) blur(20px);
+    -webkit-backdrop-filter:saturate(180%) blur(20px);color:#fff;padding:14px 20px;display:flex;justify-content:space-between;
+    align-items:center;flex-wrap:wrap;gap:8px;border-bottom:1px solid rgba(255,255,255,.08)}
+  header h1{font-size:17px;margin:0;font-weight:600;letter-spacing:-0.01em}
   header .clock{font-size:13px;color:#9db4c4;font-variant-numeric:tabular-nums}
   .wrap{max-width:1080px;margin:0 auto;padding:16px 16px 60px}
   .tabs{display:flex;gap:4px;margin:14px 0 18px;border-bottom:1px solid var(--line);flex-wrap:wrap}
   .tab{padding:9px 15px;border:0;background:none;font-size:14px;font-weight:600;color:var(--ink2);
-    cursor:pointer;border-bottom:2px solid transparent}
-  .tab.active{color:var(--ink);border-bottom-color:var(--ink)}
+    cursor:pointer;border-bottom:2px solid transparent;transition:color .2s var(--ease),border-color .2s var(--ease)}
+  .tab:hover{color:var(--ink)}
+  .tab.active{color:var(--accent);border-bottom-color:var(--accent)}
   .tab .badge{background:var(--amber);color:#fff;border-radius:10px;font-size:11px;padding:1px 6px;margin-left:6px;font-weight:700}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:11px;box-shadow:var(--shadow);
-    padding:18px;margin-bottom:16px}
-  .card h2{margin:0 0 3px;font-size:16px}
+  .card{background:var(--card);border:1px solid rgba(var(--text-rgb),.06);border-radius:var(--r-lg);box-shadow:var(--shadow);
+    padding:20px;margin-bottom:16px}
+  .card h2{margin:0 0 3px;font-size:16px;letter-spacing:-0.01em}
   .sub{color:var(--ink2);font-size:13px;margin:0 0 14px}
   .grp-title{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;letter-spacing:.4px;
     text-transform:uppercase;color:var(--ink2);margin:6px 0 10px}
   .lic-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:11px;margin-bottom:18px}
-  .lic{border:1px solid var(--line);border-radius:10px;padding:13px 14px;position:relative;background:#fff;
-    border-left:4px solid var(--gray)}
+  .lic{border:1px solid rgba(var(--text-rgb),.06);border-radius:var(--r-md);padding:13px 14px;position:relative;background:#fff;
+    border-left:4px solid var(--gray);transition:box-shadow .25s var(--ease),transform .25s var(--ease)}
+  .lic:hover{box-shadow:var(--shadow-lift);transform:translateY(-2px)}
   .lic.busy{border-left-color:var(--green);background:#fbfefc}
   .lic.overdue{border-left-color:var(--warn);background:#fef7f5;animation:pulse 2s infinite}
   @keyframes pulse{0%,100%{box-shadow:var(--shadow)}50%{box-shadow:0 0 0 3px rgba(192,57,43,.18)}}
@@ -50,7 +70,7 @@
   .recon-row .lbl{font-size:12px;color:var(--ink2);font-weight:600;text-transform:uppercase}
   .recon-row .val{font-size:13px}
   .recon-row .val b{font-size:20px;font-variant-numeric:tabular-nums}
-  .recon-row input{width:70px;border:1px solid var(--line);border-radius:6px;padding:6px 8px;font-size:15px;text-align:center}
+  .recon-row input{width:70px;border:1px solid var(--line);border-radius:var(--r-sm);padding:6px 8px;font-size:15px;text-align:center}
   .recon-flag{font-size:12.5px;font-weight:700;padding:4px 10px;border-radius:20px;display:inline-block}
   .recon-flag.ok{background:var(--green-bg);color:var(--green)}
   .recon-flag.bad{background:#fdecea;color:var(--warn)}
@@ -61,28 +81,33 @@
     font-size:13.5px;color:#8c1d13;font-weight:600}
   .warn-name b{color:var(--warn)}
   .ok-name{background:var(--green-bg);border-radius:8px;padding:9px 13px;margin-top:8px;font-size:13px;color:var(--green);font-weight:600}
-  #machBody input{width:180px;border:1px solid var(--line);border-radius:6px;padding:6px 9px;font-size:14px;text-transform:uppercase}
-  .wk-today{background:#fff;border:1px solid var(--line);border-left:4px solid var(--etabs);border-radius:10px;
+  #machBody input{width:180px;border:1px solid var(--line);border-radius:var(--r-sm);padding:6px 9px;font-size:14px;text-transform:uppercase}
+  .wk-today{background:#fff;border:1px solid rgba(var(--text-rgb),.06);border-left:4px solid var(--etabs);border-radius:var(--r-md);
     padding:13px 15px;margin-bottom:16px;box-shadow:var(--shadow)}
   .wk-today h3{margin:0 0 8px;font-size:14px}
   .wk-chip{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;
     padding:5px 11px;border-radius:20px;margin:3px 5px 3px 0}
   .wk-chip.in{background:var(--green-bg);color:var(--green)}
   .wk-chip.wait{background:#fdecea;color:var(--warn)}
-  .wk-chip.hold{background:#eef3f7;color:var(--ink2)}
+  .wk-chip.hold{background:var(--surface-2);color:var(--ink2)}
   .lock-row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
   .lock-badge{font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px}
-  .lock-badge.on{background:#eef3f7;color:var(--ink2)}
+  .lock-badge.on{background:var(--surface-2);color:var(--ink2)}
   .lock-badge.off{background:var(--amber-bg);color:var(--amber)}
-  #loginBg{position:fixed;inset:0;background:linear-gradient(135deg,#0f1e2b,#1d3141);display:flex;
+  #loginBg{position:fixed;inset:0;background:linear-gradient(135deg,var(--text),var(--accent));display:flex;
     align-items:center;justify-content:center;padding:20px;z-index:500}
-  .login-card{background:#fff;border-radius:14px;padding:26px 24px;max-width:380px;width:100%;box-shadow:0 20px 60px rgba(0,0,0,.35)}
-  .login-card h2{margin:0 0 4px;font-size:20px}
+  .login-card{background:rgba(255,255,255,.92);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+    border:1px solid rgba(255,255,255,.4);border-radius:var(--r-lg);padding:28px 26px;max-width:380px;width:100%;
+    box-shadow:0 20px 60px rgba(0,0,0,.35)}
+  .login-card h2{margin:0 0 4px;font-size:22px;letter-spacing:-0.02em}
   #meBox b{color:#fff}
-  .modal-bg{position:fixed;inset:0;background:rgba(15,30,43,.5);display:none;align-items:flex-start;
-    justify-content:center;padding:40px 16px;z-index:200;overflow:auto}
-  .modal-bg.show{display:flex}
-  .modal{background:#fff;border-radius:12px;padding:20px;max-width:560px;width:100%;box-shadow:var(--shadow)}
+  .modal-bg{position:fixed;inset:0;background:rgba(var(--text-rgb),.45);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+    display:flex;align-items:flex-start;justify-content:center;padding:40px 16px;z-index:200;overflow:auto;
+    opacity:0;visibility:hidden;transition:opacity .25s var(--ease)}
+  .modal-bg.show{opacity:1;visibility:visible}
+  .modal{background:#fff;border-radius:var(--r-lg);padding:20px;max-width:560px;width:100%;box-shadow:var(--shadow-lift);
+    transform:scale(.96);transition:transform .25s var(--ease)}
+  .modal-bg.show .modal{transform:scale(1)}
   .modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
   .checkin-list{margin-top:8px}
   .checkin-row{display:grid;grid-template-columns:1fr 90px 90px;gap:8px;align-items:center;
@@ -92,7 +117,7 @@
   .checkin-row .who small{color:var(--ink2)}
   .checkin-row label{display:flex;align-items:center;justify-content:center;gap:5px;cursor:pointer;font-size:13px;font-weight:600}
   .checkin-row input[type=checkbox]{width:17px;height:17px;cursor:pointer}
-  .lookup-card{border:1px solid var(--line);border-radius:9px;padding:14px}
+  .lookup-card{border:1px solid rgba(var(--text-rgb),.06);border-radius:var(--r-md);padding:14px}
   .lookup-card.found{border-left:4px solid var(--green);background:#fbfefc}
   .lookup-card.notfound{border-left:4px solid var(--amber);background:#fffdf6}
   .lookup-card .nm{font-size:18px;font-weight:700;margin:2px 0}
@@ -112,9 +137,23 @@
   .pill.safe{background:var(--safe-bg);color:var(--safe)}
   .pill.sang{background:#fff3d6;color:#9a6b00}
   .pill.chieu{background:#e5e0ff;color:#4a34b8}
-  .pill.pri-hot{background:#fdecea;color:#c0392b}
-  .pill.pri-warm{background:#fdf3e2;color:#b7791f}
-  .pill.pri-cool{background:#eef3f7;color:#42606f}
+  .pill.pri-hot{background:#fdecea;color:var(--pri-high)}
+  .pill.pri-warm{background:var(--col-todo-soft);color:var(--pri-mid)}
+  .pill.pri-cool{background:var(--surface-2);color:var(--text-muted)}
+  .pill.st-todo{background:var(--col-todo-soft);color:var(--col-todo)}
+  .pill.st-idea{background:var(--col-idea-soft);color:var(--col-idea)}
+  .pill.st-done{background:var(--col-done-soft);color:var(--col-done)}
+  .item-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px}
+  .item-card{border:1px solid rgba(var(--text-rgb),.06);border-radius:var(--r-md);padding:13px 14px;background:#fff;
+    cursor:pointer;transition:box-shadow .25s var(--ease),transform .25s var(--ease)}
+  .item-card:hover{box-shadow:var(--shadow-lift);transform:translateY(-2px)}
+  .item-card .top{display:flex;justify-content:space-between;align-items:center;gap:6px;flex-wrap:wrap}
+  .item-card .title{font-weight:700;font-size:14px;margin-top:9px}
+  .item-card .row{margin-top:6px;font-size:12.5px;color:var(--ink2)}
+  .item-card .row b{color:var(--ink);font-weight:600}
+  .item-card .meta{margin-top:9px;padding-top:9px;border-top:1px solid var(--line);font-size:11.5px;color:var(--ink2);
+    display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
+  .item-card .meta a{color:var(--accent)}
   #weekTable th,#weekTable td{border:1px solid var(--line);text-align:center;padding:6px 8px;font-size:12px}
   #weekTable th.day{background:var(--ink);color:#fff}
   #weekTable th.sess{background:#f4f7fa}
@@ -122,20 +161,28 @@
   #weekTable td .who{font-size:11.5px;line-height:1.5;display:block}
   #weekTable td.has{background:#eaf3ff}
   #weekTable td .rm{cursor:pointer;color:var(--warn);font-weight:700;margin-left:3px}
-  .btn{border:0;border-radius:7px;padding:9px 16px;font-size:14px;font-weight:600;cursor:pointer}
-  .btn.primary{background:var(--ink);color:#fff}
+  .btn{border:0;border-radius:var(--r-pill);padding:9px 18px;font-size:14px;font-weight:600;cursor:pointer;
+    transition:filter .2s var(--ease),transform .1s var(--ease),box-shadow .2s var(--ease)}
+  .btn:hover:not(:disabled){filter:brightness(1.06)}
+  .btn:active:not(:disabled){transform:scale(.97)}
+  .btn.primary{background:var(--accent);color:var(--accent-ink);box-shadow:0 2px 8px rgba(var(--accent-rgb),.28)}
   .btn.green{background:var(--green);color:#fff}
   .btn.warn{background:var(--warn);color:#fff}
-  .btn.ghost{background:#eef3f7;color:var(--ink)}
-  .btn.small{padding:6px 12px;font-size:13px}
+  .btn.ghost{background:var(--surface-2);color:var(--ink);box-shadow:none}
+  .btn.small{padding:6px 14px;font-size:13px}
   .btn:disabled{opacity:.45;cursor:not-allowed}
+  .btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
   .field{display:flex;flex-direction:column;gap:4px;margin-bottom:13px}
   .field label{font-size:12px;font-weight:600;color:var(--ink2)}
-  .field select,.field input{border:1px solid var(--line);border-radius:7px;padding:9px 10px;font-size:14px;background:#fff}
+  .field select,.field input{border:1px solid var(--line);border-radius:var(--r-sm);padding:9px 10px;font-size:14px;background:#fff;
+    transition:border-color .2s var(--ease),box-shadow .2s var(--ease)}
+  .field select:focus-visible,.field input:focus-visible{outline:none;border-color:var(--accent);
+    box-shadow:0 0 0 3px rgba(var(--accent-rgb),.18)}
+  .field select:disabled,.field input:disabled{background:var(--surface-2);color:var(--ink2);cursor:not-allowed}
   .seg{display:flex;gap:8px}
-  .seg button{flex:1;border:1px solid var(--line);background:#fff;border-radius:8px;padding:10px;font-size:14px;
-    font-weight:600;cursor:pointer;color:var(--ink2)}
-  .seg button.on{border-color:var(--ink);background:var(--ink);color:#fff}
+  .seg button{flex:1;border:1px solid var(--line);background:#fff;border-radius:var(--r-sm);padding:10px;font-size:14px;
+    font-weight:600;cursor:pointer;color:var(--ink2);transition:background .2s var(--ease),color .2s var(--ease),border-color .2s var(--ease)}
+  .seg button.on{border-color:var(--accent);background:var(--accent);color:var(--accent-ink)}
   table{width:100%;border-collapse:collapse;font-size:13.5px}
   th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
   th{background:#f4f7fa;font-size:12px;text-transform:uppercase;letter-spacing:.4px;color:var(--ink2)}
@@ -143,13 +190,13 @@
   .queue-no{display:inline-flex;width:24px;height:24px;border-radius:50%;background:var(--amber);color:#fff;
     align-items:center;justify-content:center;font-weight:700;font-size:12px}
   .empty{text-align:center;color:var(--ink2);padding:24px;font-size:13.5px}
-  .bar{height:8px;background:#eef3f7;border-radius:5px;overflow:hidden;min-width:70px;display:inline-block;vertical-align:middle}
+  .bar{height:8px;background:var(--surface-2);border-radius:5px;overflow:hidden;min-width:70px;display:inline-block;vertical-align:middle}
   .bar>span{display:block;height:100%;background:var(--etabs)}
   .toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:var(--ink);color:#fff;
     padding:11px 18px;border-radius:8px;font-size:14px;box-shadow:var(--shadow);opacity:0;
     transition:opacity .25s,transform .25s;pointer-events:none;z-index:99;max-width:90vw;text-align:center}
   .toast.show{opacity:1;transform:translateX(-50%) translateY(-4px)}
-  .note{font-size:12.5px;color:var(--ink2);background:#eef3f7;border-radius:8px;padding:11px 13px;margin-bottom:14px}
+  .note{font-size:12.5px;color:var(--ink2);background:var(--surface-2);border-radius:8px;padding:11px 13px;margin-bottom:14px}
   .rules{font-size:13.5px;color:var(--ink);line-height:1.7}
   .rules li{margin-bottom:3px}
   .row2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
@@ -171,7 +218,7 @@
 </div>
 
 <header>
-  <h1>Quản lý License · ETABS &amp; SAFE</h1>
+  <h1>Trao đổi &amp; Học Tập</h1>
   <div style="display:flex;align-items:center;gap:12px">
     <span class="clock" id="clock"></span>
     <span id="meBox" style="display:none;font-size:13px;color:#cfe0ec"></span>
@@ -183,18 +230,24 @@
 <div class="wrap">
   <div class="tabs">
     <button class="tab active" data-tab="dash">Dashboard</button>
-    <button class="tab" data-tab="week">Lịch tuần</button>
-    <button class="tab" data-tab="reg">Đăng ký</button>
-    <button class="tab" data-tab="queue">Hàng chờ <span class="badge" id="qBadge" style="display:none">0</span></button>
+    <button class="tab" data-tab="reg">Đăng ký &amp; Lịch tuần <span class="badge" id="qBadge" style="display:none">0</span></button>
+    <button class="tab" data-tab="backlog">Optimization</button>
+    <button class="tab" data-tab="training">Đào tạo</button>
     <button class="tab" data-tab="report">Báo cáo</button>
-    <button class="tab" data-tab="machines">Máy</button>
-    <button class="tab" data-tab="rules">Quy định</button>
+    <button class="tab" data-tab="machines">Thiết bị</button>
   </div>
 
   <!-- DASHBOARD -->
   <section class="pane" id="pane-dash">
     <div id="dashAlert"></div>
     <div id="wkToday"></div>
+    <div class="card">
+      <div class="grp-title" style="margin-top:0">Backlog &amp; Đào tạo</div>
+      <div class="row2">
+        <div id="dashBacklogSummary"></div>
+        <div id="dashTrainingSummary"></div>
+      </div>
+    </div>
     <div class="card recon">
       <div class="recon-head">
         <div><h2 style="margin:0">Đối chiếu với license server</h2>
@@ -212,34 +265,7 @@
     </div>
   </section>
 
-  <!-- LỊCH TUẦN -->
-  <section class="pane" id="pane-week" style="display:none">
-    <div class="card" style="max-width:520px">
-      <h2>Đăng ký lịch tuần</h2>
-      <p class="sub">Chọn tuần, rồi đăng ký buổi mình cần — người có lịch được <b>ưu tiên nhận key trước</b> trong buổi đó.</p>
-      <div class="field"><label>Tuần</label><select id="wkWeek"></select></div>
-      <div class="field"><label>Họ tên</label><select id="wkName"></select></div>
-      <div class="field"><label>Phần mềm</label>
-        <div class="seg" id="wkSw"><button data-v="ETABS" class="on">ETABS</button><button data-v="SAFE">SAFE</button></div></div>
-      <div class="field"><label>Ngày</label>
-        <div class="seg" id="wkDay">
-          <button data-v="Thứ 2" class="on">T2</button><button data-v="Thứ 3">T3</button>
-          <button data-v="Thứ 4">T4</button><button data-v="Thứ 5">T5</button><button data-v="Thứ 6">T6</button>
-        </div></div>
-      <div class="field"><label>Buổi</label>
-        <div class="seg" id="wkSess"><button data-v="Sáng" class="on">Sáng</button><button data-v="Chiều">Chiều</button></div></div>
-      <button class="btn primary" id="wkSubmit" style="width:100%">Đăng ký buổi này</button>
-      <div class="note" id="wkHint" style="margin-top:12px"></div>
-    </div>
-
-    <div class="card">
-      <h2>Lịch tuần: <span id="weekLabel"></span></h2>
-      <p class="sub">Bảng ai giữ buổi nào trong tuần đã chọn. Ô xanh = có người đăng ký ưu tiên. Bấm ✕ để xóa.</p>
-      <div style="overflow-x:auto"><table id="weekTable"><thead></thead><tbody></tbody></table></div>
-    </div>
-  </section>
-
-  <!-- ĐĂNG KÝ -->
+  <!-- ĐĂNG KÝ & LỊCH TUẦN -->
   <section class="pane" id="pane-reg" style="display:none">
     <div class="card" style="max-width:460px">
       <h2>Đăng ký sử dụng</h2>
@@ -265,22 +291,90 @@
       <button class="btn primary" id="rgSubmit" style="width:100%">Đăng ký</button>
       <div class="note" id="rgHint" style="margin-top:13px"></div>
     </div>
-  </section>
 
-  <!-- HÀNG CHỜ -->
-  <section class="pane" id="pane-queue" style="display:none">
     <div class="card">
       <h2>Danh sách chờ</h2>
       <p class="sub">Xếp theo mức ưu tiên (Rất gấp → Gấp → Thường); cùng mức thì ai đăng ký trước ra trước.</p>
-      <table><thead><tr><th class="num">#</th><th>Ưu tiên</th><th>Họ tên</th><th>Phần mềm</th><th>Buổi</th><th>Lý do dự án</th><th>Thời gian ĐK</th><th></th></tr></thead>
-        <tbody id="queueBody"></tbody></table>
+      <div style="overflow-x:auto"><table><thead><tr><th class="num">#</th><th>Ưu tiên</th><th>Họ tên</th><th>Phần mềm</th><th>Buổi</th><th>Lý do dự án</th><th>Thời gian ĐK</th><th></th></tr></thead>
+        <tbody id="queueBody"></tbody></table></div>
+    </div>
+
+    <div class="card" style="max-width:520px">
+      <h2>Đăng ký lịch tuần</h2>
+      <p class="sub">Chọn tuần, rồi đăng ký buổi mình cần — người có lịch được <b>ưu tiên nhận key trước</b> trong buổi đó.</p>
+      <div class="field"><label>Tuần</label><select id="wkWeek"></select></div>
+      <div class="field"><label>Họ tên</label><select id="wkName"></select></div>
+      <div class="field"><label>Phần mềm</label>
+        <div class="seg" id="wkSw"><button data-v="ETABS" class="on">ETABS</button><button data-v="SAFE">SAFE</button></div></div>
+      <div class="field"><label>Ngày</label>
+        <div class="seg" id="wkDay">
+          <button data-v="Thứ 2" class="on">T2</button><button data-v="Thứ 3">T3</button>
+          <button data-v="Thứ 4">T4</button><button data-v="Thứ 5">T5</button><button data-v="Thứ 6">T6</button>
+        </div></div>
+      <div class="field"><label>Buổi</label>
+        <div class="seg" id="wkSess"><button data-v="Sáng" class="on">Sáng</button><button data-v="Chiều">Chiều</button></div></div>
+      <button class="btn primary" id="wkSubmit" style="width:100%">Đăng ký buổi này</button>
+      <div class="note" id="wkHint" style="margin-top:12px"></div>
+    </div>
+
+    <div class="card">
+      <h2>Lịch tuần: <span id="weekLabel"></span></h2>
+      <p class="sub">Bảng ai giữ buổi nào trong tuần đã chọn. Ô xanh = có người đăng ký ưu tiên. Bấm ✕ để xóa.</p>
+      <div style="overflow-x:auto"><table id="weekTable"><thead></thead><tbody></tbody></table></div>
+    </div>
+  </section>
+
+  <!-- BÁO CÁO -->
+  <!-- BACKLOG CẢI TIẾN (Optimization) -->
+  <section class="pane" id="pane-backlog" style="display:none">
+    <div class="card">
+      <div class="recon-head">
+        <div><h2 style="margin:0">🛠️ Optimization Backlog</h2>
+          <p class="sub" style="margin:2px 0 0">Việc thủ công, lặp lại, tốn thời gian — từ lúc đề xuất tới khi thành quy trình chuẩn. Dùng chung cho cả team.</p></div>
+        <button class="btn primary small" id="backlog-btn-add">+ Thêm việc</button>
+      </div>
+      <div class="tabs" id="backlog-tabs" style="margin:10px 0 10px"></div>
+      <div class="item-grid" id="backlog-body"></div>
+    </div>
+  </section>
+
+  <!-- NHU CẦU ĐÀO TẠO -->
+  <section class="pane" id="pane-training" style="display:none">
+    <div class="card">
+      <div class="recon-head">
+        <div><h2 style="margin:0">📚 Training Needs</h2>
+          <p class="sub" style="margin:2px 0 0">Kỹ năng / kiến thức còn thiếu của team — từ lúc phát hiện tới khi hoàn thành đào tạo. Dùng chung cho cả team.</p></div>
+        <button class="btn primary small" id="training-btn-add">+ Thêm chủ đề</button>
+      </div>
+      <div class="tabs" id="training-tabs" style="margin:10px 0 10px"></div>
+      <div class="item-grid" id="training-body"></div>
     </div>
   </section>
 
   <!-- BÁO CÁO -->
   <section class="pane" id="pane-report" style="display:none">
+    <div class="row2">
+      <div class="card">
+        <h2>🛠️ Thống kê Optimization</h2>
+        <p class="sub">Theo người: số đã đề xuất, đã xong, đang làm, và số ưu tiên Cao còn tồn đọng.</p>
+        <table><thead><tr><th>Người</th><th class="num">Đề xuất</th><th class="num">Đã xong</th><th class="num">Đang làm</th><th class="num">Ưu tiên cao tồn đọng</th></tr></thead>
+          <tbody id="rpBacklogUser"></tbody></table>
+      </div>
+      <div class="card">
+        <h2>📚 Thống kê Đào tạo</h2>
+        <p class="sub">Theo người: số đã đề xuất, đã xong, đang làm, và số ưu tiên Cao còn tồn đọng.</p>
+        <table><thead><tr><th>Người</th><th class="num">Đề xuất</th><th class="num">Đã xong</th><th class="num">Đang làm</th><th class="num">Ưu tiên cao tồn đọng</th></tr></thead>
+          <tbody id="rpTrainingUser"></tbody></table>
+      </div>
+    </div>
     <div class="card">
-      <h2>Biểu đồ đăng ký &amp; sử dụng</h2>
+      <h2>Cập nhật gần đây — Optimization &amp; Đào tạo</h2>
+      <p class="sub">Phản hồi / tiến độ mới nhất trên cả 2 bảng, mới nhất lên trước.</p>
+      <div style="overflow-x:auto"><table><thead><tr><th>Loại</th><th>Tiêu đề</th><th>Hiện trạng / phản hồi</th><th>Trạng thái</th><th>Người cập nhật</th><th>Thời gian</th></tr></thead>
+        <tbody id="rpItemsRecent"></tbody></table></div>
+    </div>
+    <div class="card">
+      <h2>Biểu đồ đăng ký &amp; sử dụng license</h2>
       <p class="sub">Trực quan hóa lượt sử dụng theo người và nhu cầu đăng ký theo buổi.</p>
       <h3 style="font-size:13.5px;margin:14px 0 6px">Lượt sử dụng theo người (nhiều → ít)</h3>
       <div id="chartUsers" style="overflow-x:auto"></div>
@@ -319,7 +413,7 @@
     <div><button class="btn ghost small" id="resetBtn">Xóa toàn bộ dữ liệu thử</button></div>
   </section>
 
-  <!-- MÁY -->
+  <!-- THIẾT BỊ -->
   <section class="pane" id="pane-machines" style="display:none">
     <div class="card" style="max-width:560px">
       <h2>Tra cứu mã máy</h2>
@@ -351,24 +445,6 @@
     </div>
   </section>
 
-  <!-- QUY ĐỊNH -->
-  <section class="pane" id="pane-rules" style="display:none">
-    <div class="card">
-      <h2>Quy định sử dụng</h2>
-      <ul class="rules">
-        <li>Không giữ license khi không sử dụng.</li>
-        <li>Hoàn thành công việc phải trả key ngay.</li>
-        <li>Mỗi người chỉ được giữ tối đa 01 buổi mỗi lần đăng ký.</li>
-        <li>Giờ hết hạn: buổi Sáng đến 12:00, buổi Chiều đến 17:30. Quá giờ chưa trả sẽ bị đánh dấu <b style="color:var(--warn)">Quá hạn</b> trên Dashboard.</li>
-        <li>Không được đăng ký cả ngày ngay từ đầu — hết buổi phải trả key hoặc đăng ký lại.</li>
-        <li>Người đăng ký trước được ưu tiên trước.</li>
-        <li><b>Lịch tuần được ưu tiên nhất:</b> ai đã đăng ký lịch tuần cho buổi nào thì được nhận key trước trong buổi đó, trên cả hàng chờ trong ngày — kể cả khi chưa vào hàng chờ.</li>
-        <li>Nếu có người đang chờ thì không được tự động gia hạn — phải trả key trước.</li>
-        <li><b>Tự động thu hồi khi quá hạn:</b> nếu đến giờ hết hạn buổi (12:00 / 17:30) mà license vẫn đang bị giữ, và có người khác đăng ký lịch tuần đúng buổi đó, hệ thống sẽ tự động thu hồi và giao lại license cho người có lịch tuần mà không cần đợi người cũ chủ động trả key.</li>
-        <li>Mọi người chủ động liên hệ nhau qua Teams / Zalo / Telegram dựa trên thông tin hiển thị trên Dashboard.</li>
-      </ul>
-    </div>
-  </section>
 </div>
 
 <div class="toast" id="toast"></div>
@@ -383,6 +459,39 @@
     <div class="checkin-list" id="checkinList"></div>
     <div style="margin-top:14px;text-align:right">
       <button class="btn primary" id="applyCheckin">Lưu &amp; đối chiếu</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-bg" id="itemBg">
+  <div class="modal">
+    <div class="modal-head">
+      <h2 id="itemTitle" style="margin:0">Thêm việc</h2>
+      <button class="btn ghost small" id="itemClose">Đóng</button>
+    </div>
+    <p class="sub" id="itemReadonlyNote" style="display:none;color:var(--warn);font-weight:600">Chỉ người đề xuất hoặc admin mới sửa được mục này.</p>
+    <div class="sub" id="itemMeta" style="display:none"></div>
+    <div class="row2">
+      <div class="field"><label>Người đề xuất (tự động = người đăng nhập)</label><select id="itemProposer"></select></div>
+      <div class="field"><label>Phụ trách (tùy chọn)</label><select id="itemOwner"><option value="">— Chưa có —</option></select></div>
+    </div>
+    <div class="row2">
+      <div class="field"><label>Hỗ trợ (tùy chọn)</label><select id="itemSupport"><option value="">— Chưa có —</option></select></div>
+      <div class="field"><label>Người soát (tùy chọn)</label><select id="itemReviewer"><option value="">— Chưa có —</option></select></div>
+    </div>
+    <div class="field"><label id="itemTitleLbl">Việc / vấn đề</label><input id="itemTitleInput" placeholder=""></div>
+    <div class="field"><label id="itemStatusLbl">Hiện trạng</label><input id="itemStatus" placeholder=""></div>
+    <div class="field"><label id="itemIdeaLbl">Ý tưởng / giải pháp</label><input id="itemIdea" placeholder=""></div>
+    <div class="row2">
+      <div class="field"><label>Mức ưu tiên</label>
+        <div class="seg" id="itemPri"><button data-v="high">Cao</button><button data-v="mid" class="on">Vừa</button><button data-v="low">Thấp</button></div></div>
+      <div class="field"><label>Trạng thái</label>
+        <div class="seg" id="itemCol"><button data-v="todo" class="on">Đã ghi nhận</button><button data-v="idea">Đang làm</button><button data-v="done">Đã xong</button></div></div>
+    </div>
+    <div class="field"><label>Link / file (tùy chọn)</label><input id="itemLink" placeholder="VD \\server\tools\... hoặc link SharePoint"></div>
+    <div class="modal-head" style="margin-top:6px">
+      <button class="btn warn small" id="itemDelete" style="display:none">Xóa mục</button>
+      <button class="btn primary" id="itemSave">Lưu</button>
     </div>
   </div>
 </div>
@@ -431,7 +540,53 @@ function fresh(){
   const pw={};EMPLOYEES.forEach(n=>{if(MACHINE_MAP[n])pw[MACHINE_MAP[n]]="123456";});
   return {state:st, queue:[], history:[], queueLog:[], server:{ETABS:null,SAFE:null},
           machines, open:{}, reports:[], week:[], wkActivated:[], machLocked:true,
-          handovers:[], wkSkipped:[], pw, wkMigratedV2:true};
+          handovers:[], wkSkipped:[], pw, wkMigratedV2:true,
+          backlog:seedBacklog(), training:seedTraining(), itemsSeeded:true};
+}
+// dữ liệu mẫu ban đầu cho 2 bảng mới — chỉ dùng lần đầu tiên (Sheet còn trống)
+function seedBacklog(){
+  return [
+    {id:"seed-ob-1", column:"todo", priority:"high",
+      proposer:"NGUYỄN THÀNH PHI", owner:"NGUYỄN THÀNH PHI", support:"", reviewer:"",
+      title:"Nhập số liệu quan trắc từ ảnh chụp máy đo vào Excel",
+      status:"Mỗi thứ 2 mất khoảng 2 giờ gõ tay số liệu từ ảnh chụp hiện trường.",
+      idea:"Chưa có hướng — đang tìm cách OCR hoặc mẫu nhập nhanh hơn.",
+      link:"", createdAt:"2026-08-05T09:14:00", createdBy:"NGUYỄN THÀNH PHI", updatedAt:"2026-08-13T08:02:00", updatedBy:"NGUYỄN THÀNH PHI"},
+    {id:"seed-ob-2", column:"idea", priority:"mid",
+      proposer:"CÁI THỊ THẢO MY", owner:"NGUYỄN ĐĂNG QUANG", support:"NGUYỄN HỮU THOẠI", reviewer:"NGUYỄN PHI GIA",
+      title:"Tự động ghép báo cáo tiến độ tuần từ nhiều file Excel",
+      status:"Đang copy-paste tay giữa các sheet của từng bộ môn, khoảng 1 giờ/tuần.",
+      idea:"Dùng Power Query nối dữ liệu tự động, đang thử nghiệm trên 1 dự án.",
+      link:"", createdAt:"2026-07-29T14:20:00", createdBy:"CÁI THỊ THẢO MY", updatedAt:"2026-08-12T16:45:00", updatedBy:"NGUYỄN ĐĂNG QUANG"},
+    {id:"seed-ob-3", column:"done", priority:"low",
+      proposer:"TRẦN ĐÌNH VŨ", owner:"TRẦN ĐÌNH VŨ", support:"", reviewer:"VÕ HỒNG HƯNG",
+      title:"Đổi tên hàng loạt file bản vẽ theo chuẩn đặt tên dự án",
+      status:"Trước đây đổi tay từng file, hay sai chuẩn đặt tên.",
+      idea:"Script Python đổi tên theo quy tắc, đã chạy ổn định 2 tháng nay.",
+      link:"\\\\server\\tools\\rename_drawings.py", createdAt:"2026-06-01T11:00:00", createdBy:"TRẦN ĐÌNH VŨ", updatedAt:"2026-08-01T10:00:00", updatedBy:"TRẦN ĐÌNH VŨ"}
+  ];
+}
+function seedTraining(){
+  return [
+    {id:"seed-tr-1", column:"todo", priority:"mid",
+      proposer:"NGUYỄN LINH TRƯỜNG", owner:"NGUYỄN LINH TRƯỜNG", support:"", reviewer:"",
+      title:"Nhiều bạn chưa biết dùng Pivot Table trong Excel",
+      status:"Hay tổng hợp số liệu thủ công, mất nhiều thời gian và dễ sai.",
+      idea:"Chưa xếp lịch — cần tìm người training nội bộ.",
+      link:"", createdAt:"2026-08-10T10:00:00", createdBy:"NGUYỄN LINH TRƯỜNG", updatedAt:"2026-08-18T09:30:00", updatedBy:"NGUYỄN LINH TRƯỜNG"},
+    {id:"seed-tr-2", column:"idea", priority:"high",
+      proposer:"BÙI LONG PHỤNG", owner:"BÙI LONG PHỤNG", support:"NGUYỄN TẤN LỢI", reviewer:"VÕ HỒNG HƯNG",
+      title:"Đào tạo cách đọc bản vẽ kết cấu thép cho nhân viên mới",
+      status:"Nhân viên mới hay hỏi lại nhiều, mất thời gian của cả bộ môn.",
+      idea:"Đã lên lịch buổi training 2 giờ vào thứ Sáu tuần này, người dạy: anh Phụng.",
+      link:"", createdAt:"2026-08-14T13:00:00", createdBy:"BÙI LONG PHỤNG", updatedAt:"2026-08-22T15:10:00", updatedBy:"BÙI LONG PHỤNG"},
+    {id:"seed-tr-3", column:"done", priority:"low",
+      proposer:"ĐOÀN PHÚC HIỆP", owner:"ĐOÀN PHÚC HIỆP", support:"", reviewer:"NGUYỄN PHI GIA",
+      title:"Hướng dẫn quy trình xuất bản vẽ theo khung tên chuẩn công ty",
+      status:"Trước đây mỗi người xuất bản vẽ một kiểu, không đồng nhất.",
+      idea:"Đã training xong, kèm tài liệu hướng dẫn để tra cứu lại.",
+      link:"\\\\server\\tools\\huong_dan_xuat_ban_ve.pdf", createdAt:"2026-07-20T09:00:00", createdBy:"ĐOÀN PHÚC HIỆP", updatedAt:"2026-08-05T11:20:00", updatedBy:"ĐOÀN PHÚC HIỆP"}
+  ];
 }
 // bổ sung mọi trường còn thiếu cho dữ liệu cũ
 function migrate(d){
@@ -456,6 +611,10 @@ function migrate(d){
   if(!d.pw||typeof d.pw!=='object')d.pw={};
   // mã máy nào có trong bảng mà chưa có mật khẩu -> mặc định 123456
   EMPLOYEES.forEach(n=>{const code=d.machines[n];if(code&&!(code in d.pw))d.pw[code]="123456";});
+  // dữ liệu cũ (trước khi có 2 bảng Backlog/Training) -> nạp dữ liệu mẫu đúng 1 lần duy nhất
+  if(!Array.isArray(d.backlog))d.backlog=d.itemsSeeded?[]:seedBacklog();
+  if(!Array.isArray(d.training))d.training=d.itemsSeeded?[]:seedTraining();
+  d.itemsSeeded=true;
   // sửa lỗi 1 lần: trước đây wkKey() dùng toISOString() nên mã tuần bị lùi 1 ngày (múi giờ VN).
   // các bản ghi lịch tuần cũ cộng lại đúng 1 ngày để khớp với wkKey() mới (đúng ngày thứ 2 thật).
   if(!d.wkMigratedV2){
@@ -674,8 +833,36 @@ function renderWkToday(){
   box.innerHTML=`<div class="wk-today"><h3>📅 Lịch tuần hôm nay — ${day}, buổi ${sess}</h3>${chips}</div>`;
 }
 
+function renderDashItemsSummary(){
+  const specs=[
+    {kind:'backlog',box:document.getElementById('dashBacklogSummary'),label:'🛠️ Backlog cải tiến',tab:'backlog',word:'việc'},
+    {kind:'training',box:document.getElementById('dashTrainingSummary'),label:'📚 Đào tạo',tab:'training',word:'chủ đề'}
+  ];
+  specs.forEach(s=>{
+    if(!s.box)return;
+    const list=db[s.kind]||[];
+    const counts={todo:0,idea:0,done:0};
+    list.forEach(it=>{if(counts[it.column]!==undefined)counts[it.column]++;});
+    const hot=list.filter(it=>it.priority==='high'&&it.column!=='done');
+    s.box.innerHTML=`
+      <div class="grp-title" style="margin-top:0">${s.label} <span style="font-weight:400;text-transform:none;letter-spacing:0">(${list.length})</span></div>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
+        <span class="pill st-todo">📌 Đã ghi nhận ${counts.todo}</span>
+        <span class="pill st-idea">💡 Đang làm ${counts.idea}</span>
+        <span class="pill st-done">🏆 Đã xong ${counts.done}</span>
+      </div>
+      ${hot.length
+        ?`<div class="warn-name" style="margin-top:0">🔴 <b>${hot.length}</b> ${s.word} ưu tiên Cao chưa xong: ${hot.slice(0,3).map(x=>esc(x.title)).join('; ')}${hot.length>3?'…':''}</div>`
+        :`<div class="ok-name" style="margin-top:0">✓ Không có ${s.word} ưu tiên Cao nào tồn đọng.</div>`}
+      <button type="button" class="btn ghost small dash-goto" style="margin-top:10px">Xem tất cả →</button>`;
+    const btn=s.box.querySelector('.dash-goto');
+    if(btn)btn.onclick=()=>document.querySelector('.tab[data-tab="'+s.tab+'"]').click();
+  });
+}
+
 function renderDash(){
   renderWkToday();
+  renderDashItemsSummary();
   renderRecon();
   const ge=document.getElementById('gridEtabs'),gs=document.getElementById('gridSafe');
   ge.innerHTML='';gs.innerHTML='';
@@ -727,7 +914,7 @@ document.getElementById('rgSubmit').onclick=()=>{
   if(already){toast(user+' đang giữ '+already[0]+' — phải trả trước khi đăng ký mới.');return;}
   // chặn đăng ký trùng khi đã ở trong hàng chờ
   const inQ=db.queue.find(q=>q.user===user&&q.sw===sw);
-  if(inQ){toast(user+' đã ở trong hàng chờ '+sw+'.');document.querySelector('.tab[data-tab="queue"]').click();return;}
+  if(inQ){toast(user+' đã ở trong hàng chờ '+sw+'.');document.querySelector('.tab[data-tab="reg"]').click();return;}
   let lic=pendingQuick?LICENSES.find(l=>l.id===pendingQuick&&!db.state[l.id]):freeLicenseOf(sw);
   pendingQuick=null;
   if(lic){
@@ -742,7 +929,7 @@ document.getElementById('rgSubmit').onclick=()=>{
     save();document.getElementById('rgNote').value='';
     const pos=sortedQueue(sw).findIndex(q=>q.user===user)+1;
     toast('⏳ Hết license '+sw+' — '+user+' vào hàng chờ (mức '+pri+', vị trí '+pos+').');
-    document.querySelector('.tab[data-tab="queue"]').click();
+    document.querySelector('.tab[data-tab="reg"]').click();
   }
 };
 
@@ -976,7 +1163,49 @@ function renderQueue(){
 }
 
 /* ---------- báo cáo ---------- */
+function itemPersonStats(list){
+  const m={};
+  const bump=(name,field)=>{if(!name)return;if(!m[name])m[name]={proposed:0,done:0,doing:0,hot:0};m[name][field]++;};
+  list.forEach(it=>{
+    bump(it.proposer,'proposed');
+    if(it.column==='done')bump(it.proposer,'done');
+    else if(it.column==='idea')bump(it.proposer,'doing');
+    if(it.priority==='high'&&it.column!=='done')bump(it.proposer,'hot');
+  });
+  return Object.entries(m).sort((a,b)=>b[1].proposed-a[1].proposed);
+}
+function renderItemsUserTable(tbodyId,list){
+  const tbody=document.getElementById(tbodyId);if(!tbody)return;
+  const rows=itemPersonStats(list);
+  tbody.innerHTML='';
+  if(!rows.length){tbody.innerHTML='<tr><td colspan="5" class="empty">Chưa có dữ liệu.</td></tr>';return;}
+  rows.forEach(([name,s])=>tbody.insertAdjacentHTML('beforeend',
+    `<tr><td>${esc(name)}</td><td class="num">${s.proposed}</td><td class="num">${s.done}</td><td class="num">${s.doing}</td>
+     <td class="num">${s.hot?'<b style="color:var(--warn)">'+s.hot+'</b>':'0'}</td></tr>`));
+}
+function renderItemsRecent(){
+  const tbody=document.getElementById('rpItemsRecent');if(!tbody)return;
+  const all=[...(db.backlog||[]).map(x=>Object.assign({kind:'Optimization'},x)),
+             ...(db.training||[]).map(x=>Object.assign({kind:'Đào tạo'},x))];
+  all.sort((a,b)=>new Date(b.updatedAt||0)-new Date(a.updatedAt||0));
+  tbody.innerHTML='';
+  if(!all.length){tbody.innerHTML='<tr><td colspan="6" class="empty">Chưa có dữ liệu.</td></tr>';return;}
+  all.slice(0,25).forEach(it=>{
+    const col=ITEM_COLS.find(c=>c.key===it.column)||ITEM_COLS[0];
+    tbody.insertAdjacentHTML('beforeend',
+      `<tr><td>${it.kind}</td><td>${esc(it.title||'')}</td><td>${esc(it.status||it.idea||'—')}</td>
+       <td><span class="pill ${col.cls}">${col.icon} ${col.name}</span></td><td>${esc(it.updatedBy||'')}</td>
+       <td>${it.updatedAt?nowStr(new Date(it.updatedAt).getTime()):'—'}</td></tr>`);
+  });
+}
+function renderItemsReport(){
+  renderItemsUserTable('rpBacklogUser',db.backlog||[]);
+  renderItemsUserTable('rpTrainingUser',db.training||[]);
+  renderItemsRecent();
+}
+
 function renderReport(){
+  renderItemsReport();
   // per user: lượt + tổng thời gian + số lần quá hạn
   const cnt={},time={},late={};
   db.history.forEach(h=>{cnt[h.user]=(cnt[h.user]||0)+1;time[h.user]=(time[h.user]||0)+(h.end-h.start);
@@ -1042,9 +1271,9 @@ function renderCharts(){
       let svg=`<svg viewBox="0 0 ${labelW+barW+50} ${h}" width="100%" style="max-width:640px" xmlns="http://www.w3.org/2000/svg" font-family="Arial" font-size="12">`;
       rows.forEach((r,i)=>{
         const y=pad+i*rowH; const w=Math.round(r[1]/max*barW);
-        svg+=`<text x="${labelW-6}" y="${y+16}" text-anchor="end" fill="#12212e">${esc(r[0])}</text>`;
-        svg+=`<rect x="${labelW}" y="${y+4}" width="${w}" height="16" rx="3" fill="#1f6feb"/>`;
-        svg+=`<text x="${labelW+w+6}" y="${y+16}" fill="#42606f" font-weight="700">${r[1]}</text>`;
+        svg+=`<text x="${labelW-6}" y="${y+16}" text-anchor="end" fill="#1c1e22">${esc(r[0])}</text>`;
+        svg+=`<rect x="${labelW}" y="${y+4}" width="${w}" height="16" rx="3" fill="#2e5c8a"/>`;
+        svg+=`<text x="${labelW+w+6}" y="${y+16}" fill="#6b6f76" font-weight="700">${r[1]}</text>`;
       });
       svg+=`</svg>`; cu.innerHTML=svg;
     }
@@ -1063,24 +1292,24 @@ function renderCharts(){
       const W=left+n*(colW+gap)+10, H=base+40;
       let svg=`<svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:720px" xmlns="http://www.w3.org/2000/svg" font-family="Arial" font-size="11">`;
       // trục
-      svg+=`<line x1="${left}" y1="${base}" x2="${W-6}" y2="${base}" stroke="#d9e2ea"/>`;
+      svg+=`<line x1="${left}" y1="${base}" x2="${W-6}" y2="${base}" stroke="#e2ded4"/>`;
       // vạch cap = 8 (tổng license) để so sánh nhu cầu vs cung
       const capY=base-Math.round(8/totalMax*chartH);
-      if(8<=totalMax*1.2){svg+=`<line x1="${left}" y1="${capY}" x2="${W-6}" y2="${capY}" stroke="#c0392b" stroke-dasharray="4 3"/>
-        <text x="${W-6}" y="${capY-3}" text-anchor="end" fill="#c0392b" font-weight="700">Cung: 8</text>`;}
+      if(8<=totalMax*1.2){svg+=`<line x1="${left}" y1="${capY}" x2="${W-6}" y2="${capY}" stroke="#c1391f" stroke-dasharray="4 3"/>
+        <text x="${W-6}" y="${capY-3}" text-anchor="end" fill="#c1391f" font-weight="700">Cung: 8</text>`;}
       cats.forEach((c,i)=>{
         const x=left+i*(colW+gap);
         const hE=Math.round(de[i]/totalMax*chartH), hS=Math.round(ds[i]/totalMax*chartH);
         const yS=base-hS, yE=yS-hE;
-        svg+=`<rect x="${x}" y="${base-hS}" width="${colW}" height="${hS}" fill="#12855a"/>`;
-        svg+=`<rect x="${x}" y="${yE}" width="${colW}" height="${hE}" fill="#1f6feb"/>`;
+        svg+=`<rect x="${x}" y="${base-hS}" width="${colW}" height="${hS}" fill="#0f7a72"/>`;
+        svg+=`<rect x="${x}" y="${yE}" width="${colW}" height="${hE}" fill="#2e5c8a"/>`;
         const tot=de[i]+ds[i];
-        if(tot)svg+=`<text x="${x+colW/2}" y="${yE-4}" text-anchor="middle" fill="#12212e" font-weight="700">${tot}</text>`;
-        svg+=`<text x="${x+colW/2}" y="${base+14}" text-anchor="middle" fill="#42606f">${c.label}</text>`;
+        if(tot)svg+=`<text x="${x+colW/2}" y="${yE-4}" text-anchor="middle" fill="#1c1e22" font-weight="700">${tot}</text>`;
+        svg+=`<text x="${x+colW/2}" y="${base+14}" text-anchor="middle" fill="#6b6f76">${c.label}</text>`;
       });
       // chú giải
-      svg+=`<rect x="${left}" y="${H-14}" width="11" height="11" fill="#1f6feb"/><text x="${left+15}" y="${H-4}" fill="#42606f">ETABS</text>`;
-      svg+=`<rect x="${left+70}" y="${H-14}" width="11" height="11" fill="#12855a"/><text x="${left+85}" y="${H-4}" fill="#42606f">SAFE</text>`;
+      svg+=`<rect x="${left}" y="${H-14}" width="11" height="11" fill="#2e5c8a"/><text x="${left+15}" y="${H-4}" fill="#6b6f76">ETABS</text>`;
+      svg+=`<rect x="${left+70}" y="${H-14}" width="11" height="11" fill="#0f7a72"/><text x="${left+85}" y="${H-4}" fill="#6b6f76">SAFE</text>`;
       svg+=`</svg>`; cd.innerHTML=svg;
     }
   }
@@ -1116,7 +1345,7 @@ function renderMachines(){
     tr.innerHTML=`<td><b>${n}</b></td><td></td>`;
     const inp=document.createElement('input');
     inp.value=db.machines[n]||'';inp.placeholder='VD VNRHD054';
-    if(db.machLocked){inp.readOnly=true;inp.style.background='#f2f5f8';inp.style.color='#42606f';inp.title='Bảng đang khóa — bấm "Mở khóa để sửa"';}
+    if(db.machLocked){inp.readOnly=true;inp.style.background='#efede7';inp.style.color='#6b6f76';inp.title='Bảng đang khóa — bấm "Mở khóa để sửa"';}
     inp.onchange=e=>{
       if(db.machLocked){e.target.value=db.machines[n]||'';return;} // chặn sửa khi khóa
       db.machines[n]=e.target.value.trim().toUpperCase();save();renderRecon();
@@ -1307,8 +1536,181 @@ function renderWeek(){
   });
 }
 
+/* ================== BACKLOG CẢI TIẾN & NHU CẦU ĐÀO TẠO ================== */
+const ITEM_COLS=[{key:'todo',icon:'📌',name:'Đã ghi nhận',cls:'st-todo'},
+  {key:'idea',icon:'💡',name:'Đang làm',cls:'st-idea'},
+  {key:'done',icon:'🏆',name:'Đã xong',cls:'st-done'}];
+const ITEM_LABELS={
+  backlog:{title:'Việc / vấn đề',status:'Hiện trạng',idea:'Ý tưởng / giải pháp',
+    titleHint:'VD: Nhập số liệu quan trắc từ ảnh chụp vào Excel',
+    statusHint:'VD: Mỗi thứ 2 mất ~2h gõ tay từ ảnh chụp máy đo',
+    ideaHint:'VD: Thử OCR số liệu tự động, chưa test'},
+  training:{title:'Chủ đề / vấn đề',status:'Hiện trạng',idea:'Kế hoạch đào tạo',
+    titleHint:'VD: Nhiều bạn chưa biết dùng Pivot Table',
+    statusHint:'VD: Hay tổng hợp số liệu thủ công, dễ sai',
+    ideaHint:'VD: Xếp lịch buổi training 1h, người dạy, tài liệu kèm theo'}
+};
+const ITEM_TAB={backlog:'all',training:'all'};
+
+function fillPersonSelect(sel,withEmpty){
+  const keep=withEmpty?'<option value="">— Chưa có —</option>':'';
+  sel.innerHTML=keep;
+  EMPLOYEES.forEach(n=>sel.append(new Option(n,n)));
+}
+fillPersonSelect(document.getElementById('itemProposer'),false);
+fillPersonSelect(document.getElementById('itemOwner'),true);
+fillPersonSelect(document.getElementById('itemSupport'),true);
+fillPersonSelect(document.getElementById('itemReviewer'),true);
+seg('itemPri'); seg('itemCol'); // attach click-toggle behavior; read live value via getItemPri/getItemCol below
+function getItemPri(){return document.getElementById('itemPri').querySelector('.on').dataset.v;}
+function getItemCol(){return document.getElementById('itemCol').querySelector('.on').dataset.v;}
+function setSegValue(id,val){
+  const box=document.getElementById(id);
+  box.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===val));
+}
+
+let itemKind='backlog', itemEditingId=null;
+function canEditItem(it){return isAdmin()||(!!ME&&it.createdBy===ME.name);}
+
+function renderItemTabs(kind){
+  const box=document.getElementById(kind+'-tabs');box.innerHTML='';
+  const list=db[kind]||[];
+  const defs=[{key:'all',icon:'',name:'Tất cả'}].concat(ITEM_COLS);
+  defs.forEach(d=>{
+    const n=d.key==='all'?list.length:list.filter(x=>x.column===d.key).length;
+    const b=document.createElement('button');b.type='button';b.className='btn ghost small';
+    if(ITEM_TAB[kind]===d.key){b.classList.remove('ghost');b.classList.add('primary');}
+    b.textContent=(d.icon?d.icon+' ':'')+d.name+' ('+n+')';
+    b.onclick=()=>{ITEM_TAB[kind]=d.key;renderItemTabs(kind);renderItemBody(kind);};
+    box.append(b);
+  });
+}
+function renderItemBody(kind){
+  const box=document.getElementById(kind+'-body');box.innerHTML='';
+  const filter=ITEM_TAB[kind];
+  const items=(db[kind]||[]).filter(it=>filter==='all'||it.column===filter);
+  if(!items.length){box.innerHTML='<div class="empty">Chưa có mục nào.</div>';return;}
+  items.forEach(it=>{
+    const col=ITEM_COLS.find(c=>c.key===it.column)||ITEM_COLS[0];
+    const pri=it.priority==='high'?'pri-hot':(it.priority==='low'?'pri-cool':'pri-warm');
+    let linkRow='';
+    if(it.link&&it.link.trim()){
+      const safe=esc(it.link);
+      const linkHtml=/^https?:\/\//i.test(it.link.trim())
+        ? `<a href="${safe}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">${safe}</a>`
+        : safe;
+      linkRow=`<div class="row">🔗 ${linkHtml}</div>`;
+    }
+    const card=document.createElement('div');
+    card.className='item-card';
+    card.innerHTML=`
+      <div class="top">
+        <span class="pill ${col.cls}">${col.icon} ${col.name}</span>
+        <span class="pill ${pri}">${ITEM_PRI_LABEL[it.priority]||'Vừa'}</span>
+      </div>
+      <div class="title">${esc(it.title||'')}</div>
+      <div class="row"><b>Hiện trạng:</b> ${esc(it.status||'—')}</div>
+      <div class="row"><b>Ý tưởng/kế hoạch:</b> ${esc(it.idea||'—')}</div>
+      <div class="row">👤 Đề xuất: <b>${esc(it.proposer||'—')}</b> · Phụ trách: <b>${esc(it.owner||'—')}</b></div>
+      <div class="row">Hỗ trợ: ${esc(it.support||'—')} · Người soát: ${esc(it.reviewer||'—')}</div>
+      ${linkRow}
+      <div class="meta">
+        <span>Cập nhật: ${it.updatedAt?nowStr(new Date(it.updatedAt).getTime()):'—'} bởi ${esc(it.updatedBy||'')}</span>
+      </div>`;
+    card.onclick=()=>openItemModal(kind,it.id);
+    box.append(card);
+  });
+}
+const ITEM_PRI_LABEL={high:'Cao',mid:'Vừa',low:'Thấp'};
+
+function openItemModal(kind,id){
+  if(!ME){toast('Vui lòng đăng nhập trước.');return;}
+  itemKind=kind;itemEditingId=id||null;
+  const it=id?(db[kind]||[]).find(x=>x.id===id):null;
+  const L=ITEM_LABELS[kind];
+  document.getElementById('itemTitle').textContent=it?'Sửa mục':(kind==='backlog'?'Thêm việc':'Thêm chủ đề');
+  document.getElementById('itemTitleLbl').textContent=L.title;
+  document.getElementById('itemStatusLbl').textContent=L.status;
+  document.getElementById('itemIdeaLbl').textContent=L.idea;
+  document.getElementById('itemTitleInput').placeholder=L.titleHint;
+  document.getElementById('itemStatus').placeholder=L.statusHint;
+  document.getElementById('itemIdea').placeholder=L.ideaHint;
+
+  document.getElementById('itemProposer').value=it?it.proposer:ME.name;
+  document.getElementById('itemOwner').value=it?(it.owner||''):'';
+  document.getElementById('itemSupport').value=it?(it.support||''):'';
+  document.getElementById('itemReviewer').value=it?(it.reviewer||''):'';
+  document.getElementById('itemTitleInput').value=it?it.title:'';
+  document.getElementById('itemStatus').value=it?(it.status||''):'';
+  document.getElementById('itemIdea').value=it?(it.idea||''):'';
+  document.getElementById('itemLink').value=it?(it.link||''):'';
+  setSegValue('itemPri',it?(it.priority||'mid'):'mid');
+  setSegValue('itemCol',it?(it.column||'todo'):'todo');
+
+  const meta=document.getElementById('itemMeta');
+  if(it){meta.style.display='';meta.innerHTML='Tạo: '+nowStr(new Date(it.createdAt).getTime())+' · Sửa lần cuối: '+nowStr(new Date(it.updatedAt).getTime())+' bởi <b>'+esc(it.updatedBy)+'</b>';}
+  else meta.style.display='none';
+
+  const ro=!!(it&&!canEditItem(it));
+  document.getElementById('itemReadonlyNote').style.display=ro?'':'none';
+  document.getElementById('itemProposer').disabled=true; // người đề xuất luôn là người đăng nhập, không đổi được
+  ['itemOwner','itemSupport','itemReviewer','itemTitleInput','itemStatus','itemIdea','itemLink'].forEach(id=>{
+    document.getElementById(id).disabled=ro;
+  });
+  document.getElementById('itemPri').querySelectorAll('button').forEach(b=>b.disabled=ro);
+  document.getElementById('itemCol').querySelectorAll('button').forEach(b=>b.disabled=ro);
+  document.getElementById('itemSave').style.display=ro?'none':'';
+  document.getElementById('itemDelete').style.display=(it&&!ro)?'':'none';
+
+  document.getElementById('itemBg').classList.add('show');
+}
+document.getElementById('backlog-btn-add').onclick=()=>openItemModal('backlog',null);
+document.getElementById('training-btn-add').onclick=()=>openItemModal('training',null);
+document.getElementById('itemClose').onclick=()=>document.getElementById('itemBg').classList.remove('show');
+document.getElementById('itemBg').onclick=e=>{if(e.target===document.getElementById('itemBg'))document.getElementById('itemBg').classList.remove('show');};
+
+document.getElementById('itemSave').onclick=()=>{
+  if(!ME)return;
+  const list=db[itemKind]||(db[itemKind]=[]);
+  const existing=itemEditingId?list.find(x=>x.id===itemEditingId):null;
+  if(existing&&!canEditItem(existing))return;
+  const proposer=document.getElementById('itemProposer').value;
+  const title=document.getElementById('itemTitleInput').value.trim();
+  if(!title||!proposer){toast('Vui lòng nhập đủ Người đề xuất và tiêu đề.');return;}
+  const now=new Date().toISOString();
+  const data={
+    id:itemEditingId||(itemKind+'-'+Date.now()+'-'+Math.random().toString(36).slice(2,8)),
+    column:getItemCol(), priority:getItemPri(),
+    proposer, owner:document.getElementById('itemOwner').value,
+    support:document.getElementById('itemSupport').value,
+    reviewer:document.getElementById('itemReviewer').value,
+    title, status:document.getElementById('itemStatus').value.trim(),
+    idea:document.getElementById('itemIdea').value.trim(),
+    link:document.getElementById('itemLink').value.trim(),
+    createdAt:existing?existing.createdAt:now,
+    createdBy:existing?existing.createdBy:ME.name,
+    updatedAt:now, updatedBy:ME.name
+  };
+  if(itemEditingId){db[itemKind]=list.map(x=>x.id===itemEditingId?data:x);}
+  else{list.push(data);}
+  save();document.getElementById('itemBg').classList.remove('show');renderAll();
+  toast('Đã lưu.');
+};
+document.getElementById('itemDelete').onclick=()=>{
+  if(!itemEditingId)return;
+  const list=db[itemKind]||[];
+  const existing=list.find(x=>x.id===itemEditingId);
+  if(existing&&!canEditItem(existing))return;
+  if(!confirm('Xóa mục này?'))return;
+  db[itemKind]=list.filter(x=>x.id!==itemEditingId);
+  save();document.getElementById('itemBg').classList.remove('show');renderAll();
+  toast('Đã xóa.');
+};
+function renderBacklog(){renderItemTabs('backlog');renderItemBody('backlog');}
+function renderTraining(){renderItemTabs('training');renderItemBody('training');}
+
 function renderAll(){
-  [renderDash,renderQueue,renderReport,renderMachines,renderReports,renderWeek].forEach(fn=>{
+  [renderDash,renderQueue,renderReport,renderMachines,renderReports,renderWeek,renderBacklog,renderTraining].forEach(fn=>{
     try{fn();}catch(e){console.error(fn.name,e);}
   });
 }
@@ -1316,7 +1718,8 @@ function renderAll(){
 /* ================== ĐĂNG NHẬP THEO MÃ MÁY + MẬT KHẨU ================== */
 let ME=null;            // {code, name}
 const ADMIN_CODE="VNRHD079";        // máy admin
-function isAdmin(){return ME&&ME.code===ADMIN_CODE;}
+const ADMIN_NAMES=["VÕ HỒNG HƯNG","NGUYỄN PHI GIA"]; // admin theo tên (Backlog/Training), không phụ thuộc mã máy
+function isAdmin(){return !!ME&&(ME.code===ADMIN_CODE||ADMIN_NAMES.indexOf(ME.name)!==-1);}
 // có quyền thao tác lên phiên/mục của "owner" không? (chính chủ hoặc admin)
 function canManage(owner){return ME&&(ME.name===owner||isAdmin());}
 const LS_ME="licmgr_me";
