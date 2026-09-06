@@ -790,7 +790,8 @@
     }
 
     .field select,
-    .field input {
+    .field input,
+    .field textarea {
       border: 1px solid var(--line);
       border-radius: var(--r-sm);
       padding: 9px 10px;
@@ -799,15 +800,23 @@
       transition: border-color .2s var(--ease), box-shadow .2s var(--ease)
     }
 
+    .field textarea {
+      font-family: inherit;
+      resize: vertical;
+      min-height: 64px
+    }
+
     .field select:focus-visible,
-    .field input:focus-visible {
+    .field input:focus-visible,
+    .field textarea:focus-visible {
       outline: none;
       border-color: var(--accent);
       box-shadow: 0 0 0 3px rgba(var(--accent-rgb), .18)
     }
 
     .field select:disabled,
-    .field input:disabled {
+    .field input:disabled,
+    .field textarea:disabled {
       background: var(--surface-2);
       color: var(--ink2);
       cursor: not-allowed
@@ -992,6 +1001,7 @@
           style="display:none">0</span></button>
       <button class="tab" data-tab="backlog">Optimization &amp; Training</button>
       <button class="tab" data-tab="report">Reports</button>
+      <button class="tab" data-tab="users" id="usersTabBtn" style="display:none">👤 Users</button>
     </div>
 
     <!-- DASHBOARD -->
@@ -1120,7 +1130,7 @@
             <button class="btn primary small" id="backlog-btn-add">+ Add task</button>
           </div>
         </div>
-        <input type="file" id="backlog-import-input" accept="application/json" style="display:none">
+        <input type="file" id="backlog-import-input" accept=".xlsx,.xls" style="display:none">
         <div class="item-note">
           <span>📅 Review weekly — tackle <strong style="color:var(--warn)">high-priority (red)</strong> items
             first.</span>
@@ -1159,7 +1169,7 @@
           </table>
         </div>
         <p class="sub" style="text-align:center;margin-top:14px">Data syncs live for the whole team via Firestore.
-          Use <b>Export</b> to download a backup copy, <b>Import</b> to load/merge data from a JSON file.</p>
+          Use <b>Export</b> to download an Excel (.xlsx) copy, <b>Import</b> to load/merge data from an exported Excel file.</p>
       </div>
 
       <div class="card">
@@ -1175,7 +1185,7 @@
             <button class="btn primary small" id="training-btn-add">+ Add topic</button>
           </div>
         </div>
-        <input type="file" id="training-import-input" accept="application/json" style="display:none">
+        <input type="file" id="training-import-input" accept=".xlsx,.xls" style="display:none">
         <div class="item-note">
           <span>📅 Review weekly — schedule <strong style="color:var(--warn)">high-priority (red)</strong> topics
             first.</span>
@@ -1214,7 +1224,7 @@
           </table>
         </div>
         <p class="sub" style="text-align:center;margin-top:14px">Data syncs live for the whole team via Firestore.
-          Use <b>Export</b> to download a backup copy, <b>Import</b> to load/merge data from a JSON file.</p>
+          Use <b>Export</b> to download an Excel (.xlsx) copy, <b>Import</b> to load/merge data from an exported Excel file.</p>
       </div>
     </section>
 
@@ -1358,7 +1368,11 @@
         </table>
       </div>
       <div id="resetBtnWrap" style="display:none"><button class="btn ghost small" id="resetBtn">Clear all test data</button></div>
-      <div class="card" id="adminAddUserCard" style="display:none">
+    </section>
+
+    <!-- USERS (admin only) -->
+    <section class="pane" id="pane-users" style="display:none">
+      <div class="card" id="adminAddUserCard">
         <div class="recon-head">
           <div>
             <h2 style="margin:0">👤 Add User (Admin)</h2>
@@ -1371,6 +1385,22 @@
             <input id="newPersonName" placeholder="e.g. NGUYEN VAN A" style="text-transform:uppercase">
           </div>
           <button class="btn primary" id="addPersonBtn">+ Add user</button>
+        </div>
+      </div>
+      <div class="card">
+        <div class="recon-head">
+          <div>
+            <h2 style="margin:0">👥 All Users</h2>
+            <p class="sub" style="margin:2px 0 0" id="usersCountSub"></p>
+          </div>
+        </div>
+        <div style="overflow-x:auto">
+          <table>
+            <thead>
+              <tr><th>#</th><th>Full name</th><th>Username</th><th>Role</th><th>Source</th><th></th></tr>
+            </thead>
+            <tbody id="usersBody"></tbody>
+          </table>
         </div>
       </div>
     </section>
@@ -1407,8 +1437,8 @@
           </select></div>
       </div>
       <div class="field"><label id="itemTitleLbl">Task / issue</label><input id="itemTitleInput" placeholder=""></div>
-      <div class="field"><label id="itemStatusLbl">Current state</label><input id="itemStatus" placeholder=""></div>
-      <div class="field"><label id="itemIdeaLbl">Idea / solution</label><input id="itemIdea" placeholder=""></div>
+      <div class="field"><label id="itemStatusLbl">Current state</label><textarea id="itemStatus" rows="6" placeholder=""></textarea></div>
+      <div class="field"><label id="itemIdeaLbl">Idea / solution</label><textarea id="itemIdea" rows="6" placeholder=""></textarea></div>
       <div class="row2">
         <div class="field"><label>Priority</label>
           <div class="seg" id="itemPri"><button data-v="high">High</button><button data-v="mid"
@@ -1430,12 +1460,16 @@
 
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
   <script>
     const EMPLOYEES = ["PHẠM ĐỨC TÀI", "TRẦN VĂN ĐỊNH", "NGUYỄN THÀNH PHI", "NGUYỄN LINH TRƯỜNG",
       "CÁI THỊ THẢO MY", "NGUYỄN ĐĂNG QUANG", "LÊ NGUYỄN ĐÌNH TUẤN", "NGUYỄN TẤN LỢI",
       "BÙI LONG PHỤNG", "ĐOÀN PHÚC HIỆP", "TRẦN ĐÌNH VŨ", "PHẠM MINH KHANG", "NGUYỄN HỮU THOẠI",
       "NGUYỄN TRƯỜNG THỌ", "NGUYỄN VIẾT HOÀNG", "VÕ HỒNG HƯNG", "NGUYỄN PHI GIA", "TRẦN THẮNG",
-      "GIP NHẬT THANH"];
+      "GIP NHẬT THANH",
+      // added from an older data snapshot (saved_resource.html) — verify diacritics/spelling
+      "ĐẶNG HOÀNG TÙNG", "HUỲNH NGUYỄN PHƯƠNG NGỌC", "LÊ THỊ HẠNH THƯ", "LÊ THỊ MỸ HOA",
+      "PHAN THỊ BÍCH PHƯƠNG", "TẠ THỊ THU HÀ", "THÁI QUỐC DŨNG", "TRẦN MỸ PHƯƠNG", "TRẦN QUANG LÂM"];
     const LICENSES = [
       { id: "ETABS-01", sw: "ETABS" }, { id: "ETABS-02", sw: "ETABS" }, { id: "ETABS-03", sw: "ETABS" },
       { id: "ETABS-04", sw: "ETABS" }, { id: "ETABS-05", sw: "ETABS" },
@@ -1454,6 +1488,15 @@
       const family = words[0];
       const initials = words.slice(1).map(w => toAsciiLower(w).charAt(0)).join('');
       return initials + toAsciiLower(family);
+    }
+    // Compact display name: initials of every word but the last + the last word in full.
+    // VD: "NGUYỄN ĐĂNG QUANG" -> "NĐQUANG". Used in tables so long names don't wrap.
+    function abbreviateName(fullName) {
+      const words = String(fullName || '').trim().split(/\s+/).filter(Boolean);
+      if (words.length < 2) return words[0] || '';
+      const last = words[words.length - 1];
+      const initials = words.slice(0, -1).map(w => w.charAt(0)).join('');
+      return initials + last;
     }
 
     const LS = "licmgr_v1";
@@ -2166,8 +2209,6 @@
     }
 
     function renderReport() {
-      const addCard = document.getElementById('adminAddUserCard');
-      if (addCard) addCard.style.display = isAdmin() ? '' : 'none';
       const resetWrap = document.getElementById('resetBtnWrap');
       if (resetWrap) resetWrap.style.display = isAdmin() ? '' : 'none';
       renderItemsReport();
@@ -2315,6 +2356,43 @@
       renderAll();
       toast('Added ' + name + ' — username "' + username + '", default password 123456.');
     };
+
+    /* ---------- Users sheet (admin only): list everyone, remove added users ---------- */
+    function renderUsers() {
+      const btn = document.getElementById('usersTabBtn');
+      if (btn) btn.style.display = isAdmin() ? '' : 'none';
+      if (!isAdmin()) {
+        const pane = document.getElementById('pane-users');
+        if (pane && pane.style.display !== 'none') {
+          pane.style.display = 'none';
+          document.getElementById('pane-dash').style.display = '';
+          document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+          document.querySelector('.tab[data-tab="dash"]').classList.add('active');
+        }
+        return;
+      }
+      const list = allEmployees();
+      const body = document.getElementById('usersBody'); body.innerHTML = '';
+      document.getElementById('usersCountSub').textContent = list.length + ' user(s) total.';
+      list.forEach((name, i) => {
+        const username = usernameOf(name);
+        const isBase = EMPLOYEES.includes(name);
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td>${i + 1}</td><td>${esc(name)}</td><td>@${esc(username)}</td>
+        <td>${ADMIN_NAMES.indexOf(name) !== -1 ? '<b style="color:#c0392b">Admin</b>' : 'Member'}</td>
+        <td>${isBase ? 'Base' : 'Added'}</td>
+        <td>${isBase ? '' : '<button class="btn ghost small rm-user" data-name="' + esc(name) + '">Remove</button>'}</td>`;
+        body.append(tr);
+      });
+      body.querySelectorAll('.rm-user').forEach(b => b.onclick = () => {
+        const name = b.dataset.name;
+        if (!confirm('Remove ' + name + ' from the user list? Their past records stay, but they will no longer be able to log in.')) return;
+        db.employees = (db.employees || []).filter(n => n !== name);
+        if (db.pw) delete db.pw[usernameOf(name)];
+        save(); renderAll();
+        toast('Removed ' + name + '.');
+      });
+    }
 
     /* ================== WEEKLY SCHEDULE (advance registration, priority) ================== */
     const WK_DAYS = ["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6"];
@@ -2487,13 +2565,13 @@
         }
         const tr = document.createElement('tr');
         tr.innerHTML = `
-        <td>${esc(it.proposer || '')}</td>
+        <td title="${esc(it.proposer || '')}">${esc(abbreviateName(it.proposer))}</td>
         <td class="item-cell-ellipsis" title="${esc(it.title || '')}">${esc(it.title || '')}</td>
         <td class="item-cell-ellipsis" title="${esc(it.status || '')}">${esc(it.status || '—')}</td>
         <td class="item-cell-ellipsis item-cell-muted" title="${esc(it.idea || '')}">${esc(it.idea || '—')}</td>
-        <td>${esc(it.owner || '—')}</td>
-        <td class="item-cell-muted">${esc(it.support || '—')}</td>
-        <td class="item-cell-muted">${esc(it.reviewer || '—')}</td>
+        <td title="${esc(it.owner || '')}">${it.owner ? esc(abbreviateName(it.owner)) : '—'}</td>
+        <td class="item-cell-muted" title="${esc(it.support || '')}">${it.support ? esc(abbreviateName(it.support)) : '—'}</td>
+        <td class="item-cell-muted" title="${esc(it.reviewer || '')}">${it.reviewer ? esc(abbreviateName(it.reviewer)) : '—'}</td>
         <td><span class="pill ${col.cls}">${col.icon} ${col.name}</span> <span class="pill ${priClass}" title="Priority: ${ITEM_PRI_LABEL[it.priority] || 'Medium'}">${ITEM_PRI_LABEL[it.priority] || 'Medium'}</span></td>
         <td class="item-cell-ellipsis">${linkCell}</td>
         <td class="item-cell-mono">${it.updatedAt ? nowStr(new Date(it.updatedAt).getTime()) : '—'}<br><small>${esc(it.updatedBy || '')}</small></td>`;
@@ -2550,13 +2628,27 @@
     document.getElementById('itemBg').onclick = e => { if (e.target === document.getElementById('itemBg')) document.getElementById('itemBg').classList.remove('show'); };
 
     ['backlog', 'training'].forEach(kind => {
+      const colNameOf = k => (ITEM_COLS.find(c => c.key === k) || ITEM_COLS[0]).name;
+      const colKeyOf = name => (ITEM_COLS.find(c => c.name === String(name || '').trim()) || ITEM_COLS[0]).key;
+      const priKeyOf = name => {
+        const hit = Object.entries(ITEM_PRI_LABEL).find(([, v]) => v === String(name || '').trim());
+        return hit ? hit[0] : 'mid';
+      };
       document.getElementById(kind + '-btn-export').onclick = () => {
-        const payload = JSON.stringify(db[kind] || [], null, 2);
-        const filename = kind + '-' + new Date().toISOString().slice(0, 10) + '.json';
-        const blob = new Blob([payload], { type: 'application/json' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a'); a.href = url; a.download = filename; a.click();
-        URL.revokeObjectURL(url);
+        const L = ITEM_LABELS[kind];
+        const rows = (db[kind] || []).map(it => ({
+          ID: it.id, Proposer: it.proposer || '', [L.title]: it.title || '', [L.status]: it.status || '',
+          [L.idea]: it.idea || '', Owner: it.owner || '', Support: it.support || '', Reviewer: it.reviewer || '',
+          Priority: ITEM_PRI_LABEL[it.priority] || 'Medium', Status: colNameOf(it.column),
+          'Link/file': it.link || '',
+          'Created At': it.createdAt || '', 'Created By': it.createdBy || '',
+          'Updated At': it.updatedAt || '', 'Updated By': it.updatedBy || ''
+        }));
+        const ws = XLSX.utils.json_to_sheet(rows);
+        ws['!cols'] = [18, 14, 26, 26, 26, 14, 14, 14, 10, 12, 24, 20, 16, 20, 16].map(w => ({ wch: w }));
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, kind === 'backlog' ? 'Optimization Backlog' : 'Training Needs');
+        XLSX.writeFile(wb, kind + '-' + new Date().toISOString().slice(0, 10) + '.xlsx');
       };
       const importInput = document.getElementById(kind + '-import-input');
       document.getElementById(kind + '-btn-import').onclick = () => importInput.click();
@@ -2566,17 +2658,36 @@
         const reader = new FileReader();
         reader.onload = () => {
           try {
-            const incoming = JSON.parse(reader.result);
-            if (!Array.isArray(incoming)) throw new Error('bad shape');
+            const L = ITEM_LABELS[kind];
+            const wb = XLSX.read(reader.result, { type: 'array' });
+            const ws = wb.Sheets[wb.SheetNames[0]];
+            const rows = XLSX.utils.sheet_to_json(ws, { defval: '' });
+            const now = new Date().toISOString();
+            const incoming = rows.filter(r => String(r.Proposer || '').trim() || String(r[L.title] || '').trim())
+              .map(r => {
+                const id = String(r.ID || '').trim() || (kind + '-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8));
+                return {
+                  id,
+                  column: colKeyOf(r.Status), priority: priKeyOf(r.Priority),
+                  proposer: String(r.Proposer || '').trim(),
+                  owner: String(r.Owner || '').trim(), support: String(r.Support || '').trim(), reviewer: String(r.Reviewer || '').trim(),
+                  title: String(r[L.title] || '').trim(), status: String(r[L.status] || '').trim(), idea: String(r[L.idea] || '').trim(),
+                  link: String(r['Link/file'] || '').trim(),
+                  createdAt: String(r['Created At'] || '').trim() || now,
+                  createdBy: String(r['Created By'] || '').trim() || (ME ? ME.name : ''),
+                  updatedAt: now, updatedBy: ME ? ME.name : (String(r['Updated By'] || '').trim())
+                };
+              });
+            if (!incoming.length) throw new Error('no rows');
             const list = db[kind] || (db[kind] = []);
             const byId = {}; list.forEach(x => { if (x && x.id) byId[x.id] = x; });
-            incoming.forEach(x => { if (x && x.id) byId[x.id] = x; });
+            incoming.forEach(x => { byId[x.id] = x; });
             db[kind] = Object.values(byId);
             save(); renderAll();
             toast('Loaded/merged ' + incoming.length + ' item(s) from the file.');
-          } catch (e) { alert('This file is not a valid JSON export for the ' + kind + ' board.'); }
+          } catch (e) { alert('This file is not a valid Excel export for the ' + kind + ' board.'); }
         };
-        reader.readAsText(file);
+        reader.readAsArrayBuffer(file);
         importInput.value = '';
       });
     });
@@ -2622,7 +2733,7 @@
     function renderTraining() { renderItemTabs('training'); renderItemBody('training'); }
 
     function renderAll() {
-      [renderDash, renderQueue, renderReport, renderWeek, renderBacklog, renderTraining].forEach(fn => {
+      [renderDash, renderQueue, renderReport, renderWeek, renderBacklog, renderTraining, renderUsers].forEach(fn => {
         try { fn(); } catch (e) { console.error(fn.name, e); }
       });
     }
