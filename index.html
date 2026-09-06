@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="vi">
+<html lang="en">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Trao đổi &amp; Học Tập</title>
+  <title>Exchange &amp; Learning</title>
   <style>
     :root {
       /* main palette — sampled straight from the Rankine&Hill Vietnam logo (rankine-hill.com):
@@ -67,7 +67,8 @@
       -webkit-font-smoothing: antialiased;
       font-size: 15px;
       line-height: 1.45;
-      letter-spacing: -0.005em
+      letter-spacing: -0.005em;
+      overflow-x: hidden
     }
 
     header {
@@ -269,8 +270,18 @@
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
+      flex-wrap: wrap;
       gap: 12px;
       margin-bottom: 6px
+    }
+
+    .recon-head>div:first-child {
+      flex: 1 1 240px;
+      min-width: 0
+    }
+
+    .recon-head>div:last-child {
+      flex: 0 0 auto
     }
 
     .warn-name {
@@ -948,38 +959,39 @@
 
 <body>
 
-  <!-- MÀN ĐĂNG NHẬP -->
+  <!-- LOGIN SCREEN -->
   <div id="loginBg">
     <div class="login-card">
-      <h2>Đăng nhập</h2>
-      <p class="sub">Nhập tên đăng nhập và mật khẩu của bạn. Mật khẩu mặc định là <b>123456</b> — đổi sau khi đăng nhập.
+      <h2>Log In</h2>
+      <p class="sub">Enter your username and password. The default password is <b>123456</b> — change it after
+        logging in.
       </p>
-      <div class="field"><label>Tên đăng nhập</label><input id="lgCode" placeholder="VD hhvo"
+      <div class="field"><label>Username</label><input id="lgCode" placeholder="e.g. hhvo"
           style="text-transform:lowercase" autocomplete="off"></div>
-      <div class="field"><label>Mật khẩu</label><input id="lgPw" type="password" placeholder="123456"
+      <div class="field"><label>Password</label><input id="lgPw" type="password" placeholder="123456"
           autocomplete="off"></div>
-      <button class="btn primary" id="lgGo" style="width:100%">Đăng nhập</button>
+      <button class="btn primary" id="lgGo" style="width:100%">Log In</button>
       <div class="note" id="lgMsg" style="margin-top:12px;display:none"></div>
     </div>
   </div>
 
   <header>
-    <h1>Trao đổi &amp; Học Tập</h1>
+    <h1>Exchange &amp; Learning</h1>
     <div style="display:flex;align-items:center;gap:12px">
       <span class="clock" id="clock"></span>
       <span id="meBox" style="display:none;font-size:13px;color:#cfe0ec"></span>
-      <button class="btn ghost small" id="pwBtn" style="display:none">Đổi mật khẩu</button>
-      <button class="btn ghost small" id="logoutBtn" style="display:none">Thoát</button>
+      <button class="btn ghost small" id="pwBtn" style="display:none">Change Password</button>
+      <button class="btn ghost small" id="logoutBtn" style="display:none">Log Out</button>
     </div>
   </header>
 
   <div class="wrap">
     <div class="tabs">
       <button class="tab active" data-tab="dash">Dashboard</button>
-      <button class="tab" data-tab="reg">Đăng ký &amp; Lịch tuần <span class="badge" id="qBadge"
+      <button class="tab" data-tab="reg">Registration &amp; Weekly Schedule <span class="badge" id="qBadge"
           style="display:none">0</span></button>
-      <button class="tab" data-tab="backlog">Optimization &amp; Đào tạo <span class="i18n">(Training)</span></button>
-      <button class="tab" data-tab="report">Báo cáo</button>
+      <button class="tab" data-tab="backlog">Optimization &amp; Training</button>
+      <button class="tab" data-tab="report">Reports</button>
     </div>
 
     <!-- DASHBOARD -->
@@ -987,80 +999,67 @@
       <div id="dashAlert"></div>
       <div id="wkToday"></div>
       <div class="card">
-        <div class="grp-title" style="margin-top:0">Backlog &amp; Đào tạo</div>
+        <div class="grp-title" style="margin-top:0">Backlog &amp; Training</div>
         <div class="row2">
           <div id="dashBacklogSummary"></div>
           <div id="dashTrainingSummary"></div>
         </div>
       </div>
-      <div class="card" id="adminAddUserCard" style="display:none">
-        <div class="recon-head">
-          <div>
-            <h2 style="margin:0">👤 Thêm người dùng <span class="i18n">(Admin)</span></h2>
-            <p class="sub" style="margin:2px 0 0">Chỉ admin thấy mục này. Nhập họ tên đầy đủ — hệ thống tự sinh tên đăng
-              nhập và đặt mật khẩu mặc định 123456.</p>
-          </div>
-        </div>
-        <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap">
-          <div class="field" style="margin:0;flex:1;min-width:220px"><label>Họ tên</label>
-            <input id="newPersonName" placeholder="VD NGUYỄN VĂN A" style="text-transform:uppercase">
-          </div>
-          <button class="btn primary" id="addPersonBtn">+ Thêm người dùng</button>
-        </div>
-      </div>
       <div class="card">
-        <div class="grp-title"><span class="pill etabs">ETABS</span> 5 license</div>
+        <div class="grp-title"><span class="pill etabs">ETABS</span> 5 licenses</div>
         <div class="lic-grid" id="gridEtabs"></div>
-        <div class="grp-title"><span class="pill safe">SAFE</span> 3 license</div>
+        <div class="grp-title"><span class="pill safe">SAFE</span> 3 licenses</div>
         <div class="lic-grid" id="gridSafe"></div>
       </div>
     </section>
 
-    <!-- ĐĂNG KÝ & LỊCH TUẦN -->
+    <!-- REGISTRATION & WEEKLY SCHEDULE -->
     <section class="pane" id="pane-reg" style="display:none">
       <div class="card" style="max-width:460px">
-        <h2>Đăng ký sử dụng</h2>
-        <p class="sub">Còn license thì nhận ngay. Hết thì vào hàng chờ. Mỗi lần chỉ giữ 01 buổi.</p>
-        <div class="field"><label>Họ tên</label><select id="rgName"></select></div>
-        <div class="field"><label>Phần mềm</label>
+        <h2>Register for use</h2>
+        <p class="sub">Get a license right away if one's free; otherwise join the queue. One session per
+          registration.</p>
+        <div class="field"><label>Full name</label><select id="rgName"></select></div>
+        <div class="field"><label>Software</label>
           <div class="seg" id="rgSw">
             <button data-v="ETABS" class="on">ETABS</button>
             <button data-v="SAFE">SAFE</button>
           </div>
         </div>
-        <div class="field"><label>Buổi sử dụng</label>
+        <div class="field"><label>Session</label>
           <div class="seg" id="rgSess">
-            <button data-v="Sáng" class="on">Buổi sáng</button>
-            <button data-v="Chiều">Buổi chiều</button>
+            <button data-v="Sáng" class="on">Morning</button>
+            <button data-v="Chiều">Afternoon</button>
           </div>
         </div>
-        <div class="field"><label>Mức ưu tiên (khi phải vào hàng chờ)</label>
+        <div class="field"><label>Priority (if you have to queue)</label>
           <div class="seg" id="rgPri">
-            <button data-v="Thường" class="on">Thường</button>
-            <button data-v="Gấp">Gấp</button>
-            <button data-v="Rất gấp">Rất gấp</button>
+            <button data-v="Thường" class="on">Normal</button>
+            <button data-v="Gấp">Urgent</button>
+            <button data-v="Rất gấp">Very urgent</button>
           </div>
         </div>
-        <div class="field"><label id="rgNoteLbl">Lý do dự án (bắt buộc nếu Gấp / Rất gấp)</label><input id="rgNote"
-            placeholder="VD: chạy mô hình gấp cho hồ sơ thầu dự án GO Siêu Thị"></div>
-        <button class="btn primary" id="rgSubmit" style="width:100%">Đăng ký</button>
+        <div class="field"><label id="rgNoteLbl">Project reason (required if Urgent / Very urgent)</label><input
+            id="rgNote" placeholder="e.g. urgent model run for the GO Supermarket bid documents"></div>
+        <button class="btn primary" id="rgSubmit" style="width:100%">Register</button>
         <div class="note" id="rgHint" style="margin-top:13px"></div>
       </div>
 
       <div class="card">
-        <h2>Danh sách chờ</h2>
-        <p class="sub">Xếp theo mức ưu tiên (Rất gấp → Gấp → Thường); cùng mức thì ai đăng ký trước ra trước.</p>
+        <h2>Queue</h2>
+        <p class="sub">Sorted by priority (Very urgent → Urgent → Normal); within the same level, first come, first
+          served.</p>
         <div style="overflow-x:auto">
           <table>
             <thead>
               <tr>
                 <th class="num">#</th>
-                <th>Ưu tiên</th>
-                <th>Họ tên</th>
-                <th>Phần mềm</th>
-                <th>Buổi</th>
-                <th>Lý do dự án</th>
-                <th>Thời gian ĐK</th>
+                <th>Priority</th>
+                <th>Full name</th>
+                <th>Software</th>
+                <th>Session</th>
+                <th>Project reason</th>
+                <th>Registered at</th>
                 <th></th>
               </tr>
             </thead>
@@ -1070,32 +1069,33 @@
       </div>
 
       <div class="card" style="max-width:520px">
-        <h2>Đăng ký lịch tuần</h2>
-        <p class="sub">Chọn tuần, rồi đăng ký buổi mình cần — người có lịch được <b>ưu tiên nhận key trước</b> trong
-          buổi đó.</p>
-        <div class="field"><label>Tuần</label><select id="wkWeek"></select></div>
-        <div class="field"><label>Họ tên</label><select id="wkName"></select></div>
-        <div class="field"><label>Phần mềm</label>
+        <h2>Weekly schedule registration</h2>
+        <p class="sub">Pick a week, then reserve the session you need — scheduled people get <b>priority to receive a
+            key first</b> in that session.</p>
+        <div class="field"><label>Week</label><select id="wkWeek"></select></div>
+        <div class="field"><label>Full name</label><select id="wkName"></select></div>
+        <div class="field"><label>Software</label>
           <div class="seg" id="wkSw"><button data-v="ETABS" class="on">ETABS</button><button data-v="SAFE">SAFE</button>
           </div>
         </div>
-        <div class="field"><label>Ngày</label>
+        <div class="field"><label>Day</label>
           <div class="seg" id="wkDay">
-            <button data-v="Thứ 2" class="on">T2</button><button data-v="Thứ 3">T3</button>
-            <button data-v="Thứ 4">T4</button><button data-v="Thứ 5">T5</button><button data-v="Thứ 6">T6</button>
+            <button data-v="Thứ 2" class="on">Mon</button><button data-v="Thứ 3">Tue</button>
+            <button data-v="Thứ 4">Wed</button><button data-v="Thứ 5">Thu</button><button data-v="Thứ 6">Fri</button>
           </div>
         </div>
-        <div class="field"><label>Buổi</label>
-          <div class="seg" id="wkSess"><button data-v="Sáng" class="on">Sáng</button><button
-              data-v="Chiều">Chiều</button></div>
+        <div class="field"><label>Session</label>
+          <div class="seg" id="wkSess"><button data-v="Sáng" class="on">Morning</button><button
+              data-v="Chiều">Afternoon</button></div>
         </div>
-        <button class="btn primary" id="wkSubmit" style="width:100%">Đăng ký buổi này</button>
+        <button class="btn primary" id="wkSubmit" style="width:100%">Reserve this session</button>
         <div class="note" id="wkHint" style="margin-top:12px"></div>
       </div>
 
       <div class="card">
-        <h2>Lịch tuần: <span id="weekLabel"></span></h2>
-        <p class="sub">Bảng ai giữ buổi nào trong tuần đã chọn. Ô xanh = có người đăng ký ưu tiên. Bấm ✕ để xóa.</p>
+        <h2>Weekly schedule: <span id="weekLabel"></span></h2>
+        <p class="sub">Who holds which session in the selected week. Green cell = a scheduled reservation. Click ✕ to
+          remove.</p>
         <div style="overflow-x:auto">
           <table id="weekTable">
             <thead></thead>
@@ -1105,38 +1105,37 @@
       </div>
     </section>
 
-    <!-- OPTIMIZATION & TRAINING (gộp 1 sheet, song ngữ Việt/Anh) -->
+    <!-- OPTIMIZATION & TRAINING (single sheet) -->
     <section class="pane" id="pane-backlog" style="display:none">
       <div class="card">
         <div class="recon-head">
           <div>
             <h2 style="margin:0">🛠️ Optimization Backlog</h2>
-            <p class="sub" style="margin:2px 0 0">Việc thủ công, lặp lại, tốn thời gian — từ lúc đề xuất tới khi thành
-              quy trình chuẩn <span class="i18n">(Manual, repetitive, time-consuming work — from proposal to a
-                standardized fix)</span>. Dùng chung cho cả team.</p>
+            <p class="sub" style="margin:2px 0 0">Manual, repetitive, time-consuming work — from proposal to a
+              standardized fix. Shared with the whole team.</p>
           </div>
           <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-            <button class="btn ghost small" id="backlog-btn-import">⭱ Import <span class="i18n">(Nhập)</span></button>
-            <button class="btn ghost small" id="backlog-btn-export">⭳ Export <span class="i18n">(Xuất)</span></button>
-            <button class="btn primary small" id="backlog-btn-add">+ Thêm việc <span class="i18n">(Add task)</span></button>
+            <button class="btn ghost small" id="backlog-btn-import">⭱ Import</button>
+            <button class="btn ghost small" id="backlog-btn-export">⭳ Export</button>
+            <button class="btn primary small" id="backlog-btn-add">+ Add task</button>
           </div>
         </div>
         <input type="file" id="backlog-import-input" accept="application/json" style="display:none">
         <div class="item-note">
-          <span>📅 Review hàng tuần — ưu tiên xử lý các việc <strong style="color:var(--warn)">ưu tiên Cao (đỏ)</strong>
-            trước <span class="i18n">(Review weekly — tackle high-priority (red) items first)</span>.</span>
+          <span>📅 Review weekly — tackle <strong style="color:var(--warn)">high-priority (red)</strong> items
+            first.</span>
           <span>·</span>
-          <span>Bấm vào 1 dòng để sửa hoặc đổi trạng thái <span class="i18n">(Click a row to edit)</span>.</span>
+          <span>Click a row to edit it or change its status.</span>
         </div>
         <div class="item-filters">
           <div class="item-tabs" id="backlog-tabs"></div>
           <div class="item-priority-filter">
-            <label for="backlog-priority-select">Ưu tiên <span class="i18n">(Priority)</span>:</label>
+            <label for="backlog-priority-select">Priority:</label>
             <select id="backlog-priority-select">
-              <option value="all">Tất cả (All)</option>
-              <option value="high">Cao (High)</option>
-              <option value="mid">Vừa (Medium)</option>
-              <option value="low">Thấp (Low)</option>
+              <option value="all">All</option>
+              <option value="high">High</option>
+              <option value="mid">Medium</option>
+              <option value="low">Low</option>
             </select>
           </div>
         </div>
@@ -1144,57 +1143,54 @@
           <table class="item-table">
             <thead>
               <tr>
-                <th>Đề xuất <span class="i18n">(Proposer)</span></th>
-                <th>Việc / vấn đề <span class="i18n">(Task/issue)</span></th>
-                <th>Hiện trạng <span class="i18n">(Current state)</span></th>
-                <th>Ý tưởng / giải pháp <span class="i18n">(Idea/solution)</span></th>
-                <th>Phụ trách <span class="i18n">(Owner)</span></th>
-                <th>Hỗ trợ <span class="i18n">(Support)</span></th>
-                <th>Người soát <span class="i18n">(Reviewer)</span></th>
-                <th>Trạng thái <span class="i18n">(Status)</span></th>
+                <th>Proposer</th>
+                <th>Task / issue</th>
+                <th>Current state</th>
+                <th>Idea / solution</th>
+                <th>Owner</th>
+                <th>Support</th>
+                <th>Reviewer</th>
+                <th>Status</th>
                 <th>Link/file</th>
-                <th>Cập nhật <span class="i18n">(Updated)</span></th>
+                <th>Updated</th>
               </tr>
             </thead>
             <tbody id="backlog-body"></tbody>
           </table>
         </div>
-        <p class="sub" style="text-align:center;margin-top:14px">Dữ liệu đồng bộ trực tiếp cho cả team qua Firestore.
-          Dùng <b>Export</b> để tải bản sao lưu trữ, <b>Import</b> để nạp/ghép thêm dữ liệu từ file JSON.</p>
+        <p class="sub" style="text-align:center;margin-top:14px">Data syncs live for the whole team via Firestore.
+          Use <b>Export</b> to download a backup copy, <b>Import</b> to load/merge data from a JSON file.</p>
       </div>
 
       <div class="card">
         <div class="recon-head">
           <div>
             <h2 style="margin:0">📚 Training Needs</h2>
-            <p class="sub" style="margin:2px 0 0">Kỹ năng / kiến thức còn thiếu của team — từ lúc phát hiện tới khi hoàn
-              thành đào tạo <span class="i18n">(Skills or knowledge gaps the team needs training on, from spotting the
-                gap to a completed session)</span>. Dùng chung cho cả team.</p>
+            <p class="sub" style="margin:2px 0 0">Skills or knowledge gaps the team needs training on — from
+              spotting the gap to a completed session. Shared with the whole team.</p>
           </div>
           <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-            <button class="btn ghost small" id="training-btn-import">⭱ Import <span class="i18n">(Nhập)</span></button>
-            <button class="btn ghost small" id="training-btn-export">⭳ Export <span class="i18n">(Xuất)</span></button>
-            <button class="btn primary small" id="training-btn-add">+ Thêm chủ đề <span class="i18n">(Add
-                topic)</span></button>
+            <button class="btn ghost small" id="training-btn-import">⭱ Import</button>
+            <button class="btn ghost small" id="training-btn-export">⭳ Export</button>
+            <button class="btn primary small" id="training-btn-add">+ Add topic</button>
           </div>
         </div>
         <input type="file" id="training-import-input" accept="application/json" style="display:none">
         <div class="item-note">
-          <span>📅 Review hàng tuần — ưu tiên xếp lịch các chủ đề <strong style="color:var(--warn)">ưu tiên Cao
-              (đỏ)</strong> trước <span class="i18n">(Review weekly — schedule high-priority (red) topics
-              first)</span>.</span>
+          <span>📅 Review weekly — schedule <strong style="color:var(--warn)">high-priority (red)</strong> topics
+            first.</span>
           <span>·</span>
-          <span>Bấm vào 1 dòng để sửa hoặc đổi trạng thái <span class="i18n">(Click a row to edit)</span>.</span>
+          <span>Click a row to edit it or change its status.</span>
         </div>
         <div class="item-filters">
           <div class="item-tabs" id="training-tabs"></div>
           <div class="item-priority-filter">
-            <label for="training-priority-select">Ưu tiên <span class="i18n">(Priority)</span>:</label>
+            <label for="training-priority-select">Priority:</label>
             <select id="training-priority-select">
-              <option value="all">Tất cả (All)</option>
-              <option value="high">Cao (High)</option>
-              <option value="mid">Vừa (Medium)</option>
-              <option value="low">Thấp (Low)</option>
+              <option value="all">All</option>
+              <option value="high">High</option>
+              <option value="mid">Medium</option>
+              <option value="low">Low</option>
             </select>
           </div>
         </div>
@@ -1202,56 +1198,56 @@
           <table class="item-table">
             <thead>
               <tr>
-                <th>Đề xuất <span class="i18n">(Proposer)</span></th>
-                <th>Chủ đề / vấn đề <span class="i18n">(Topic/issue)</span></th>
-                <th>Hiện trạng <span class="i18n">(Current state)</span></th>
-                <th>Kế hoạch đào tạo <span class="i18n">(Training plan)</span></th>
-                <th>Phụ trách <span class="i18n">(Owner)</span></th>
-                <th>Hỗ trợ <span class="i18n">(Support)</span></th>
-                <th>Người soát <span class="i18n">(Reviewer)</span></th>
-                <th>Trạng thái <span class="i18n">(Status)</span></th>
+                <th>Proposer</th>
+                <th>Topic / issue</th>
+                <th>Current state</th>
+                <th>Training plan</th>
+                <th>Owner</th>
+                <th>Support</th>
+                <th>Reviewer</th>
+                <th>Status</th>
                 <th>Link/file</th>
-                <th>Cập nhật <span class="i18n">(Updated)</span></th>
+                <th>Updated</th>
               </tr>
             </thead>
             <tbody id="training-body"></tbody>
           </table>
         </div>
-        <p class="sub" style="text-align:center;margin-top:14px">Dữ liệu đồng bộ trực tiếp cho cả team qua Firestore.
-          Dùng <b>Export</b> để tải bản sao lưu trữ, <b>Import</b> để nạp/ghép thêm dữ liệu từ file JSON.</p>
+        <p class="sub" style="text-align:center;margin-top:14px">Data syncs live for the whole team via Firestore.
+          Use <b>Export</b> to download a backup copy, <b>Import</b> to load/merge data from a JSON file.</p>
       </div>
     </section>
 
-    <!-- BÁO CÁO -->
+    <!-- REPORTS -->
     <section class="pane" id="pane-report" style="display:none">
       <div class="row2">
         <div class="card">
-          <h2>🛠️ Thống kê Optimization</h2>
-          <p class="sub">Theo người: số đã đề xuất, đã xong, đang làm, và số ưu tiên Cao còn tồn đọng.</p>
+          <h2>🛠️ Optimization stats</h2>
+          <p class="sub">By person: proposed, done, in progress, and outstanding High-priority items.</p>
           <table>
             <thead>
               <tr>
-                <th>Người</th>
-                <th class="num">Đề xuất</th>
-                <th class="num">Đã xong</th>
-                <th class="num">Đang làm</th>
-                <th class="num">Ưu tiên cao tồn đọng</th>
+                <th>Person</th>
+                <th class="num">Proposed</th>
+                <th class="num">Done</th>
+                <th class="num">In progress</th>
+                <th class="num">High priority outstanding</th>
               </tr>
             </thead>
             <tbody id="rpBacklogUser"></tbody>
           </table>
         </div>
         <div class="card">
-          <h2>📚 Thống kê Đào tạo</h2>
-          <p class="sub">Theo người: số đã đề xuất, đã xong, đang làm, và số ưu tiên Cao còn tồn đọng.</p>
+          <h2>📚 Training stats</h2>
+          <p class="sub">By person: proposed, done, in progress, and outstanding High-priority topics.</p>
           <table>
             <thead>
               <tr>
-                <th>Người</th>
-                <th class="num">Đề xuất</th>
-                <th class="num">Đã xong</th>
-                <th class="num">Đang làm</th>
-                <th class="num">Ưu tiên cao tồn đọng</th>
+                <th>Person</th>
+                <th class="num">Proposed</th>
+                <th class="num">Done</th>
+                <th class="num">In progress</th>
+                <th class="num">High priority outstanding</th>
               </tr>
             </thead>
             <tbody id="rpTrainingUser"></tbody>
@@ -1259,18 +1255,18 @@
         </div>
       </div>
       <div class="card">
-        <h2>Cập nhật gần đây — Optimization &amp; Đào tạo</h2>
-        <p class="sub">Phản hồi / tiến độ mới nhất trên cả 2 bảng, mới nhất lên trước.</p>
+        <h2>Recent updates — Optimization &amp; Training</h2>
+        <p class="sub">Latest progress/feedback across both boards, newest first.</p>
         <div style="overflow-x:auto">
           <table>
             <thead>
               <tr>
-                <th>Loại</th>
-                <th>Tiêu đề</th>
-                <th>Hiện trạng / phản hồi</th>
-                <th>Trạng thái</th>
-                <th>Người cập nhật</th>
-                <th>Thời gian</th>
+                <th>Type</th>
+                <th>Title</th>
+                <th>Current state / feedback</th>
+                <th>Status</th>
+                <th>Updated by</th>
+                <th>Time</th>
               </tr>
             </thead>
             <tbody id="rpItemsRecent"></tbody>
@@ -1278,49 +1274,49 @@
         </div>
       </div>
       <div class="card">
-        <h2>Biểu đồ đăng ký &amp; sử dụng license</h2>
-        <p class="sub">Trực quan hóa lượt sử dụng theo người và nhu cầu đăng ký theo buổi.</p>
-        <h3 style="font-size:13.5px;margin:14px 0 6px">Lượt sử dụng theo người (nhiều → ít)</h3>
+        <h2>License registration &amp; usage charts</h2>
+        <p class="sub">Visualizes usage by person and registration demand by session.</p>
+        <h3 style="font-size:13.5px;margin:14px 0 6px">Usage by person (most → least)</h3>
         <div id="chartUsers" style="overflow-x:auto"></div>
-        <h3 style="font-size:13.5px;margin:20px 0 6px">Nhu cầu đăng ký lịch tuần theo buổi (tất cả các tuần)</h3>
+        <h3 style="font-size:13.5px;margin:20px 0 6px">Weekly schedule demand by session (all weeks)</h3>
         <div id="chartDemand" style="overflow-x:auto"></div>
       </div>
       <div class="row2">
         <div class="card">
-          <h2>Ai dùng nhiều nhất</h2>
-          <p class="sub">Số lượt và tổng thời gian đã sử dụng theo người.</p>
+          <h2>Top users</h2>
+          <p class="sub">Number of sessions and total time used by person.</p>
           <table>
             <thead>
               <tr>
-                <th>Người</th>
-                <th class="num">Lượt</th>
-                <th class="num">Tổng thời gian</th>
-                <th class="num">Quá hạn</th>
+                <th>Person</th>
+                <th class="num">Sessions</th>
+                <th class="num">Total time</th>
+                <th class="num">Overdue</th>
               </tr>
             </thead>
             <tbody id="rpUser"></tbody>
           </table>
         </div>
         <div class="card">
-          <h2>Tỷ lệ sử dụng phần mềm</h2>
-          <p class="sub">Số lượt sử dụng ETABS so với SAFE.</p>
+          <h2>Software usage share</h2>
+          <p class="sub">Sessions used for ETABS vs SAFE.</p>
           <table>
             <thead>
               <tr>
-                <th>Phần mềm</th>
-                <th class="num">Lượt</th>
-                <th>Tỷ lệ</th>
+                <th>Software</th>
+                <th class="num">Sessions</th>
+                <th>Share</th>
               </tr>
             </thead>
             <tbody id="rpSw"></tbody>
           </table>
-          <h2 style="margin-top:18px">Thời điểm thường thiếu license</h2>
-          <p class="sub">Số lần rơi vào hàng chờ theo buổi.</p>
+          <h2 style="margin-top:18px">When licenses usually run out</h2>
+          <p class="sub">Number of times a queue formed, by session.</p>
           <table>
             <thead>
               <tr>
-                <th>Buổi</th>
-                <th class="num">Lần vào hàng chờ</th>
+                <th>Session</th>
+                <th class="num">Times queued</th>
               </tr>
             </thead>
             <tbody id="rpPeak"></tbody>
@@ -1328,40 +1324,55 @@
         </div>
       </div>
       <div class="card">
-        <h2>Lịch sử sử dụng license</h2>
+        <h2>License usage history</h2>
         <table>
           <thead>
             <tr>
               <th>License</th>
-              <th>Người dùng</th>
-              <th>Buổi</th>
-              <th>Bắt đầu</th>
-              <th>Trả</th>
-              <th>Thời lượng</th>
-              <th>Ghi chú</th>
+              <th>User</th>
+              <th>Session</th>
+              <th>Start</th>
+              <th>Returned</th>
+              <th>Duration</th>
+              <th>Note</th>
             </tr>
           </thead>
           <tbody id="rpHist"></tbody>
         </table>
       </div>
       <div class="card">
-        <h2>Lịch sử nhường / tạm không dùng</h2>
-        <p class="sub">Ai nhường key cho ai, hoặc tạm không dùng dù đã đăng ký lịch tuần.</p>
+        <h2>Handover / temporarily-not-used history</h2>
+        <p class="sub">Who handed a key to whom, or skipped a scheduled session.</p>
         <table>
           <thead>
             <tr>
-              <th>Thời điểm</th>
+              <th>Time</th>
               <th>License</th>
-              <th>Từ</th>
-              <th>Cho</th>
-              <th>Kiểu</th>
-              <th>Lịch tuần?</th>
+              <th>From</th>
+              <th>To</th>
+              <th>Type</th>
+              <th>Weekly schedule?</th>
             </tr>
           </thead>
           <tbody id="rpHandover"></tbody>
         </table>
       </div>
-      <div><button class="btn ghost small" id="resetBtn">Xóa toàn bộ dữ liệu thử</button></div>
+      <div id="resetBtnWrap" style="display:none"><button class="btn ghost small" id="resetBtn">Clear all test data</button></div>
+      <div class="card" id="adminAddUserCard" style="display:none">
+        <div class="recon-head">
+          <div>
+            <h2 style="margin:0">👤 Add User (Admin)</h2>
+            <p class="sub" style="margin:2px 0 0">Only admins see this. Enter the full name — the system auto-generates
+              the username and sets the default password 123456.</p>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap">
+          <div class="field" style="margin:0;flex:1;min-width:220px"><label>Full name</label>
+            <input id="newPersonName" placeholder="e.g. NGUYEN VAN A" style="text-transform:uppercase">
+          </div>
+          <button class="btn primary" id="addPersonBtn">+ Add user</button>
+        </div>
+      </div>
     </section>
 
   </div>
@@ -1372,47 +1383,47 @@
   <div class="modal-bg" id="itemBg">
     <div class="modal">
       <div class="modal-head">
-        <h2 id="itemTitle" style="margin:0">Thêm việc</h2>
-        <button class="btn ghost small" id="itemClose">Đóng <span class="i18n">(Close)</span></button>
+        <h2 id="itemTitle" style="margin:0">Add task</h2>
+        <button class="btn ghost small" id="itemClose">Close</button>
       </div>
-      <p class="sub" id="itemReadonlyNote" style="display:none;color:var(--warn);font-weight:600">Chỉ người đề xuất hoặc
-        admin mới sửa được mục này.</p>
+      <p class="sub" id="itemReadonlyNote" style="display:none;color:var(--warn);font-weight:600">Only the proposer or
+        an admin can edit this item.</p>
       <div class="sub" id="itemMeta" style="display:none"></div>
       <div class="row2">
-        <div class="field"><label>Người đề xuất <span class="i18n">(Proposer, auto = logged-in user)</span></label>
+        <div class="field"><label>Proposer <span class="i18n">(auto = logged-in user)</span></label>
           <select id="itemProposer"></select>
         </div>
-        <div class="field"><label>Phụ trách <span class="i18n">(Owner, optional)</span></label><select id="itemOwner">
-            <option value="">— Chưa có —</option>
+        <div class="field"><label>Owner <span class="i18n">(optional)</span></label><select id="itemOwner">
+            <option value="">— None —</option>
           </select></div>
       </div>
       <div class="row2">
-        <div class="field"><label>Hỗ trợ <span class="i18n">(Support, optional)</span></label><select id="itemSupport">
-            <option value="">— Chưa có —</option>
+        <div class="field"><label>Support <span class="i18n">(optional)</span></label><select id="itemSupport">
+            <option value="">— None —</option>
           </select></div>
-        <div class="field"><label>Người soát <span class="i18n">(Reviewer, optional)</span></label><select
+        <div class="field"><label>Reviewer <span class="i18n">(optional)</span></label><select
             id="itemReviewer">
-            <option value="">— Chưa có —</option>
+            <option value="">— None —</option>
           </select></div>
       </div>
-      <div class="field"><label id="itemTitleLbl">Việc / vấn đề</label><input id="itemTitleInput" placeholder=""></div>
-      <div class="field"><label id="itemStatusLbl">Hiện trạng</label><input id="itemStatus" placeholder=""></div>
-      <div class="field"><label id="itemIdeaLbl">Ý tưởng / giải pháp</label><input id="itemIdea" placeholder=""></div>
+      <div class="field"><label id="itemTitleLbl">Task / issue</label><input id="itemTitleInput" placeholder=""></div>
+      <div class="field"><label id="itemStatusLbl">Current state</label><input id="itemStatus" placeholder=""></div>
+      <div class="field"><label id="itemIdeaLbl">Idea / solution</label><input id="itemIdea" placeholder=""></div>
       <div class="row2">
-        <div class="field"><label>Mức ưu tiên <span class="i18n">(Priority)</span></label>
-          <div class="seg" id="itemPri"><button data-v="high">Cao (High)</button><button data-v="mid"
-              class="on">Vừa (Medium)</button><button data-v="low">Thấp (Low)</button></div>
+        <div class="field"><label>Priority</label>
+          <div class="seg" id="itemPri"><button data-v="high">High</button><button data-v="mid"
+              class="on">Medium</button><button data-v="low">Low</button></div>
         </div>
-        <div class="field"><label>Trạng thái <span class="i18n">(Status)</span></label>
-          <div class="seg" id="itemCol"><button data-v="todo" class="on">Đã ghi nhận</button><button data-v="idea">Đang
-              làm</button><button data-v="done">Đã xong</button></div>
+        <div class="field"><label>Status</label>
+          <div class="seg" id="itemCol"><button data-v="todo" class="on">Identified</button><button data-v="idea">In
+              progress</button><button data-v="done">Done</button></div>
         </div>
       </div>
       <div class="field"><label>Link / file <span class="i18n">(optional)</span></label><input id="itemLink"
-          placeholder="VD \\server\tools\... hoặc link SharePoint"></div>
+          placeholder="e.g. \\server\tools\... or a SharePoint link"></div>
       <div class="modal-head" style="margin-top:6px">
-        <button class="btn warn small" id="itemDelete" style="display:none">Xóa mục <span class="i18n">(Delete)</span></button>
-        <button class="btn primary" id="itemSave">Lưu <span class="i18n">(Save)</span></button>
+        <button class="btn warn small" id="itemDelete" style="display:none">Delete</button>
+        <button class="btn primary" id="itemSave">Save</button>
       </div>
     </div>
   </div>
@@ -1465,31 +1476,31 @@
       (db.employees || []).forEach(n => { if (n) set.add(n); });
       return Array.from(set).sort((a, b) => a.localeCompare(b, 'vi'));
     }
-    // dữ liệu mẫu ban đầu cho 2 bảng mới — chỉ dùng lần đầu tiên (Sheet còn trống)
+    // initial sample data for the 2 new boards — only used the very first time (when the Sheet is empty)
     function seedBacklog() {
       return [
         {
           id: "seed-ob-1", column: "todo", priority: "high",
           proposer: "NGUYỄN THÀNH PHI", owner: "NGUYỄN THÀNH PHI", support: "", reviewer: "",
-          title: "Nhập số liệu quan trắc từ ảnh chụp máy đo vào Excel",
-          status: "Mỗi thứ 2 mất khoảng 2 giờ gõ tay số liệu từ ảnh chụp hiện trường.",
-          idea: "Chưa có hướng — đang tìm cách OCR hoặc mẫu nhập nhanh hơn.",
+          title: "Enter survey readings from measurement device photos into Excel",
+          status: "Every Monday takes about 2 hours of manually typing readings from field photos.",
+          idea: "No direction yet — looking into OCR or a faster entry template.",
           link: "", createdAt: "2026-08-05T09:14:00", createdBy: "NGUYỄN THÀNH PHI", updatedAt: "2026-08-13T08:02:00", updatedBy: "NGUYỄN THÀNH PHI"
         },
         {
           id: "seed-ob-2", column: "idea", priority: "mid",
           proposer: "CÁI THỊ THẢO MY", owner: "NGUYỄN ĐĂNG QUANG", support: "NGUYỄN HỮU THOẠI", reviewer: "NGUYỄN PHI GIA",
-          title: "Tự động ghép báo cáo tiến độ tuần từ nhiều file Excel",
-          status: "Đang copy-paste tay giữa các sheet của từng bộ môn, khoảng 1 giờ/tuần.",
-          idea: "Dùng Power Query nối dữ liệu tự động, đang thử nghiệm trên 1 dự án.",
+          title: "Automatically merge weekly progress reports from multiple Excel files",
+          status: "Currently copy-pasting by hand between each discipline's sheets, about 1 hour/week.",
+          idea: "Use Power Query to merge data automatically, currently piloting on 1 project.",
           link: "", createdAt: "2026-07-29T14:20:00", createdBy: "CÁI THỊ THẢO MY", updatedAt: "2026-08-12T16:45:00", updatedBy: "NGUYỄN ĐĂNG QUANG"
         },
         {
           id: "seed-ob-3", column: "done", priority: "low",
           proposer: "TRẦN ĐÌNH VŨ", owner: "TRẦN ĐÌNH VŨ", support: "", reviewer: "VÕ HỒNG HƯNG",
-          title: "Đổi tên hàng loạt file bản vẽ theo chuẩn đặt tên dự án",
-          status: "Trước đây đổi tay từng file, hay sai chuẩn đặt tên.",
-          idea: "Script Python đổi tên theo quy tắc, đã chạy ổn định 2 tháng nay.",
+          title: "Bulk-rename drawing files to the project naming standard",
+          status: "Previously renamed each file by hand, often got the naming standard wrong.",
+          idea: "Python script renames files by rule, has been running stably for 2 months.",
           link: "\\\\server\\tools\\rename_drawings.py", createdAt: "2026-06-01T11:00:00", createdBy: "TRẦN ĐÌNH VŨ", updatedAt: "2026-08-01T10:00:00", updatedBy: "TRẦN ĐÌNH VŨ"
         }
       ];
@@ -1499,25 +1510,25 @@
         {
           id: "seed-tr-1", column: "todo", priority: "mid",
           proposer: "NGUYỄN LINH TRƯỜNG", owner: "NGUYỄN LINH TRƯỜNG", support: "", reviewer: "",
-          title: "Nhiều bạn chưa biết dùng Pivot Table trong Excel",
-          status: "Hay tổng hợp số liệu thủ công, mất nhiều thời gian và dễ sai.",
-          idea: "Chưa xếp lịch — cần tìm người training nội bộ.",
+          title: "Several people don't know how to use Pivot Tables in Excel",
+          status: "Often summarizes data manually, which takes a lot of time and is error-prone.",
+          idea: "Not scheduled yet — need to find an internal trainer.",
           link: "", createdAt: "2026-08-10T10:00:00", createdBy: "NGUYỄN LINH TRƯỜNG", updatedAt: "2026-08-18T09:30:00", updatedBy: "NGUYỄN LINH TRƯỜNG"
         },
         {
           id: "seed-tr-2", column: "idea", priority: "high",
           proposer: "BÙI LONG PHỤNG", owner: "BÙI LONG PHỤNG", support: "NGUYỄN TẤN LỢI", reviewer: "VÕ HỒNG HƯNG",
-          title: "Đào tạo cách đọc bản vẽ kết cấu thép cho nhân viên mới",
-          status: "Nhân viên mới hay hỏi lại nhiều, mất thời gian của cả bộ môn.",
-          idea: "Đã lên lịch buổi training 2 giờ vào thứ Sáu tuần này, người dạy: anh Phụng.",
+          title: "Train new hires on how to read steel structure drawings",
+          status: "New hires ask a lot of repeat questions, taking up the whole discipline's time.",
+          idea: "A 2-hour training session has been scheduled for this Friday, taught by Mr. Phung.",
           link: "", createdAt: "2026-08-14T13:00:00", createdBy: "BÙI LONG PHỤNG", updatedAt: "2026-08-22T15:10:00", updatedBy: "BÙI LONG PHỤNG"
         },
         {
           id: "seed-tr-3", column: "done", priority: "low",
           proposer: "ĐOÀN PHÚC HIỆP", owner: "ĐOÀN PHÚC HIỆP", support: "", reviewer: "NGUYỄN PHI GIA",
-          title: "Hướng dẫn quy trình xuất bản vẽ theo khung tên chuẩn công ty",
-          status: "Trước đây mỗi người xuất bản vẽ một kiểu, không đồng nhất.",
-          idea: "Đã training xong, kèm tài liệu hướng dẫn để tra cứu lại.",
+          title: "Guide for the drawing issuance process per the company's title block standard",
+          status: "Previously everyone issued drawings their own way, inconsistently.",
+          idea: "Training completed, with a reference guide document included.",
           link: "\\\\server\\tools\\huong_dan_xuat_ban_ve.pdf", createdAt: "2026-07-20T09:00:00", createdBy: "ĐOÀN PHÚC HIỆP", updatedAt: "2026-08-05T11:20:00", updatedBy: "ĐOÀN PHÚC HIỆP"
         }
       ];
@@ -1555,8 +1566,8 @@
       }
       return d;
     }
-    // ================== KẾT NỐI FIREBASE FIRESTORE (realtime, không cần poll) ==================
-    // >>> DÁN CẤU HÌNH FIREBASE CỦA BẠN VÀO ĐÂY (Firebase console > Project settings > Your apps) <<<
+    // ================== FIREBASE FIRESTORE CONNECTION (realtime, no polling needed) ==================
+    // >>> PASTE YOUR FIREBASE CONFIG HERE (Firebase console > Project settings > Your apps) <<<
     const firebaseConfig = {
       apiKey: "AIzaSyCfVCGpi8_34EhEWJ-M41crdpY1naHOLGA",
       authDomain: "rhvietnam-91faf.firebaseapp.com",
@@ -1574,7 +1585,7 @@
     }
 
     async function loadFromServer() {
-      if (!USE_FIRESTORE) { // chưa cấu hình -> dùng localStorage để thử
+      if (!USE_FIRESTORE) { // not configured -> use localStorage as a trial mode
         try { return migrate(JSON.parse(localStorage.getItem(LS))); } catch (e) { return fresh(); }
       }
       try {
@@ -1588,35 +1599,35 @@
         const data = migrate(snap.data());
         LAST_SNAPSHOT = JSON.stringify(data);
         return data;
-      } catch (e) { console.error('load', e); toast('⚠ Không tải được dữ liệu — kiểm tra cấu hình Firestore.'); return fresh(); }
+      } catch (e) { console.error('load', e); toast('⚠ Could not load data — check your Firestore configuration.'); return fresh(); }
     }
     function save() {
       const snap = JSON.stringify(db);
       if (!USE_FIRESTORE) { localStorage.setItem(LS, snap); LAST_SNAPSHOT = snap; return; }
-      if (snap === LAST_SNAPSHOT) return; // không có gì đổi thì khỏi ghi
-      // gộp các lần lưu liên tiếp trong 400ms
+      if (snap === LAST_SNAPSHOT) return; // nothing changed, no need to write
+      // batch consecutive saves within 400ms
       clearTimeout(SAVE_TIMER);
       SAVE_TIMER = setTimeout(async () => {
         try {
           await fsDocRef.set(db);
           LAST_SNAPSHOT = JSON.stringify(db);
-        } catch (e) { console.error('save', e); toast('⚠ Không lưu được lên Firestore — kiểm tra kết nối.'); }
+        } catch (e) { console.error('save', e); toast('⚠ Could not save to Firestore — check your connection.'); }
       }, 400);
     }
-    // đồng bộ realtime: Firestore tự đẩy thay đổi về, không cần vòng lặp hỏi lại mỗi vài giây
+    // realtime sync: Firestore pushes changes automatically, no need to poll every few seconds
     function watchServer() {
       if (!USE_FIRESTORE) return;
       fsDocRef.onSnapshot(snap => {
         if (!snap.exists) return;
         const data = migrate(snap.data());
         const asStr = JSON.stringify(data);
-        if (asStr === LAST_SNAPSHOT) return; // chính mình vừa ghi xong, bỏ qua để khỏi giật màn hình
+        if (asStr === LAST_SNAPSHOT) return; // this is our own write echoing back, skip to avoid UI jitter
         LAST_SNAPSHOT = asStr;
         db = data;
         populatePeopleSelects();
         renderAll();
         if (ME) applyIdentity();
-      }, err => { console.error('watch', err); toast('⚠ Mất kết nối realtime — thử tải lại trang.'); });
+      }, err => { console.error('watch', err); toast('⚠ Lost the realtime connection — try reloading the page.'); });
     }
 
     /* ---------- helpers ---------- */
@@ -1627,16 +1638,25 @@
     }
     function dur(ms) {
       const s = Math.floor(ms / 1000), h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60);
-      return (h ? h + 'g ' : '') + m + 'p';
+      return (h ? h + 'h ' : '') + m + 'm';
     }
     let tmo; function toast(m) {
       const el = document.getElementById('toast'); el.textContent = m; el.classList.add('show');
       clearTimeout(tmo); tmo = setTimeout(() => el.classList.remove('show'), 2600);
     }
 
-    /* ---------- giờ hết hạn theo buổi ---------- */
+    // Internal values (sess/day/priority) stay in Vietnamese as stable data keys — matches
+    // existing Firestore data and internal comparisons. These just map them to English for display.
+    const SESS_LABEL = { "Sáng": "Morning", "Chiều": "Afternoon" };
+    const DAY_LABEL = { "Thứ 2": "Mon", "Thứ 3": "Tue", "Thứ 4": "Wed", "Thứ 5": "Thu", "Thứ 6": "Fri" };
+    const PRI_LABEL = { "Thường": "Normal", "Gấp": "Urgent", "Rất gấp": "Very urgent", "Lịch tuần": "Scheduled" };
+    function dSess(s) { return SESS_LABEL[s] || s; }
+    function dDay(d) { return DAY_LABEL[d] || d; }
+    function dPri(p) { return PRI_LABEL[p] || p; }
+
+    /* ---------- session expiry time ---------- */
     const SESSION_END = { "Sáng": { h: 12, m: 0 }, "Chiều": { h: 17, m: 30 } };
-    // mốc hết hạn = cuối buổi của NGÀY nhận key
+    // deadline = end of the session on the day the key was taken
     function deadlineOf(s) {
       const start = new Date(s.start); const e = SESSION_END[s.sess];
       const dl = new Date(start.getFullYear(), start.getMonth(), start.getDate(), e.h, e.m, 0, 0);
@@ -1647,14 +1667,14 @@
 
     /* ---------- clock + live timers ---------- */
     function tick() {
-      document.getElementById('clock').textContent = 'Bây giờ: ' + nowStr();
+      document.getElementById('clock').textContent = 'Now: ' + nowStr();
       document.querySelectorAll('[data-start]').forEach(el => {
         el.textContent = dur(Date.now() - Number(el.dataset.start));
       });
       document.querySelectorAll('[data-over]').forEach(el => {
         el.textContent = dur(Date.now() - Number(el.dataset.over));
       });
-      // cập nhật lại thẻ để đổi màu khi vừa quá hạn (nhẹ: chỉ khi có phiên đang mở)
+      // refresh cards so they change color right when they become overdue (only matters while a session is open)
       if (document.getElementById('pane-dash').style.display !== 'none') refreshOverdueClasses();
     }
     setInterval(tick, 1000);
@@ -1681,8 +1701,8 @@
     const getSw = seg('rgSw'), getSess = seg('rgSess'), getPri = seg('rgPri');
     function updateNoteLabel() {
       const lbl = document.getElementById('rgNoteLbl'); const p = getPri();
-      if (p === 'Thường') lbl.innerHTML = 'Lý do dự án (tùy chọn)';
-      else lbl.innerHTML = 'Lý do dự án <b style="color:var(--warn)">(bắt buộc — ' + p + ')</b>';
+      if (p === 'Thường') lbl.innerHTML = 'Project reason (optional)';
+      else lbl.innerHTML = 'Project reason <b style="color:var(--warn)">(required — ' + dPri(p) + ')</b>';
     }
 
     /* ---------- tabs ---------- */
@@ -1701,39 +1721,39 @@
       div.className = 'lic' + (s ? ' busy' : '') + (over ? ' overdue' : '');
       const swpill = `<span class="pill ${l.sw.toLowerCase()}">${l.sw}</span>`;
       if (s) {
-        // có ai đang chờ cùng phần mềm không?
+        // is anyone waiting for the same software?
         const waiting = db.queue.filter(q => q.sw === l.sw).length;
         const overBlock = over
-          ? `<div class="over">🔴 QUÁ HẠN buổi ${s.sess} (hạn ${endLabel(s)}) · trễ <span data-over="${deadlineOf(s)}">—</span>
-          ${waiting ? `<div class="over-strong">⚠ Có ${waiting} người đang chờ ${l.sw} — vui lòng trả key gấp!</div>` : ''}</div>`
-          : `<div class="deadline">Hạn trả: <b>${endLabel(s)}</b> (cuối buổi ${s.sess})</div>`;
+          ? `<div class="over">🔴 OVERDUE — ${dSess(s.sess)} session (due ${endLabel(s)}) · late by <span data-over="${deadlineOf(s)}">—</span>
+          ${waiting ? `<div class="over-strong">⚠ ${waiting} people waiting for ${l.sw} — please return the key ASAP!</div>` : ''}</div>`
+          : `<div class="deadline">Due: <b>${endLabel(s)}</b> (end of ${dSess(s.sess)} session)</div>`;
         div.innerHTML = `<div class="top"><span class="name">${swpill} ${l.id}</span>
-        <span class="dot ${over ? 'over' : 'busy'}">${over ? '🔴 Quá hạn' : '🟢 Đang dùng'}</span></div>
-      <div class="body">👤 <b>${s.user}</b> · <span class="pill ${s.sess === 'Sáng' ? 'sang' : 'chieu'}">${s.sess}</span>
-        ${holdsWeekToday(s.user, l.sw) ? ' <span class="pill pri-cool">lịch tuần</span>' : ''}
+        <span class="dot ${over ? 'over' : 'busy'}">${over ? '🔴 Overdue' : '🟢 In use'}</span></div>
+      <div class="body">👤 <b>${s.user}</b> · <span class="pill ${s.sess === 'Sáng' ? 'sang' : 'chieu'}">${dSess(s.sess)}</span>
+        ${holdsWeekToday(s.user, l.sw) ? ' <span class="pill pri-cool">scheduled</span>' : ''}
         ${s.via ? '<br><small style="color:var(--ink2)">' + s.via + '</small>' : ''}<br>
-        Bắt đầu: <b>${nowStr(s.start)}</b> · đã dùng <span class="timer" data-start="${s.start}">—</span>
+        Started: <b>${nowStr(s.start)}</b> · used for <span class="timer" data-start="${s.start}">—</span>
         ${overBlock}</div>`;
         const act = document.createElement('div'); act.className = 'act'; act.style.flexWrap = 'wrap';
         if (canManage(s.user)) {
-          const b = document.createElement('button'); b.className = 'btn green small'; b.textContent = 'Trả key';
+          const b = document.createElement('button'); b.className = 'btn green small'; b.textContent = 'Return key';
           b.onclick = () => release(l.id); act.append(b);
-          const bh = document.createElement('button'); bh.className = 'btn ghost small'; bh.textContent = 'Nhường cho…';
+          const bh = document.createElement('button'); bh.className = 'btn ghost small'; bh.textContent = 'Hand over to…';
           bh.onclick = () => handoverTo(l.id); act.append(bh);
-          const bs = document.createElement('button'); bs.className = 'btn ghost small'; bs.textContent = 'Tạm không dùng';
+          const bs = document.createElement('button'); bs.className = 'btn ghost small'; bs.textContent = 'Not using right now';
           bs.onclick = () => markNotUse(l.id); act.append(bs);
         } else {
           const note = document.createElement('div'); note.style.fontSize = '12px'; note.style.color = 'var(--ink2)';
-          note.textContent = 'Chỉ ' + s.user + ' hoặc admin thao tác được key này.';
+          note.textContent = 'Only ' + s.user + ' or an admin can manage this key.';
           act.append(note);
         }
         div.append(act);
       } else {
         div.innerHTML = `<div class="top"><span class="name">${swpill} ${l.id}</span>
-        <span class="dot free">⚪ Trống</span></div>
-      <div class="body">Sẵn sàng để đăng ký.</div>`;
+        <span class="dot free">⚪ Free</span></div>
+      <div class="body">Ready to register.</div>`;
         const act = document.createElement('div'); act.className = 'act';
-        const b = document.createElement('button'); b.className = 'btn primary small'; b.textContent = 'Nhận key này';
+        const b = document.createElement('button'); b.className = 'btn primary small'; b.textContent = 'Take this key';
         b.onclick = () => quickTake(l.id); act.append(b); div.append(act);
       }
       return div;
@@ -1749,19 +1769,19 @@
       const chips = due.map(w => {
         const holdingByThis = Object.entries(db.state).find(([id, s]) => s && s.user === w.user && LICENSES.find(l => l.id === id).sw === w.sw);
         if (holdingByThis) return `<span class="wk-chip in">✅ ${w.user} · ${w.sw} (${holdingByThis[0]})</span>`;
-        // chưa có key: còn trống hay bị kẹt?
+        // no key yet: is one free, or is it stuck?
         const free = LICENSES.some(l => l.sw === w.sw && !db.state[l.id]);
         return free
-          ? `<span class="wk-chip hold">⏳ ${w.user} · ${w.sw} (đang đưa vào…)</span>`
-          : `<span class="wk-chip wait">⚠ ${w.user} · ${w.sw} (kẹt — hết license)</span>`;
+          ? `<span class="wk-chip hold">⏳ ${w.user} · ${w.sw} (assigning…)</span>`
+          : `<span class="wk-chip wait">⚠ ${w.user} · ${w.sw} (stuck — no license free)</span>`;
       }).join('');
-      box.innerHTML = `<div class="wk-today"><h3>📅 Lịch tuần hôm nay — ${day}, buổi ${sess}</h3>${chips}</div>`;
+      box.innerHTML = `<div class="wk-today"><h3>📅 Today's schedule — ${dDay(day)}, ${dSess(sess)} session</h3>${chips}</div>`;
     }
 
     function renderDashItemsSummary() {
       const specs = [
-        { kind: 'backlog', box: document.getElementById('dashBacklogSummary'), label: '🛠️ Backlog cải tiến', tab: 'backlog', word: 'việc' },
-        { kind: 'training', box: document.getElementById('dashTrainingSummary'), label: '📚 Đào tạo', tab: 'backlog', word: 'chủ đề' }
+        { kind: 'backlog', box: document.getElementById('dashBacklogSummary'), label: '🛠️ Optimization Backlog', tab: 'backlog', word: 'task' },
+        { kind: 'training', box: document.getElementById('dashTrainingSummary'), label: '📚 Training', tab: 'backlog', word: 'topic' }
       ];
       specs.forEach(s => {
         if (!s.box) return;
@@ -1772,14 +1792,14 @@
         s.box.innerHTML = `
       <div class="grp-title" style="margin-top:0">${s.label} <span style="font-weight:400;text-transform:none;letter-spacing:0">(${list.length})</span></div>
       <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">
-        <span class="pill st-todo">📌 Đã ghi nhận ${counts.todo}</span>
-        <span class="pill st-idea">💡 Đang làm ${counts.idea}</span>
-        <span class="pill st-done">🏆 Đã xong ${counts.done}</span>
+        <span class="pill st-todo">📌 Identified ${counts.todo}</span>
+        <span class="pill st-idea">💡 In progress ${counts.idea}</span>
+        <span class="pill st-done">🏆 Done ${counts.done}</span>
       </div>
       ${hot.length
-            ? `<div class="warn-name" style="margin-top:0">🔴 <b>${hot.length}</b> ${s.word} ưu tiên Cao chưa xong: ${hot.slice(0, 3).map(x => esc(x.title)).join('; ')}${hot.length > 3 ? '…' : ''}</div>`
-            : `<div class="ok-name" style="margin-top:0">✓ Không có ${s.word} ưu tiên Cao nào tồn đọng.</div>`}
-      <button type="button" class="btn ghost small dash-goto" style="margin-top:10px">Xem tất cả →</button>`;
+            ? `<div class="warn-name" style="margin-top:0">🔴 <b>${hot.length}</b> High-priority ${s.word}${hot.length > 1 ? 's' : ''} not done: ${hot.slice(0, 3).map(x => esc(x.title)).join('; ')}${hot.length > 3 ? '…' : ''}</div>`
+            : `<div class="ok-name" style="margin-top:0">✓ No outstanding High-priority ${s.word}s.</div>`}
+      <button type="button" class="btn ghost small dash-goto" style="margin-top:10px">View all →</button>`;
         const btn = s.box.querySelector('.dash-goto');
         if (btn) btn.onclick = () => document.querySelector('.tab[data-tab="' + s.tab + '"]').click();
       });
@@ -1788,67 +1808,65 @@
     function renderDash() {
       renderWkToday();
       renderDashItemsSummary();
-      const addCard = document.getElementById('adminAddUserCard');
-      if (addCard) addCard.style.display = isAdmin() ? '' : 'none';
       const ge = document.getElementById('gridEtabs'), gs = document.getElementById('gridSafe');
       ge.innerHTML = ''; gs.innerHTML = '';
       LICENSES.forEach(l => (l.sw === 'ETABS' ? ge : gs).append(licCard(l)));
-      // banner: các key quá hạn, ưu tiên cái đang có người chờ
+      // banner: overdue keys, prioritizing ones with people waiting
       const overdue = LICENSES.filter(l => db.state[l.id] && isOverdue(db.state[l.id]));
       const alert = document.getElementById('dashAlert');
       if (overdue.length) {
         const parts = overdue.map(l => {
           const s = db.state[l.id];
           const w = db.queue.filter(q => q.sw === l.sw).length;
-          return `${l.id} — <b>${s.user}</b> (buổi ${s.sess}, hạn ${endLabel(s)})${w ? ` · <b>${w} người đang chờ</b>` : ''}`;
+          return `${l.id} — <b>${s.user}</b> (${dSess(s.sess)} session, due ${endLabel(s)})${w ? ` · <b>${w} people waiting</b>` : ''}`;
         });
-        alert.innerHTML = `<div class="dash-alert">🔴 Có ${overdue.length} license quá hạn chưa trả:<br>`
-          + parts.join('<br>') + `<br><span style="font-weight:500">Vui lòng chủ động nhắc nhau trả key qua Teams/Zalo/Telegram.</span></div>`;
+        alert.innerHTML = `<div class="dash-alert">🔴 ${overdue.length} license(s) overdue:<br>`
+          + parts.join('<br>') + `<br><span style="font-weight:500">Please remind each other to return keys via Teams/Zalo/Telegram.</span></div>`;
       } else alert.innerHTML = '';
       tick();
     }
 
-    /* ---------- nhận nhanh 1 license trống từ dashboard ---------- */
+    /* ---------- take a free license quickly from the dashboard ---------- */
     let pendingQuick = null;
     function quickTake(licId) {
       pendingQuick = licId;
-      // chuyển sang tab đăng ký, khóa phần mềm theo license
+      // switch to the registration tab, lock the software to this license
       document.querySelector('.tab[data-tab="reg"]').click();
       const sw = LICENSES.find(l => l.id === licId).sw;
       const box = document.getElementById('rgSw');
       box.querySelectorAll('button').forEach(x => x.classList.toggle('on', x.dataset.v === sw));
       updateHint(licId);
-      toast('Điền tên và buổi để nhận ' + licId);
+      toast('Fill in your name and session to take ' + licId);
     }
 
-    /* ---------- đăng ký ---------- */
+    /* ---------- registration ---------- */
     function freeLicenseOf(sw) { return LICENSES.find(l => l.sw === sw && !db.state[l.id]); }
     function updateHint(forceLic) {
       const sw = getSw(); const free = freeLicenseOf(sw);
       const h = document.getElementById('rgHint');
-      if (forceLic) { h.innerHTML = `Sẽ nhận <b>${forceLic}</b> ngay khi bấm Đăng ký.`; return; }
-      if (free) h.innerHTML = `Còn license <b>${free.id}</b> — bạn sẽ nhận ngay.`;
-      else h.innerHTML = `Hết license ${sw} — bạn sẽ được đưa vào <b>hàng chờ</b>.`;
+      if (forceLic) { h.innerHTML = `You'll receive <b>${forceLic}</b> as soon as you click Register.`; return; }
+      if (free) h.innerHTML = `License <b>${free.id}</b> is free — you'll get it right away.`;
+      else h.innerHTML = `No ${sw} license free — you'll be placed in the <b>queue</b>.`;
     }
     document.getElementById('rgSubmit').onclick = () => {
       const user = rgName.value, sw = getSw(), sess = getSess(), pri = getPri(), note = document.getElementById('rgNote').value.trim();
-      // bắt buộc lý do nếu Gấp/Rất gấp
+      // require a reason for Urgent/Very urgent
       if ((pri === 'Gấp' || pri === 'Rất gấp') && !note) {
-        toast('Vui lòng nhập LÝ DO DỰ ÁN khi chọn mức ' + pri + '.');
+        toast('Please enter a PROJECT REASON for the ' + dPri(pri) + ' priority level.');
         document.getElementById('rgNote').focus(); return;
       }
-      // chặn giữ 2 license cùng lúc
+      // block holding 2 licenses at once
       const already = Object.entries(db.state).find(([id, s]) => s && s.user === user);
-      if (already) { toast(user + ' đang giữ ' + already[0] + ' — phải trả trước khi đăng ký mới.'); return; }
-      // chặn đăng ký trùng khi đã ở trong hàng chờ
+      if (already) { toast(user + ' is already holding ' + already[0] + ' — return it before registering again.'); return; }
+      // block duplicate registration while already queued
       const inQ = db.queue.find(q => q.user === user && q.sw === sw);
-      if (inQ) { toast(user + ' đã ở trong hàng chờ ' + sw + '.'); document.querySelector('.tab[data-tab="reg"]').click(); return; }
+      if (inQ) { toast(user + ' is already in the ' + sw + ' queue.'); document.querySelector('.tab[data-tab="reg"]').click(); return; }
       let lic = pendingQuick ? LICENSES.find(l => l.id === pendingQuick && !db.state[l.id]) : freeLicenseOf(sw);
       pendingQuick = null;
       if (lic) {
         db.state[lic.id] = { user, sess, note, pri, start: Date.now() };
         save(); document.getElementById('rgNote').value = '';
-        toast('✅ ' + user + ' đã nhận ' + lic.id + ' (' + sess + ')');
+        toast('✅ ' + user + ' received ' + lic.id + ' (' + dSess(sess) + ')');
         document.querySelector('.tab[data-tab="dash"]').click();
       } else {
         db.queue.push({ id: Date.now(), user, sw, sess, pri, note, at: Date.now() });
@@ -1856,57 +1874,57 @@
         db.queueLog.push({ sess, sw, at: Date.now() });
         save(); document.getElementById('rgNote').value = '';
         const pos = sortedQueue(sw).findIndex(q => q.user === user) + 1;
-        toast('⏳ Hết license ' + sw + ' — ' + user + ' vào hàng chờ (mức ' + pri + ', vị trí ' + pos + ').');
+        toast('⏳ No ' + sw + ' license free — ' + user + ' joined the queue (' + dPri(pri) + ', position ' + pos + ').');
         document.querySelector('.tab[data-tab="reg"]').click();
       }
     };
 
-    /* ---------- sắp xếp hàng chờ theo ưu tiên ---------- */
+    /* ---------- sort the queue by priority ---------- */
     const PRI_RANK = { "Rất gấp": 3, "Gấp": 2, "Thường": 1 };
     function priRank(q) { return PRI_RANK[q.pri] || 1; }
     function sortedQueue(sw) {
       return db.queue.filter(q => !sw || q.sw === sw)
         .slice().sort((a, b) => {
-          const d = priRank(b) - priRank(a); if (d) return d;   // ưu tiên cao trước
-          return a.at - b.at;                                // cùng mức: ai trước ra trước
+          const d = priRank(b) - priRank(a); if (d) return d;   // higher priority first
+          return a.at - b.at;                                // same level: first come, first served
         });
     }
 
-    /* ---------- trả key + ưu tiên hàng chờ ---------- */
+    /* ---------- return a key + queue priority ---------- */
     function release(licId) {
       const s = db.state[licId]; if (!s) return;
-      if (!canManage(s.user)) { toast('Chỉ ' + s.user + ' hoặc admin mới trả key này.'); return; }
+      if (!canManage(s.user)) { toast('Only ' + s.user + ' or an admin can return this key.'); return; }
       db.history.push({
         lic: licId, sw: LICENSES.find(l => l.id === licId).sw, user: s.user, sess: s.sess,
         note: s.note, start: s.start, end: Date.now(), overdue: isOverdue(s)
       });
       db.state[licId] = null;
       const sw = LICENSES.find(l => l.id === licId).sw;
-      // 1) ƯU TIÊN người có LỊCH TUẦN cho đúng buổi hiện tại, đang đợi trong hàng chờ
+      // 1) PRIORITIZE someone with a WEEKLY SCHEDULE for the current session, waiting in the queue
       const wkCand = weekPriorityCandidate(sw);
       if (wkCand) {
         if (wkCand.fromQueue) db.queue = db.queue.filter(q => q.id !== wkCand.id);
         db.state[licId] = { user: wkCand.user, sess: wkCand.sess, note: wkCand.note, pri: wkCand.pri, start: Date.now() };
-        save(); toast('🔁 ' + licId + ' → giao cho ' + wkCand.user + ' (có lịch tuần buổi này).');
+        save(); toast('🔁 ' + licId + ' → given to ' + wkCand.user + ' (scheduled for this session).');
         renderAll(); return;
       }
-      // 2) rồi mới tới hàng chờ theo mức ưu tiên
+      // 2) then the queue, by priority
       const next = sortedQueue(sw)[0];
       if (next) {
         db.queue = db.queue.filter(q => q.id !== next.id);
         db.state[licId] = { user: next.user, sess: next.sess, note: next.note, pri: next.pri, start: Date.now() };
-        save(); toast('🔁 ' + licId + ' đã trả → giao cho ' + next.user + ' (ưu tiên ' + (next.pri || 'Thường') + ').');
-      } else { save(); toast('⚪ ' + licId + ' đã trả, hiện đang trống.'); }
+        save(); toast('🔁 ' + licId + ' returned → given to ' + next.user + ' (' + dPri(next.pri || 'Thường') + ' priority).');
+      } else { save(); toast('⚪ ' + licId + ' returned, now free.'); }
       renderAll();
     }
 
-    /* ---------- người đang giữ có lịch tuần buổi nay không ---------- */
+    /* ---------- does the current holder have a schedule for this session? ---------- */
     function holdsWeekToday(user, sw) {
       const day = currentDayVN(), sess = currentSession();
       if (!day) return false;
       return db.week.some(w => w.wk === currentWeekKey() && w.user === user && w.sw === sw && w.day === day && w.sess === sess);
     }
-    // gỡ lượt lịch tuần buổi nay của 1 người (khi họ nhường / tạm không dùng)
+    // clear a person's schedule slot for today's session (when they hand over / skip)
     function dropWeekToday(user, sw) {
       const day = currentDayVN(), sess = currentSession();
       if (!day) return;
@@ -1915,80 +1933,80 @@
         .forEach(w => { if (!db.wkActivated.includes(w.id)) db.wkActivated.push(w.id); });
     }
 
-    /* ---------- NHƯỜNG đích danh cho người khác ---------- */
+    /* ---------- hand over to a specific person ---------- */
     function handoverTo(licId) {
       const s = db.state[licId]; if (!s) return;
-      if (!canManage(s.user)) { toast('Chỉ ' + s.user + ' hoặc admin mới nhường key này.'); return; }
+      if (!canManage(s.user)) { toast('Only ' + s.user + ' or an admin can hand over this key.'); return; }
       const others = EMPLOYEES.filter(n => n !== s.user);
-      const name = pickName('Nhường ' + licId + ' cho ai?', others);
+      const name = pickName('Hand over ' + licId + ' to whom?', others);
       if (!name) return;
       const byWeek = holdsWeekToday(s.user, licId.startsWith('ETABS') ? 'ETABS' : 'SAFE');
-      // ghi lịch sử phiên của người nhường
+      // log the outgoing holder's session in history
       db.history.push({
         lic: licId, sw: LICENSES.find(l => l.id === licId).sw, user: s.user, sess: s.sess,
-        note: (s.note || '') + ' [nhường cho ' + name + ']', start: s.start, end: Date.now(), overdue: isOverdue(s)
+        note: (s.note || '') + ' [handed over to ' + name + ']', start: s.start, end: Date.now(), overdue: isOverdue(s)
       });
       db.handovers.unshift({
         id: Date.now(), lic: licId, from: s.user, to: name,
-        kind: 'Nhường đích danh', byWeek, at: new Date().toLocaleString('vi-VN')
+        kind: 'Direct handover', byWeek, at: new Date().toLocaleString('vi-VN')
       });
-      // chuyển key sang người nhận
+      // transfer the key to the recipient
       db.state[licId] = {
-        user: name, sess: s.sess, note: '(được ' + s.user + ' nhường)', pri: s.pri, start: Date.now(),
-        via: '← ' + s.user + ' nhường lúc ' + nowStr()
+        user: name, sess: s.sess, note: '(handed over by ' + s.user + ')', pri: s.pri, start: Date.now(),
+        via: '← handed over by ' + s.user + ' at ' + nowStr()
       };
-      // người nhường mất lượt ưu tiên buổi này
+      // the giver loses their priority slot for this session
       if (byWeek) dropWeekToday(s.user, LICENSES.find(l => l.id === licId).sw);
-      // nếu người nhận đang trong hàng chờ thì rút ra
+      // if the recipient was in the queue, remove them
       db.queue = db.queue.filter(q => !(q.user === name && q.sw === LICENSES.find(l => l.id === licId).sw));
       save(); renderAll();
-      toast('🤝 ' + s.user + ' đã nhường ' + licId + ' cho ' + name + '.');
+      toast('🤝 ' + s.user + ' handed over ' + licId + ' to ' + name + '.');
     }
 
-    /* ---------- TẠM KHÔNG DÙNG (trả key + đánh dấu) ---------- */
+    /* ---------- NOT USING RIGHT NOW (return key + flag it) ---------- */
     function markNotUse(licId) {
       const s = db.state[licId]; if (!s) return;
-      if (!canManage(s.user)) { toast('Chỉ ' + s.user + ' hoặc admin mới thao tác key này.'); return; }
-      if (!confirm(s.user + ' tạm không dùng ' + licId + '? Key sẽ mở cho người khác.')) return;
+      if (!canManage(s.user)) { toast('Only ' + s.user + ' or an admin can manage this key.'); return; }
+      if (!confirm(s.user + ' is not using ' + licId + ' right now? The key will open up for others.')) return;
       const sw = LICENSES.find(l => l.id === licId).sw;
       const byWeek = holdsWeekToday(s.user, sw);
       db.history.push({
         lic: licId, sw, user: s.user, sess: s.sess,
-        note: (s.note || '') + ' [tạm không dùng]', start: s.start, end: Date.now(), overdue: isOverdue(s)
+        note: (s.note || '') + ' [not using right now]', start: s.start, end: Date.now(), overdue: isOverdue(s)
       });
       db.handovers.unshift({
-        id: Date.now(), lic: licId, from: s.user, to: '(để trống)',
-        kind: 'Tạm không dùng', byWeek, at: new Date().toLocaleString('vi-VN')
+        id: Date.now(), lic: licId, from: s.user, to: '(left free)',
+        kind: 'Not using right now', byWeek, at: new Date().toLocaleString('vi-VN')
       });
       db.wkSkipped.unshift({
         id: Date.now(), user: s.user, sw, at: new Date().toLocaleString('vi-VN'),
-        note: byWeek ? 'có lịch tuần nhưng tạm không dùng' : 'tạm không dùng'
+        note: byWeek ? 'had a schedule slot but skipped it' : 'not using right now'
       });
       if (byWeek) dropWeekToday(s.user, sw);
       db.state[licId] = null;
-      // ưu tiên giao ngay cho người chờ (lịch tuần trước, rồi hàng chờ)
+      // hand it straight to whoever's waiting (weekly schedule first, then the queue)
       const wkCand = weekPriorityCandidate(sw);
       const next = wkCand || sortedQueue(sw)[0];
       if (next) {
         if (!wkCand || wkCand.fromQueue) db.queue = db.queue.filter(q => q.id !== next.id);
         db.state[licId] = { user: next.user, sess: next.sess, note: next.note, pri: next.pri, start: Date.now() };
-        toast('⏸ ' + s.user + ' tạm không dùng ' + licId + ' → giao cho ' + next.user + '.');
+        toast('⏸ ' + s.user + ' is not using ' + licId + ' → given to ' + next.user + '.');
       } else {
-        toast('⏸ ' + s.user + ' tạm không dùng ' + licId + ' — key đang trống, ai cần có thể nhận.');
+        toast('⏸ ' + s.user + ' is not using ' + licId + ' — it is free, anyone can take it.');
       }
       save(); renderAll();
     }
 
-    /* ---------- hộp chọn tên đơn giản (prompt số thứ tự) ---------- */
+    /* ---------- simple name picker (prompt for a number) ---------- */
     function pickName(title, names) {
       const list = names.map((n, i) => (i + 1) + '. ' + n).join('\n');
-      const ans = prompt(title + '\nNhập SỐ tương ứng:\n\n' + list, '');
+      const ans = prompt(title + '\nEnter the NUMBER:\n\n' + list, '');
       if (ans === null) return null;
       const idx = parseInt(ans.trim(), 10) - 1;
-      if (isNaN(idx) || idx < 0 || idx >= names.length) { toast('Số không hợp lệ.'); return null; }
+      if (isNaN(idx) || idx < 0 || idx >= names.length) { toast('Invalid number.'); return null; }
       return names[idx];
     }
-    // buổi hiện tại theo giờ máy: Sáng nếu <12:00, còn lại Chiều
+    // current session by system clock: Morning if <12:00, otherwise Afternoon
     function currentSession() {
       const h = new Date().getHours(), m = new Date().getMinutes();
       return (h < 12) ? 'Sáng' : 'Chiều';
@@ -1997,12 +2015,12 @@
       const d = new Date().getDay();// 0=CN..6=T7
       return ({ 1: 'Thứ 2', 2: 'Thứ 3', 3: 'Thứ 4', 4: 'Thứ 5', 5: 'Thứ 6' })[d] || null;
     }
-    // người có lịch tuần đúng TUẦN HIỆN TẠI + buổi hiện tại, chưa đang giữ license nào.
-    // Ưu tiên: ai đã có trong hàng chờ thì lấy theo thứ tự vào chờ trước; nếu không ai trong hàng chờ
-    // thì vẫn trả về người đăng ký lịch tuần sớm nhất — KHÔNG bắt buộc phải vào hàng chờ trước mới được ưu tiên.
+    // someone scheduled for the CURRENT WEEK + current session who isn't holding a license yet.
+    // Priority: whoever's in the queue goes by queue order; if nobody scheduled is in the queue,
+    // still return the earliest-scheduled person — being in the queue first is NOT required for priority.
     function weekPriorityCandidate(sw) {
       const day = currentDayVN(), sess = currentSession();
-      if (!day) return null; // cuối tuần thì không xét lịch tuần
+      if (!day) return null; // weekend: no weekly schedule to consider
       const wk = currentWeekKey();
       const holders = db.week.filter(w => w.wk === wk && w.sw === sw && w.day === day && w.sess === sess).sort((a, b) => a.id - b.id);
       if (!holders.length) return null;
@@ -2015,43 +2033,44 @@
         return { id: q.id, user: q.user, sess: w.sess, pri: q.pri, note: q.note, fromQueue: true };
       }
       const w = free[0];
-      return { id: null, user: w.user, sess: w.sess, pri: 'Lịch tuần', note: '(lịch tuần)', fromQueue: false };
+      return { id: null, user: w.user, sess: w.sess, pri: 'Lịch tuần', note: '(scheduled)', fromQueue: false };
     }
 
-    /* ---------- TỰ ĐẨY người có lịch tuần vào Dashboard khi tới buổi ---------- */
-    // chạy định kỳ; mỗi lịch chỉ kích hoạt 1 lần cho mỗi buổi (nhớ bằng wkActivated)
+    /* ---------- AUTO-ASSIGN scheduled people onto the Dashboard when their session starts ---------- */
+    // runs periodically; each schedule slot only activates once per session (tracked via wkActivated)
     function autoActivateWeek() {
       const day = currentDayVN(), sess = currentSession();
-      if (!day) return false;                 // cuối tuần: bỏ qua
+      if (!day) return false;                 // weekend: skip
       const wk = currentWeekKey();
       let changed = false;
-      // lịch của đúng tuần+ngày+buổi hiện tại, sắp theo giờ đăng ký (ai đăng ký trước xử lý trước)
+      // slots for the current week+day+session, ordered by registration time (first registered, first handled)
       const due = db.week.filter(w => w.wk === wk && w.day === day && w.sess === sess)
         .sort((a, b) => a.id - b.id);
       due.forEach(w => {
-        if (db.wkActivated.includes(w.id)) return;             // đã xử lý lịch này rồi
-        // người này đang giữ license nào chưa? nếu rồi thì coi như đã kích hoạt
+        if (db.wkActivated.includes(w.id)) return;             // already handled
+        // is this person already holding a license? if so, treat it as already activated
         const holding = Object.values(db.state).some(s => s && s.user === w.user);
         if (holding) { db.wkActivated.push(w.id); changed = true; return; }
-        // còn license trống đúng phần mềm?
+        // is a license of the right software free?
         const lic = LICENSES.find(l => l.sw === w.sw && !db.state[l.id]);
         if (lic) {
-          db.state[lic.id] = { user: w.user, sess: w.sess, note: '(lịch tuần)', pri: 'Lịch tuần', start: Date.now() };
+          db.state[lic.id] = { user: w.user, sess: w.sess, note: '(scheduled)', pri: 'Lịch tuần', start: Date.now() };
           db.wkActivated.push(w.id); changed = true;
-          toast('📅 ' + w.user + ' được đẩy vào ' + lic.id + ' theo lịch tuần (' + day + ' ' + sess + ').');
+          toast('📅 ' + w.user + ' was assigned ' + lic.id + ' per the weekly schedule (' + dDay(day) + ' ' + dSess(sess) + ').');
         } else {
-          // HẾT license trống -> không đuổi ai, chỉ báo cho người đang mở trang biết
+          // no license free -> don't kick anyone, just notify whoever has the page open
           db.wkActivated.push(w.id); changed = true;
-          toast('⚠ ' + w.user + ' có lịch ' + w.sw + ' nhưng hết license — người đang giữ chưa nhả key.');
+          toast('⚠ ' + w.user + ' has a ' + w.sw + ' slot but no license is free — the current holder hasn\'t released it yet.');
         }
       });
       if (changed) save();
       return changed;
     }
 
-    /* ---------- TỰ ĐỘNG THU HỒI license quá hạn để nhường cho người có lịch tuần ---------- */
-    // chạy định kỳ cùng autoActivateWeek: hết giờ buổi (12:00/17:30) mà license vẫn bị giữ (quá hạn)
-    // và có người khác đăng ký lịch tuần đúng buổi đó đang chờ -> tự động thu hồi, không cần người cũ tự trả key.
+    /* ---------- AUTO-RECLAIM overdue licenses for scheduled people ---------- */
+    // runs alongside autoActivateWeek: once a session's deadline passes (12:00/17:30) with the license
+    // still held (overdue), and someone else is scheduled for that session and waiting -> reclaim it
+    // automatically, without waiting for the previous holder to return the key.
     function autoReclaimOverdueForWeek() {
       let changed = false;
       LICENSES.forEach(l => {
@@ -2061,50 +2080,50 @@
         if (!cand || cand.user === s.user) return;
         db.history.push({
           lic: l.id, sw: l.sw, user: s.user, sess: s.sess,
-          note: (s.note || '') + ' [hệ thống tự động thu hồi do quá hạn — nhường cho ' + cand.user + ' theo lịch tuần]',
+          note: (s.note || '') + ' [auto-reclaimed by the system for being overdue — handed to ' + cand.user + ' per the weekly schedule]',
           start: s.start, end: Date.now(), overdue: true
         });
         db.handovers.unshift({
           id: Date.now() + Math.random(), lic: l.id, from: s.user, to: cand.user,
-          kind: 'Tự động thu hồi (quá hạn, lịch tuần)', byWeek: true, at: new Date().toLocaleString('vi-VN')
+          kind: 'Auto-reclaimed (overdue, scheduled)', byWeek: true, at: new Date().toLocaleString('vi-VN')
         });
         if (cand.fromQueue) db.queue = db.queue.filter(q => q.id !== cand.id);
         db.state[l.id] = { user: cand.user, sess: cand.sess, note: cand.note, pri: cand.pri, start: Date.now() };
-        toast('⏰ ' + l.id + ' quá hạn — hệ thống tự động thu hồi từ ' + s.user + ' và giao cho ' + cand.user + ' (lịch tuần).');
+        toast('⏰ ' + l.id + ' overdue — the system auto-reclaimed it from ' + s.user + ' and gave it to ' + cand.user + ' (scheduled).');
         changed = true;
       });
       if (changed) save();
       return changed;
     }
 
-    /* ---------- hàng chờ ---------- */
+    /* ---------- queue ---------- */
     function priPill(p) {
       p = p || 'Thường';
       const cls = p === 'Rất gấp' ? 'pri-hot' : (p === 'Gấp' ? 'pri-warm' : 'pri-cool');
-      return `<span class="pill ${cls}">${p}</span>`;
+      return `<span class="pill ${cls}">${dPri(p)}</span>`;
     }
     function renderQueue() {
       const b = document.getElementById('queueBody'); b.innerHTML = '';
       const badge = document.getElementById('qBadge');
       if (db.queue.length) { badge.style.display = ''; badge.textContent = db.queue.length; } else badge.style.display = 'none';
-      if (!db.queue.length) { b.innerHTML = '<tr><td colspan="8" class="empty">Không có ai đang chờ.</td></tr>'; return; }
+      if (!db.queue.length) { b.innerHTML = '<tr><td colspan="8" class="empty">No one is waiting.</td></tr>'; return; }
       sortedQueue().forEach((q, i) => {
         const tr = document.createElement('tr');
         tr.innerHTML = `<td class="num"><span class="queue-no">${i + 1}</span></td>
       <td>${priPill(q.pri)}</td><td>${q.user}</td>
       <td><span class="pill ${q.sw.toLowerCase()}">${q.sw}</span></td>
-      <td><span class="pill ${q.sess === 'Sáng' ? 'sang' : 'chieu'}">${q.sess}</span></td>
+      <td><span class="pill ${q.sess === 'Sáng' ? 'sang' : 'chieu'}">${dSess(q.sess)}</span></td>
       <td>${q.note || ''}</td><td>${nowStr(q.at)}</td><td></td>`;
         if (canManage(q.user)) {
-          const btn = document.createElement('button'); btn.className = 'btn ghost small'; btn.textContent = 'Rút khỏi chờ';
-          btn.onclick = () => { db.queue = db.queue.filter(x => x.id !== q.id); save(); renderAll(); toast('Đã rút ' + q.user + ' khỏi hàng chờ.'); };
+          const btn = document.createElement('button'); btn.className = 'btn ghost small'; btn.textContent = 'Leave queue';
+          btn.onclick = () => { db.queue = db.queue.filter(x => x.id !== q.id); save(); renderAll(); toast('Removed ' + q.user + ' from the queue.'); };
           tr.lastElementChild.append(btn);
         }
         b.append(tr);
       });
     }
 
-    /* ---------- báo cáo ---------- */
+    /* ---------- reports ---------- */
     function itemPersonStats(list) {
       const m = {};
       const bump = (name, field) => { if (!name) return; if (!m[name]) m[name] = { proposed: 0, done: 0, doing: 0, hot: 0 }; m[name][field]++; };
@@ -2120,7 +2139,7 @@
       const tbody = document.getElementById(tbodyId); if (!tbody) return;
       const rows = itemPersonStats(list);
       tbody.innerHTML = '';
-      if (!rows.length) { tbody.innerHTML = '<tr><td colspan="5" class="empty">Chưa có dữ liệu.</td></tr>'; return; }
+      if (!rows.length) { tbody.innerHTML = '<tr><td colspan="5" class="empty">No data yet.</td></tr>'; return; }
       rows.forEach(([name, s]) => tbody.insertAdjacentHTML('beforeend',
         `<tr><td>${esc(name)}</td><td class="num">${s.proposed}</td><td class="num">${s.done}</td><td class="num">${s.doing}</td>
      <td class="num">${s.hot ? '<b style="color:var(--warn)">' + s.hot + '</b>' : '0'}</td></tr>`));
@@ -2128,10 +2147,10 @@
     function renderItemsRecent() {
       const tbody = document.getElementById('rpItemsRecent'); if (!tbody) return;
       const all = [...(db.backlog || []).map(x => Object.assign({ kind: 'Optimization' }, x)),
-      ...(db.training || []).map(x => Object.assign({ kind: 'Đào tạo' }, x))];
+      ...(db.training || []).map(x => Object.assign({ kind: 'Training' }, x))];
       all.sort((a, b) => new Date(b.updatedAt || 0) - new Date(a.updatedAt || 0));
       tbody.innerHTML = '';
-      if (!all.length) { tbody.innerHTML = '<tr><td colspan="6" class="empty">Chưa có dữ liệu.</td></tr>'; return; }
+      if (!all.length) { tbody.innerHTML = '<tr><td colspan="6" class="empty">No data yet.</td></tr>'; return; }
       all.slice(0, 25).forEach(it => {
         const col = ITEM_COLS.find(c => c.key === it.column) || ITEM_COLS[0];
         tbody.insertAdjacentHTML('beforeend',
@@ -2147,8 +2166,12 @@
     }
 
     function renderReport() {
+      const addCard = document.getElementById('adminAddUserCard');
+      if (addCard) addCard.style.display = isAdmin() ? '' : 'none';
+      const resetWrap = document.getElementById('resetBtnWrap');
+      if (resetWrap) resetWrap.style.display = isAdmin() ? '' : 'none';
       renderItemsReport();
-      // per user: lượt + tổng thời gian + số lần quá hạn
+      // per user: sessions + total time + overdue count
       const cnt = {}, time = {}, late = {};
       db.history.forEach(h => {
         cnt[h.user] = (cnt[h.user] || 0) + 1; time[h.user] = (time[h.user] || 0) + (h.end - h.start);
@@ -2162,12 +2185,12 @@
       });
       const u = document.getElementById('rpUser'); u.innerHTML = '';
       const names = Object.keys(cnt).sort((a, b) => time[b] - time[a]);
-      if (!names.length) u.innerHTML = '<tr><td colspan="4" class="empty">Chưa có dữ liệu.</td></tr>';
+      if (!names.length) u.innerHTML = '<tr><td colspan="4" class="empty">No data yet.</td></tr>';
       names.forEach(n => u.insertAdjacentHTML('beforeend',
         `<tr><td>${n}</td><td class="num">${cnt[n]}</td><td class="num">${dur(time[n])}</td>
      <td class="num">${late[n] ? `<b style="color:var(--warn)">${late[n]}</b>` : '0'}</td></tr>`));
 
-      // sw ratio
+      // software share
       const sw = { ETABS: 0, SAFE: 0 };
       db.history.forEach(h => sw[h.sw]++);
       Object.entries(db.state).forEach(([id, s]) => { if (s) sw[LICENSES.find(l => l.id === id).sw]++; });
@@ -2184,19 +2207,19 @@
       (db.queueLog || []).forEach(q => peak[q.sess] = (peak[q.sess] || 0) + 1);
       const pd = document.getElementById('rpPeak'); pd.innerHTML = '';
       [['Sáng', peak.Sáng || 0], ['Chiều', peak.Chiều || 0]].forEach(([k, v]) =>
-        pd.insertAdjacentHTML('beforeend', `<tr><td><span class="pill ${k === 'Sáng' ? 'sang' : 'chieu'}">${k}</span></td><td class="num">${v}</td></tr>`));
+        pd.insertAdjacentHTML('beforeend', `<tr><td><span class="pill ${k === 'Sáng' ? 'sang' : 'chieu'}">${dSess(k)}</span></td><td class="num">${v}</td></tr>`));
 
       const hd = document.getElementById('rpHist'); hd.innerHTML = '';
-      if (!db.history.length) hd.innerHTML = '<tr><td colspan="7" class="empty">Chưa có lịch sử.</td></tr>';
+      if (!db.history.length) hd.innerHTML = '<tr><td colspan="7" class="empty">No history yet.</td></tr>';
       [...db.history].reverse().forEach(h => hd.insertAdjacentHTML('beforeend',
-        `<tr><td>${h.lic}</td><td>${h.user}</td><td>${h.sess}</td><td>${nowStr(h.start)}</td>
-     <td>${nowStr(h.end)}${h.overdue ? ' <span style="color:var(--warn);font-weight:700">(quá hạn)</span>' : ''}</td>
+        `<tr><td>${h.lic}</td><td>${h.user}</td><td>${dSess(h.sess)}</td><td>${nowStr(h.start)}</td>
+     <td>${nowStr(h.end)}${h.overdue ? ' <span style="color:var(--warn);font-weight:700">(overdue)</span>' : ''}</td>
      <td>${dur(h.end - h.start)}</td><td>${h.note || ''}</td></tr>`));
 
       const ho = document.getElementById('rpHandover');
       if (ho) {
         ho.innerHTML = '';
-        if (!db.handovers || !db.handovers.length) ho.innerHTML = '<tr><td colspan="6" class="empty">Chưa có.</td></tr>';
+        if (!db.handovers || !db.handovers.length) ho.innerHTML = '<tr><td colspan="6" class="empty">None yet.</td></tr>';
         else db.handovers.forEach(x => ho.insertAdjacentHTML('beforeend',
           `<tr><td>${x.at}</td><td>${x.lic}</td><td><b>${x.from}</b></td><td>${x.to}</td>
        <td>${x.kind}</td><td>${x.byWeek ? '✔' : ''}</td></tr>`));
@@ -2204,17 +2227,17 @@
       renderCharts();
     }
 
-    /* ---------- BIỂU ĐỒ (SVG thuần) ---------- */
+    /* ---------- CHARTS (plain SVG) ---------- */
     function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
     function renderCharts() {
-      // 1) Lượt sử dụng theo người: từ history + phiên đang mở
+      // 1) sessions by person: from history + currently open sessions
       const cnt = {};
       db.history.forEach(h => cnt[h.user] = (cnt[h.user] || 0) + 1);
       Object.values(db.state).forEach(s => { if (s) cnt[s.user] = (cnt[s.user] || 0) + 1; });
       const rows = Object.entries(cnt).sort((a, b) => b[1] - a[1]);
       const cu = document.getElementById('chartUsers');
       if (cu) {
-        if (!rows.length) { cu.innerHTML = '<div class="empty">Chưa có lượt sử dụng nào.</div>'; }
+        if (!rows.length) { cu.innerHTML = '<div class="empty">No sessions used yet.</div>'; }
         else {
           const max = Math.max(...rows.map(r => r[1]), 1);
           const rowH = 26, labelW = 170, barW = 360, pad = 8;
@@ -2229,26 +2252,26 @@
           svg += `</svg>`; cu.innerHTML = svg;
         }
       }
-      // 2) Nhu cầu đăng ký lịch tuần theo buổi (gộp tất cả tuần): 10 cột T2Sáng..T6Chiều, tách ETABS/SAFE
+      // 2) weekly schedule demand by session (all weeks combined): 10 columns Mon AM..Fri PM, ETABS/SAFE split
       const cd = document.getElementById('chartDemand');
       if (cd) {
         const days = ['Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6'];
-        const cats = []; days.forEach(d => ['Sáng', 'Chiều'].forEach(s => cats.push({ d, s, label: d.replace('Thứ ', 'T') + ' ' + s })));
+        const cats = []; days.forEach(d => ['Sáng', 'Chiều'].forEach(s => cats.push({ d, s, label: dDay(d) + ' ' + (s === 'Sáng' ? 'AM' : 'PM') })));
         const de = cats.map(c => db.week.filter(w => w.day === c.d && w.sess === c.s && w.sw === 'ETABS').length);
         const ds = cats.map(c => db.week.filter(w => w.day === c.d && w.sess === c.s && w.sw === 'SAFE').length);
         const totalMax = Math.max(...cats.map((c, i) => de[i] + ds[i]), 1);
-        if (!db.week.length) { cd.innerHTML = '<div class="empty">Chưa có ai đăng ký lịch tuần.</div>'; }
+        if (!db.week.length) { cd.innerHTML = '<div class="empty">No one has registered a weekly schedule yet.</div>'; }
         else {
           const n = cats.length, colW = 54, gap = 10, chartH = 180, base = chartH + 8, left = 34;
           const W = left + n * (colW + gap) + 10, H = base + 40;
           let svg = `<svg viewBox="0 0 ${W} ${H}" width="100%" style="max-width:720px" xmlns="http://www.w3.org/2000/svg" font-family="Arial" font-size="11">`;
-          // trục
+          // axis
           svg += `<line x1="${left}" y1="${base}" x2="${W - 6}" y2="${base}" stroke="#e2ded4"/>`;
-          // vạch cap = 8 (tổng license) để so sánh nhu cầu vs cung
+          // supply line = 8 (total licenses) to compare demand vs supply
           const capY = base - Math.round(8 / totalMax * chartH);
           if (8 <= totalMax * 1.2) {
             svg += `<line x1="${left}" y1="${capY}" x2="${W - 6}" y2="${capY}" stroke="#c1391f" stroke-dasharray="4 3"/>
-        <text x="${W - 6}" y="${capY - 3}" text-anchor="end" fill="#c1391f" font-weight="700">Cung: 8</text>`;
+        <text x="${W - 6}" y="${capY - 3}" text-anchor="end" fill="#c1391f" font-weight="700">Supply: 8</text>`;
           }
           cats.forEach((c, i) => {
             const x = left + i * (colW + gap);
@@ -2260,7 +2283,7 @@
             if (tot) svg += `<text x="${x + colW / 2}" y="${yE - 4}" text-anchor="middle" fill="#1c1e22" font-weight="700">${tot}</text>`;
             svg += `<text x="${x + colW / 2}" y="${base + 14}" text-anchor="middle" fill="#6b6f76">${c.label}</text>`;
           });
-          // chú giải
+          // legend
           svg += `<rect x="${left}" y="${H - 14}" width="11" height="11" fill="#2e5c8a"/><text x="${left + 15}" y="${H - 4}" fill="#6b6f76">ETABS</text>`;
           svg += `<rect x="${left + 70}" y="${H - 14}" width="11" height="11" fill="#0f7a72"/><text x="${left + 85}" y="${H - 4}" fill="#6b6f76">SAFE</text>`;
           svg += `</svg>`; cd.innerHTML = svg;
@@ -2269,18 +2292,19 @@
     }
 
     document.getElementById('resetBtn').onclick = () => {
-      if (confirm('Xóa toàn bộ dữ liệu thử trên máy này?')) { db = fresh(); save(); renderAll(); toast('Đã xóa.'); }
+      if (!isAdmin()) { toast('Only an admin can clear data.'); return; }
+      if (confirm('Clear all test data on this machine?')) { db = fresh(); save(); renderAll(); toast('Cleared.'); }
     };
 
-    /* ---------- thêm người dùng mới (chỉ admin) ---------- */
+    /* ---------- add a new user (admin only) ---------- */
     document.getElementById('addPersonBtn').onclick = () => {
-      if (!isAdmin()) { toast('Chỉ admin mới thêm được người dùng.'); return; }
+      if (!isAdmin()) { toast('Only an admin can add users.'); return; }
       const nameInp = document.getElementById('newPersonName');
       const name = nameInp.value.trim().toUpperCase();
-      if (!name) { toast('Nhập họ tên.'); return; }
-      if (allEmployees().includes(name)) { toast('Người này đã có trong danh sách.'); return; }
+      if (!name) { toast('Enter a full name.'); return; }
+      if (allEmployees().includes(name)) { toast('This person is already in the list.'); return; }
       const username = usernameOf(name);
-      if (nameOfUsername(username)) { toast('Trùng tên đăng nhập "' + username + '" với người đã có — đổi cách nhập tên khác.'); return; }
+      if (nameOfUsername(username)) { toast('Username "' + username + '" clashes with an existing person — enter the name differently.'); return; }
       if (!db.employees) db.employees = [];
       db.employees.push(name);
       if (!db.pw) db.pw = {};
@@ -2289,33 +2313,33 @@
       nameInp.value = '';
       populatePeopleSelects();
       renderAll();
-      toast('Đã thêm ' + name + ' — tên đăng nhập "' + username + '", mật khẩu mặc định 123456.');
+      toast('Added ' + name + ' — username "' + username + '", default password 123456.');
     };
 
-    /* ================== LỊCH TUẦN (đăng ký trước, ưu tiên) ================== */
+    /* ================== WEEKLY SCHEDULE (advance registration, priority) ================== */
     const WK_DAYS = ["Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6"];
 
-    // danh sách các tuần (thứ 2 đầu tuần) từ tuần hiện tại đến hết 2026
+    // list of weeks (Monday start) from the current week onward
     function mondayOf(d) { const x = new Date(d); const wd = (x.getDay() + 6) % 7; x.setDate(x.getDate() - wd); x.setHours(0, 0, 0, 0); return x; }
     function buildWeeks() {
       const out = []; let d = mondayOf(new Date());
-      // chỉ cho đăng ký tuần này và tuần kế tiếp (1 tuần tới) — không cho đăng ký xa hơn tuần thứ 2
+      // only allow registering this week and the next one — no further ahead
       for (let i = 0; i < 2; i++) { out.push(new Date(d)); d.setDate(d.getDate() + 7); }
       return out;
     }
     const WK_LIST = buildWeeks();
     function wkKey(d) { return d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2); }
-    // mã tuần = ngày thứ 2 (giờ địa phương, KHÔNG dùng toISOString
-    // vì toISOString quy đổi sang UTC sẽ lùi mất 1 ngày ở múi giờ VN)
+    // week key = the Monday's date (local time, NOT toISOString — toISOString converts to UTC
+    // which would shift back by 1 day in the VN timezone)
     function wkFmt(d) { return ('0' + d.getDate()).slice(-2) + '/' + ('0' + (d.getMonth() + 1)).slice(-2) + '/' + d.getFullYear(); }
     function isoWeekNo(d) {
       const t = new Date(d); t.setHours(0, 0, 0, 0); t.setDate(t.getDate() + 3 - ((t.getDay() + 6) % 7));
       const w1 = new Date(t.getFullYear(), 0, 4); return 1 + Math.round(((t - w1) / 864e5 - 3 + ((w1.getDay() + 6) % 7)) / 7);
     }
-    function wkLabel(d) { const e = new Date(d); e.setDate(e.getDate() + 4); return 'Tuần ' + isoWeekNo(d) + ': ' + wkFmt(d) + ' → ' + wkFmt(e); }
+    function wkLabel(d) { const e = new Date(d); e.setDate(e.getDate() + 4); return 'Week ' + isoWeekNo(d) + ': ' + wkFmt(d) + ' → ' + wkFmt(e); }
     function currentWeekKey() { return wkKey(mondayOf(new Date())); }
 
-    // điền dropdown tuần + tên + segment
+    // fill in the week/name dropdowns + segments
     const wkWeekSel = document.getElementById('wkWeek');
     WK_LIST.forEach(d => wkWeekSel.append(new Option(wkLabel(d), wkKey(d))));
     wkWeekSel.value = currentWeekKey();
@@ -2327,16 +2351,16 @@
     document.getElementById('wkSubmit').onclick = () => {
       const wk = wkWeekSel.value;
       const user = wkName.value, sw = getWkSw(), day = getWkDay(), sess = getWkSess();
-      // đã đăng ký đúng buổi này trong tuần này chưa
+      // already registered for this exact session this week?
       if (db.week.find(w => w.wk === wk && w.user === user && w.day === day && w.sess === sess && w.sw === sw)) {
-        toast(user + ' đã đăng ký buổi này trong tuần đã chọn.'); return;
+        toast(user + ' has already registered for this session in the selected week.'); return;
       }
       const cap = LICENSES.filter(l => l.sw === sw).length;
       const taken = db.week.filter(w => w.wk === wk && w.day === day && w.sess === sess && w.sw === sw).length;
-      if (taken >= cap) { toast('Buổi ' + day + ' ' + sess + ' đã đủ ' + cap + ' người đăng ký ' + sw + ' trong tuần này.'); return; }
+      if (taken >= cap) { toast(dDay(day) + ' ' + dSess(sess) + ' already has ' + cap + ' people registered for ' + sw + ' this week.'); return; }
       db.week.push({ id: Date.now(), wk, user, sw, day, sess });
       save(); renderWeek();
-      toast('✅ ' + user + ' đã đăng ký ' + day + ' ' + sess + ' (' + sw + ') tuần ' + isoWeekNo(new Date(wk)) + ' — sẽ được ưu tiên.');
+      toast('✅ ' + user + ' registered ' + dDay(day) + ' ' + dSess(sess) + ' (' + sw + ') for week ' + isoWeekNo(new Date(wk)) + ' — will get priority.');
     };
 
     function renderWeek() {
@@ -2344,13 +2368,13 @@
       const lbl = document.getElementById('weekLabel'); if (lbl) lbl.textContent = wkLabel(new Date(wk));
       const thead = document.querySelector('#weekTable thead');
       const tbody = document.querySelector('#weekTable tbody');
-      let h1 = '<tr><th rowspan="2" class="swcell">Phần mềm</th>';
+      let h1 = '<tr><th rowspan="2" class="swcell">Software</th>';
       WK_DAYS.forEach((d, i) => {
         const dd = new Date(wk); dd.setDate(dd.getDate() + i);
-        h1 += `<th class="day" colspan="2">${d}<br><small>${('0' + dd.getDate()).slice(-2)}/${('0' + (dd.getMonth() + 1)).slice(-2)}</small></th>`;
+        h1 += `<th class="day" colspan="2">${dDay(d)}<br><small>${('0' + dd.getDate()).slice(-2)}/${('0' + (dd.getMonth() + 1)).slice(-2)}</small></th>`;
       });
       h1 += '</tr><tr>';
-      WK_DAYS.forEach(() => { h1 += '<th class="sess">Sáng</th><th class="sess">Chiều</th>'; });
+      WK_DAYS.forEach(() => { h1 += '<th class="sess">AM</th><th class="sess">PM</th>'; });
       h1 += '</tr>'; thead.innerHTML = h1;
       tbody.innerHTML = '';
       ['ETABS', 'SAFE'].forEach(sw => {
@@ -2368,28 +2392,28 @@
       });
       tbody.querySelectorAll('.rm').forEach(x => x.onclick = () => {
         const id = Number(x.dataset.id); const w = db.week.find(v => v.id === id);
-        if (w && !canManage(w.user)) { toast('Chỉ ' + w.user + ' hoặc admin mới xóa lịch này.'); return; }
+        if (w && !canManage(w.user)) { toast('Only ' + w.user + ' or an admin can remove this slot.'); return; }
         db.week = db.week.filter(v => v.id !== id); save(); renderWeek();
-        if (w) toast('Đã xóa lịch ' + w.user + ' (' + w.day + ' ' + w.sess + ').');
+        if (w) toast('Removed ' + w.user + '\'s slot (' + dDay(w.day) + ' ' + dSess(w.sess) + ').');
       });
     }
 
-    /* ================== BACKLOG CẢI TIẾN & NHU CẦU ĐÀO TẠO ================== */
-    const ITEM_COLS = [{ key: 'todo', icon: '📌', name: 'Đã ghi nhận (Identified)', cls: 'st-todo' },
-    { key: 'idea', icon: '💡', name: 'Đang làm (In progress)', cls: 'st-idea' },
-    { key: 'done', icon: '🏆', name: 'Đã xong (Done)', cls: 'st-done' }];
+    /* ================== OPTIMIZATION BACKLOG & TRAINING NEEDS ================== */
+    const ITEM_COLS = [{ key: 'todo', icon: '📌', name: 'Identified', cls: 'st-todo' },
+    { key: 'idea', icon: '💡', name: 'In progress', cls: 'st-idea' },
+    { key: 'done', icon: '🏆', name: 'Done', cls: 'st-done' }];
     const ITEM_LABELS = {
       backlog: {
-        title: 'Việc / vấn đề (Task/issue)', status: 'Hiện trạng (Current state)', idea: 'Ý tưởng / giải pháp (Idea/solution)',
-        titleHint: 'VD: Nhập số liệu quan trắc từ ảnh chụp vào Excel',
-        statusHint: 'VD: Mỗi thứ 2 mất ~2h gõ tay từ ảnh chụp máy đo',
-        ideaHint: 'VD: Thử OCR số liệu tự động, chưa test'
+        title: 'Task / issue', status: 'Current state', idea: 'Idea / solution',
+        titleHint: 'e.g. Enter survey readings from photos into Excel',
+        statusHint: 'e.g. Every Monday takes ~2h typing from site photos',
+        ideaHint: 'e.g. Try automatic OCR, not tested yet'
       },
       training: {
-        title: 'Chủ đề / vấn đề (Topic/issue)', status: 'Hiện trạng (Current state)', idea: 'Kế hoạch đào tạo (Training plan)',
-        titleHint: 'VD: Nhiều bạn chưa biết dùng Pivot Table',
-        statusHint: 'VD: Hay tổng hợp số liệu thủ công, dễ sai',
-        ideaHint: 'VD: Xếp lịch buổi training 1h, người dạy, tài liệu kèm theo'
+        title: 'Topic / issue', status: 'Current state', idea: 'Training plan',
+        titleHint: "e.g. Several people don't know how to use Pivot Tables",
+        statusHint: 'e.g. Often summarizes data manually, error-prone',
+        ideaHint: 'e.g. Schedule a 1h training session, who teaches it, materials'
       }
     };
     const ITEM_TAB = { backlog: 'all', training: 'all' };
@@ -2400,7 +2424,7 @@
     });
 
     function fillPersonSelect(sel, withEmpty) {
-      const keep = withEmpty ? '<option value="">— Chưa có —</option>' : '';
+      const keep = withEmpty ? '<option value="">— None —</option>' : '';
       sel.innerHTML = keep;
       allEmployees().forEach(n => sel.append(new Option(n, n)));
     }
@@ -2435,7 +2459,7 @@
     function renderItemTabs(kind) {
       const box = document.getElementById(kind + '-tabs'); box.innerHTML = '';
       const list = (db[kind] || []).filter(it => ITEM_PRI_FILTER[kind] === 'all' || it.priority === ITEM_PRI_FILTER[kind]);
-      const defs = [{ key: 'all', icon: '', name: 'Tất cả (All)' }].concat(ITEM_COLS);
+      const defs = [{ key: 'all', icon: '', name: 'All' }].concat(ITEM_COLS);
       defs.forEach(d => {
         const n = d.key === 'all' ? list.length : list.filter(x => x.column === d.key).length;
         const b = document.createElement('button'); b.type = 'button'; b.className = 'item-tab';
@@ -2450,7 +2474,7 @@
       const tabFilter = ITEM_TAB[kind], priFilter = ITEM_PRI_FILTER[kind];
       const items = (db[kind] || []).filter(it =>
         (tabFilter === 'all' || it.column === tabFilter) && (priFilter === 'all' || it.priority === priFilter));
-      if (!items.length) { box.innerHTML = '<tr><td colspan="10" class="empty">Chưa có mục nào.</td></tr>'; return; }
+      if (!items.length) { box.innerHTML = '<tr><td colspan="10" class="empty">No items yet.</td></tr>'; return; }
       items.forEach(it => {
         const col = ITEM_COLS.find(c => c.key === it.column) || ITEM_COLS[0];
         const priClass = it.priority === 'high' ? 'pri-hot' : (it.priority === 'low' ? 'pri-cool' : 'pri-warm');
@@ -2470,21 +2494,21 @@
         <td>${esc(it.owner || '—')}</td>
         <td class="item-cell-muted">${esc(it.support || '—')}</td>
         <td class="item-cell-muted">${esc(it.reviewer || '—')}</td>
-        <td><span class="pill ${col.cls}">${col.icon} ${col.name}</span> <span class="pill ${priClass}" title="Ưu tiên: ${ITEM_PRI_LABEL[it.priority] || 'Vừa'}">${ITEM_PRI_LABEL[it.priority] || 'Vừa'}</span></td>
+        <td><span class="pill ${col.cls}">${col.icon} ${col.name}</span> <span class="pill ${priClass}" title="Priority: ${ITEM_PRI_LABEL[it.priority] || 'Medium'}">${ITEM_PRI_LABEL[it.priority] || 'Medium'}</span></td>
         <td class="item-cell-ellipsis">${linkCell}</td>
         <td class="item-cell-mono">${it.updatedAt ? nowStr(new Date(it.updatedAt).getTime()) : '—'}<br><small>${esc(it.updatedBy || '')}</small></td>`;
         tr.onclick = () => openItemModal(kind, it.id);
         box.append(tr);
       });
     }
-    const ITEM_PRI_LABEL = { high: 'Cao (High)', mid: 'Vừa (Medium)', low: 'Thấp (Low)' };
+    const ITEM_PRI_LABEL = { high: 'High', mid: 'Medium', low: 'Low' };
 
     function openItemModal(kind, id) {
-      if (!ME) { toast('Vui lòng đăng nhập trước.'); return; }
+      if (!ME) { toast('Please log in first.'); return; }
       itemKind = kind; itemEditingId = id || null;
       const it = id ? (db[kind] || []).find(x => x.id === id) : null;
       const L = ITEM_LABELS[kind];
-      document.getElementById('itemTitle').textContent = it ? 'Sửa mục (Edit)' : (kind === 'backlog' ? 'Thêm việc (Add task)' : 'Thêm chủ đề (Add topic)');
+      document.getElementById('itemTitle').textContent = it ? 'Edit item' : (kind === 'backlog' ? 'Add task' : 'Add topic');
       document.getElementById('itemTitleLbl').textContent = L.title;
       document.getElementById('itemStatusLbl').textContent = L.status;
       document.getElementById('itemIdeaLbl').textContent = L.idea;
@@ -2504,12 +2528,12 @@
       setSegValue('itemCol', it ? (it.column || 'todo') : 'todo');
 
       const meta = document.getElementById('itemMeta');
-      if (it) { meta.style.display = ''; meta.innerHTML = 'Tạo: ' + nowStr(new Date(it.createdAt).getTime()) + ' · Sửa lần cuối: ' + nowStr(new Date(it.updatedAt).getTime()) + ' bởi <b>' + esc(it.updatedBy) + '</b>'; }
+      if (it) { meta.style.display = ''; meta.innerHTML = 'Created: ' + nowStr(new Date(it.createdAt).getTime()) + ' · Last edited: ' + nowStr(new Date(it.updatedAt).getTime()) + ' by <b>' + esc(it.updatedBy) + '</b>'; }
       else meta.style.display = 'none';
 
       const ro = !!(it && !canEditItem(it));
       document.getElementById('itemReadonlyNote').style.display = ro ? '' : 'none';
-      document.getElementById('itemProposer').disabled = true; // người đề xuất luôn là người đăng nhập, không đổi được
+      document.getElementById('itemProposer').disabled = true; // proposer is always the logged-in user, not editable
       ['itemOwner', 'itemSupport', 'itemReviewer', 'itemTitleInput', 'itemStatus', 'itemIdea', 'itemLink'].forEach(id => {
         document.getElementById(id).disabled = ro;
       });
@@ -2549,8 +2573,8 @@
             incoming.forEach(x => { if (x && x.id) byId[x.id] = x; });
             db[kind] = Object.values(byId);
             save(); renderAll();
-            toast('Đã nạp/ghép ' + incoming.length + ' mục từ file.');
-          } catch (e) { alert('File này không phải JSON export hợp lệ cho bảng ' + kind + '.'); }
+            toast('Loaded/merged ' + incoming.length + ' item(s) from the file.');
+          } catch (e) { alert('This file is not a valid JSON export for the ' + kind + ' board.'); }
         };
         reader.readAsText(file);
         importInput.value = '';
@@ -2564,7 +2588,7 @@
       if (existing && !canEditItem(existing)) return;
       const proposer = document.getElementById('itemProposer').value;
       const title = document.getElementById('itemTitleInput').value.trim();
-      if (!title || !proposer) { toast('Vui lòng nhập đủ Người đề xuất và tiêu đề.'); return; }
+      if (!title || !proposer) { toast('Please enter both a Proposer and a title.'); return; }
       const now = new Date().toISOString();
       const data = {
         id: itemEditingId || (itemKind + '-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8)),
@@ -2582,17 +2606,17 @@
       if (itemEditingId) { db[itemKind] = list.map(x => x.id === itemEditingId ? data : x); }
       else { list.push(data); }
       save(); document.getElementById('itemBg').classList.remove('show'); renderAll();
-      toast('Đã lưu.');
+      toast('Saved.');
     };
     document.getElementById('itemDelete').onclick = () => {
       if (!itemEditingId) return;
       const list = db[itemKind] || [];
       const existing = list.find(x => x.id === itemEditingId);
       if (existing && !canEditItem(existing)) return;
-      if (!confirm('Xóa mục này?')) return;
+      if (!confirm('Delete this item?')) return;
       db[itemKind] = list.filter(x => x.id !== itemEditingId);
       save(); document.getElementById('itemBg').classList.remove('show'); renderAll();
-      toast('Đã xóa.');
+      toast('Deleted.');
     };
     function renderBacklog() { renderItemTabs('backlog'); renderItemBody('backlog'); }
     function renderTraining() { renderItemTabs('training'); renderItemBody('training'); }
@@ -2603,11 +2627,11 @@
       });
     }
 
-    /* ================== ĐĂNG NHẬP THEO TÊN ĐĂNG NHẬP (USERNAME) + MẬT KHẨU ================== */
+    /* ================== LOGIN BY USERNAME + PASSWORD ================== */
     let ME = null;            // {username, name}
-    const ADMIN_NAMES = ["VÕ HỒNG HƯNG", "NGUYỄN PHI GIA"]; // admin theo tên, không phụ thuộc username
+    const ADMIN_NAMES = ["VÕ HỒNG HƯNG", "NGUYỄN PHI GIA"]; // admin by name, independent of username
     function isAdmin() { return !!ME && ADMIN_NAMES.indexOf(ME.name) !== -1; }
-    // có quyền thao tác lên phiên/mục của "owner" không? (chính chủ hoặc admin)
+    // allowed to manage a session/item owned by "owner"? (the owner themself, or an admin)
     function canManage(owner) { return ME && (ME.name === owner || isAdmin()); }
     const LS_ME = "licmgr_me";
     function nameOfUsername(username) {
@@ -2615,7 +2639,7 @@
       return n || null;
     }
     function applyIdentity() {
-      // khóa các dropdown chọn tên = người đăng nhập
+      // lock the name dropdowns to the logged-in user
       if (ME) {
         if (rgName) { rgName.value = ME.name; rgName.disabled = true; }
         if (wkName) { wkName.value = ME.name; wkName.disabled = true; }
@@ -2630,18 +2654,18 @@
       const name = nameOfUsername(username);
       const msg = document.getElementById('lgMsg');
       const showErr = t => { if (msg) { msg.style.display = ''; msg.textContent = t; } };
-      if (!name) { showErr('Tên đăng nhập không có trong danh sách.'); return false; }
+      if (!name) { showErr('Username not found.'); return false; }
       const real = (db.pw && db.pw[username] !== undefined) ? db.pw[username] : '123456';
-      if (String(pw) !== String(real)) { showErr('Sai mật khẩu. Mặc định là 123456.'); return false; }
+      if (String(pw) !== String(real)) { showErr('Wrong password. The default is 123456.'); return false; }
       ME = { username, name };
       try { localStorage.setItem(LS_ME, username); } catch (e) { }
       document.getElementById('loginBg').style.display = 'none';
       applyIdentity();
-      renderAll();                                 // vẽ lại để nút theo đúng quyền
+      renderAll();                                 // re-render so buttons reflect the right permissions
       if (isAdmin()) document.getElementById('meBox').innerHTML += ' <b style="color:#ffd27a">(ADMIN)</b>';
-      if (!silent) { toast('Xin chào ' + name + (isAdmin() ? ' (Admin)' : '') + '!'); }
-      // nếu mật khẩu vẫn là mặc định, nhắc đổi
-      if (real === '123456') { setTimeout(() => toast('Bạn đang dùng mật khẩu mặc định — nên đổi mật khẩu.'), 1500); }
+      if (!silent) { toast('Welcome ' + name + (isAdmin() ? ' (Admin)' : '') + '!'); }
+      // nudge to change the password if it's still the default
+      if (real === '123456') { setTimeout(() => toast('You are using the default password — you should change it.'), 1500); }
       return true;
     }
     document.getElementById('lgGo').onclick = () => doLogin(
@@ -2655,16 +2679,16 @@
     };
     document.getElementById('pwBtn').onclick = () => {
       if (!ME) return;
-      const cur = prompt('Nhập mật khẩu hiện tại:', ''); if (cur === null) return;
+      const cur = prompt('Enter your current password:', ''); if (cur === null) return;
       const real = (db.pw && db.pw[ME.username] !== undefined) ? db.pw[ME.username] : '123456';
-      if (String(cur) !== String(real)) { toast('Sai mật khẩu hiện tại.'); return; }
-      const nw = prompt('Nhập mật khẩu MỚI (ít nhất 4 ký tự):', ''); if (nw === null) return;
-      if (nw.trim().length < 4) { toast('Mật khẩu quá ngắn.'); return; }
+      if (String(cur) !== String(real)) { toast('Wrong current password.'); return; }
+      const nw = prompt('Enter a NEW password (at least 4 characters):', ''); if (nw === null) return;
+      if (nw.trim().length < 4) { toast('Password too short.'); return; }
       if (!db.pw) db.pw = {}; db.pw[ME.username] = nw.trim(); save();
-      toast('Đã đổi mật khẩu cho @' + ME.username + '.');
+      toast('Password changed for @' + ME.username + '.');
     };
 
-    // tự động điền tên đăng nhập nếu máy này đã lưu (?user=... hoặc localStorage), vẫn hỏi mật khẩu
+    // auto-fill the username if this browser remembers one (?user=... or localStorage); still asks for the password
     function autoFillCode() {
       const u = new URLSearchParams(location.search).get('user');
       let username = u || null;
@@ -2672,17 +2696,17 @@
       if (username) { document.getElementById('lgCode').value = username.toLowerCase(); document.getElementById('lgPw').focus(); }
     }
 
-    // ---- khởi động: nạp dữ liệu chung từ máy chủ, rồi hiển thị ----
+    // ---- startup: load shared data from the server, then render ----
     (async function init() {
       db = await loadFromServer();
-      populatePeopleSelects();                     // nạp thêm người đã đăng ký từ trước (nếu có)
-      autoFillCode();                              // điền sẵn mã máy nếu có
+      populatePeopleSelects();                     // load anyone registered earlier (if any)
+      autoFillCode();                              // pre-fill the username if remembered
       let bootChanged = autoActivateWeek();
       if (autoReclaimOverdueForWeek()) bootChanged = true;
       if (bootChanged) save();
       renderAll(); updateHint(); updateNoteLabel();
-      watchServer();                               // từ đây, mọi thay đổi từ người khác tự đẩy về ngay (không cần poll)
-      // vẫn cần kiểm tra định kỳ vì 2 việc này phụ thuộc ĐỒNG HỒ THỰC (12:00/17:30), không phải dữ liệu ai đó vừa ghi
+      watchServer();                               // from here on, changes from others push in automatically (no polling)
+      // still need to poll periodically since these 2 checks depend on the REAL CLOCK (12:00/17:30), not on someone else's write
       setInterval(() => {
         if (ME) applyIdentity();
         let tickChanged = autoActivateWeek();
