@@ -1644,18 +1644,27 @@
         return data;
       } catch (e) { console.error('load', e); toast('⚠ Could not load data — check your Firestore configuration.'); return fresh(); }
     }
+    async function writeNow() {
+      SAVE_TIMER = null;
+      try {
+        await fsDocRef.set(db);
+        LAST_SNAPSHOT = JSON.stringify(db);
+      } catch (e) { console.error('save', e); toast('⚠ Could not save to Firestore — check your connection.'); }
+    }
     function save() {
       const snap = JSON.stringify(db);
       if (!USE_FIRESTORE) { localStorage.setItem(LS, snap); LAST_SNAPSHOT = snap; return; }
       if (snap === LAST_SNAPSHOT) return; // nothing changed, no need to write
       // batch consecutive saves within 400ms
       clearTimeout(SAVE_TIMER);
-      SAVE_TIMER = setTimeout(async () => {
-        try {
-          await fsDocRef.set(db);
-          LAST_SNAPSHOT = JSON.stringify(db);
-        } catch (e) { console.error('save', e); toast('⚠ Could not save to Firestore — check your connection.'); }
-      }, 400);
+      SAVE_TIMER = setTimeout(writeNow, 400);
+    }
+    // force any pending debounced write to happen right now — call before reload/logout/navigation,
+    // otherwise a change made just before leaving the page can be lost (never reaches Firestore).
+    async function flushSave() {
+      if (!USE_FIRESTORE || !SAVE_TIMER) return;
+      clearTimeout(SAVE_TIMER);
+      await writeNow();
     }
     // realtime sync: Firestore pushes changes automatically, no need to poll every few seconds
     function watchServer() {
@@ -2338,7 +2347,7 @@
     };
 
     /* ---------- add a new user (admin only) ---------- */
-    document.getElementById('addPersonBtn').onclick = () => {
+    document.getElementById('addPersonBtn').onclick = async () => {
       if (!isAdmin()) { toast('Only an admin can add users.'); return; }
       const nameInp = document.getElementById('newPersonName');
       const name = nameInp.value.trim().toUpperCase();
@@ -2350,7 +2359,7 @@
       db.employees.push(name);
       if (!db.pw) db.pw = {};
       db.pw[username] = '123456';
-      save();
+      save(); await flushSave();
       nameInp.value = '';
       populatePeopleSelects();
       renderAll();
@@ -2384,12 +2393,12 @@
         <td>${isBase ? '' : '<button class="btn ghost small rm-user" data-name="' + esc(name) + '">Remove</button>'}</td>`;
         body.append(tr);
       });
-      body.querySelectorAll('.rm-user').forEach(b => b.onclick = () => {
+      body.querySelectorAll('.rm-user').forEach(b => b.onclick = async () => {
         const name = b.dataset.name;
         if (!confirm('Remove ' + name + ' from the user list? Their past records stay, but they will no longer be able to log in.')) return;
         db.employees = (db.employees || []).filter(n => n !== name);
         if (db.pw) delete db.pw[usernameOf(name)];
-        save(); renderAll();
+        save(); await flushSave(); renderAll();
         toast('Removed ' + name + '.');
       });
     }
@@ -2784,18 +2793,21 @@
     document.getElementById('lgPw').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('lgGo').click(); });
     document.getElementById('lgCode').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('lgPw').focus(); });
 
-    document.getElementById('logoutBtn').onclick = () => {
+    document.getElementById('logoutBtn').onclick = async () => {
+      await flushSave(); // make sure any last-second change (e.g. a password change) actually reached the server first
       ME = null; try { localStorage.removeItem(LS_ME); } catch (e) { }
       location.reload();
     };
-    document.getElementById('pwBtn').onclick = () => {
+    window.addEventListener('beforeunload', () => { flushSave(); }); // best effort if the tab is closed instead
+    document.getElementById('pwBtn').onclick = async () => {
       if (!ME) return;
       const cur = prompt('Enter your current password:', ''); if (cur === null) return;
       const real = (db.pw && db.pw[ME.username] !== undefined) ? db.pw[ME.username] : '123456';
       if (String(cur) !== String(real)) { toast('Wrong current password.'); return; }
       const nw = prompt('Enter a NEW password (at least 4 characters):', ''); if (nw === null) return;
       if (nw.trim().length < 4) { toast('Password too short.'); return; }
-      if (!db.pw) db.pw = {}; db.pw[ME.username] = nw.trim(); save();
+      if (!db.pw) db.pw = {}; db.pw[ME.username] = nw.trim();
+      save(); await flushSave(); // write immediately — this is rare and critical, don't risk losing it to the debounce window
       toast('Password changed for @' + ME.username + '.');
     };
 
