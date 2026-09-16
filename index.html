@@ -2611,7 +2611,7 @@
 
       const ro = !!(it && !canEditItem(it));
       document.getElementById('itemReadonlyNote').style.display = ro ? '' : 'none';
-      document.getElementById('itemProposer').disabled = true; // proposer is always the logged-in user, not editable
+      document.getElementById('itemProposer').disabled = !isAdmin(); // normally locked to the logged-in user; admins may log it on someone else's behalf
       ['itemOwner', 'itemSupport', 'itemReviewer', 'itemTitleInput', 'itemStatus', 'itemIdea', 'itemLink'].forEach(id => {
         document.getElementById(id).disabled = ro;
       });
@@ -2750,10 +2750,10 @@
       return n || null;
     }
     function applyIdentity() {
-      // lock the name dropdowns to the logged-in user
+      // lock the name dropdowns to the logged-in user — admins may pick anyone, to register/reserve on their behalf
       if (ME) {
-        if (rgName) { rgName.value = ME.name; rgName.disabled = true; }
-        if (wkName) { wkName.value = ME.name; wkName.disabled = true; }
+        if (rgName) { rgName.value = ME.name; rgName.disabled = !isAdmin(); }
+        if (wkName) { wkName.value = ME.name; wkName.disabled = !isAdmin(); }
         document.getElementById('meBox').style.display = '';
         document.getElementById('meBox').innerHTML = '👤 <b>' + ME.name + '</b> · @' + ME.username;
         document.getElementById('pwBtn').style.display = '';
