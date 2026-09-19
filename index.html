@@ -806,6 +806,23 @@
       min-height: 64px
     }
 
+    .field .multi-extra {
+      margin-top: 6px
+    }
+
+    .owner-multi-toggle {
+      font-weight: 400;
+      font-size: 12px;
+      color: var(--ink2);
+      margin-left: 8px;
+      cursor: pointer
+    }
+
+    .owner-multi-toggle input {
+      vertical-align: middle;
+      margin-right: 3px
+    }
+
     .field select:focus-visible,
     .field input:focus-visible,
     .field textarea:focus-visible {
@@ -1153,6 +1170,7 @@
           <table class="item-table">
             <thead>
               <tr>
+                <th>#</th>
                 <th>Proposer</th>
                 <th>Task / issue</th>
                 <th>Current state</th>
@@ -1208,6 +1226,7 @@
           <table class="item-table">
             <thead>
               <tr>
+                <th>#</th>
                 <th>Proposer</th>
                 <th>Topic / issue</th>
                 <th>Current state</th>
@@ -1423,18 +1442,35 @@
         <div class="field"><label>Proposer <span class="i18n">(auto = logged-in user)</span></label>
           <select id="itemProposer"></select>
         </div>
-        <div class="field"><label>Owner <span class="i18n">(optional)</span></label><select id="itemOwner">
-            <option value="">— None —</option>
-          </select></div>
+        <div class="field">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+            <label style="margin:0">Owner <span class="i18n">(optional)</span></label>
+            <label class="owner-multi-toggle"><input type="checkbox" id="itemOwnerMulti" class="multi-toggle" data-group="Owner"> <span class="i18n">multiple (up to 3)</span></label>
+          </div>
+          <select id="itemOwner1"><option value="">— None —</option></select>
+          <select id="itemOwner2" class="multi-extra" data-group="Owner" style="display:none"><option value="">— None —</option></select>
+          <select id="itemOwner3" class="multi-extra" data-group="Owner" style="display:none"><option value="">— None —</option></select>
+        </div>
       </div>
       <div class="row2">
-        <div class="field"><label>Support <span class="i18n">(optional)</span></label><select id="itemSupport">
-            <option value="">— None —</option>
-          </select></div>
-        <div class="field"><label>Reviewer <span class="i18n">(optional)</span></label><select
-            id="itemReviewer">
-            <option value="">— None —</option>
-          </select></div>
+        <div class="field">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+            <label style="margin:0">Support <span class="i18n">(optional)</span></label>
+            <label class="owner-multi-toggle"><input type="checkbox" id="itemSupportMulti" class="multi-toggle" data-group="Support"> <span class="i18n">multiple (up to 3)</span></label>
+          </div>
+          <select id="itemSupport1"><option value="">— None —</option></select>
+          <select id="itemSupport2" class="multi-extra" data-group="Support" style="display:none"><option value="">— None —</option></select>
+          <select id="itemSupport3" class="multi-extra" data-group="Support" style="display:none"><option value="">— None —</option></select>
+        </div>
+        <div class="field">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+            <label style="margin:0">Reviewer <span class="i18n">(optional)</span></label>
+            <label class="owner-multi-toggle"><input type="checkbox" id="itemReviewerMulti" class="multi-toggle" data-group="Reviewer"> <span class="i18n">multiple (up to 3)</span></label>
+          </div>
+          <select id="itemReviewer1"><option value="">— None —</option></select>
+          <select id="itemReviewer2" class="multi-extra" data-group="Reviewer" style="display:none"><option value="">— None —</option></select>
+          <select id="itemReviewer3" class="multi-extra" data-group="Reviewer" style="display:none"><option value="">— None —</option></select>
+        </div>
       </div>
       <div class="field"><label id="itemTitleLbl">Task / issue</label><input id="itemTitleInput" placeholder=""></div>
       <div class="field"><label id="itemStatusLbl">Current state</label><textarea id="itemStatus" rows="6" placeholder=""></textarea></div>
@@ -1497,6 +1533,12 @@
       const last = words[words.length - 1];
       const initials = words.slice(0, -1).map(w => w.charAt(0)).join('');
       return initials + last;
+    }
+    // owner can hold up to 3 people; normalize both the array form and older single-string records
+    function ownersOf(it) {
+      const o = it && it.owner;
+      if (Array.isArray(o)) return o.filter(Boolean);
+      return o ? [o] : [];
     }
 
     const LS = "licmgr_v1";
@@ -2390,8 +2432,20 @@
         tr.innerHTML = `<td>${i + 1}</td><td>${esc(name)}</td><td>@${esc(username)}</td>
         <td>${ADMIN_NAMES.indexOf(name) !== -1 ? '<b style="color:#c0392b">Admin</b>' : 'Member'}</td>
         <td>${isBase ? 'Base' : 'Added'}</td>
-        <td>${isBase ? '' : '<button class="btn ghost small rm-user" data-name="' + esc(name) + '">Remove</button>'}</td>`;
+        <td style="display:flex;gap:6px;flex-wrap:wrap">
+          <button class="btn ghost small reset-pw" data-name="${esc(name)}">Reset password</button>
+          ${isBase ? '' : '<button class="btn ghost small rm-user" data-name="' + esc(name) + '">Remove</button>'}
+        </td>`;
         body.append(tr);
+      });
+      body.querySelectorAll('.reset-pw').forEach(b => b.onclick = async () => {
+        if (!isAdmin()) { toast('Only an admin can reset passwords.'); return; }
+        const name = b.dataset.name;
+        if (!confirm('Reset the password for ' + name + ' back to the default (123456)?')) return;
+        if (!db.pw) db.pw = {};
+        db.pw[usernameOf(name)] = '123456';
+        save(); await flushSave();
+        toast('Password for ' + name + ' reset to 123456.');
       });
       body.querySelectorAll('.rm-user').forEach(b => b.onclick = async () => {
         const name = b.dataset.name;
@@ -2515,6 +2569,31 @@
       sel.innerHTML = keep;
       allEmployees().forEach(n => sel.append(new Option(n, n)));
     }
+    // Owner/Support/Reviewer all follow the same pattern: 1 dropdown by default, ticking
+    // "multiple" reveals 2 more pickers (up to 3 people total). MULTI_FIELDS drives all of it.
+    const MULTI_FIELDS = [
+      { key: 'owner', id: 'itemOwner' },
+      { key: 'support', id: 'itemSupport' },
+      { key: 'reviewer', id: 'itemReviewer' }
+    ];
+    function fillMultiFieldSelects() {
+      MULTI_FIELDS.forEach(f => ['1', '2', '3'].forEach(n => fillPersonSelect(document.getElementById(f.id + n), true)));
+    }
+    function gatherMultiField(id) {
+      return Array.from(new Set(['1', '2', '3'].map(n => document.getElementById(id + n).value).filter(Boolean)));
+    }
+    // legacy records may store a single string instead of an array — normalize both shapes
+    function peopleOf(it, key) {
+      const v = it && it[key];
+      if (Array.isArray(v)) return v.filter(Boolean);
+      return v ? [v] : [];
+    }
+    function ownersOf(it) { return peopleOf(it, 'owner'); }
+    function splitPeople(v) { return String(v || '').split(/[;,]/).map(s => s.trim()).filter(Boolean).slice(0, 3); }
+    function peopleCellHtml(it, key, cls) {
+      const list = peopleOf(it, key);
+      return `<td class="${cls || ''}" title="${esc(list.join(', '))}">${list.length ? esc(list.map(abbreviateName).join(', ')) : '—'}</td>`;
+    }
     function populatePeopleSelects() {
       [rgName, wkName].forEach(sel => {
         if (!sel) return;
@@ -2524,14 +2603,17 @@
         if (allEmployees().includes(cur)) sel.value = cur;
       });
       fillPersonSelect(document.getElementById('itemProposer'), false);
-      fillPersonSelect(document.getElementById('itemOwner'), true);
-      fillPersonSelect(document.getElementById('itemSupport'), true);
-      fillPersonSelect(document.getElementById('itemReviewer'), true);
+      fillMultiFieldSelects();
     }
+    document.querySelectorAll('.multi-toggle').forEach(chk => chk.addEventListener('change', e => {
+      const group = e.target.dataset.group;
+      document.querySelectorAll(`.multi-extra[data-group="${group}"]`).forEach(sel => {
+        sel.style.display = e.target.checked ? '' : 'none';
+        if (!e.target.checked) sel.value = '';
+      });
+    }));
     fillPersonSelect(document.getElementById('itemProposer'), false);
-    fillPersonSelect(document.getElementById('itemOwner'), true);
-    fillPersonSelect(document.getElementById('itemSupport'), true);
-    fillPersonSelect(document.getElementById('itemReviewer'), true);
+    fillMultiFieldSelects();
     seg('itemPri'); seg('itemCol'); // attach click-toggle behavior; read live value via getItemPri/getItemCol below
     function getItemPri() { return document.getElementById('itemPri').querySelector('.on').dataset.v; }
     function getItemCol() { return document.getElementById('itemCol').querySelector('.on').dataset.v; }
@@ -2561,8 +2643,8 @@
       const tabFilter = ITEM_TAB[kind], priFilter = ITEM_PRI_FILTER[kind];
       const items = (db[kind] || []).filter(it =>
         (tabFilter === 'all' || it.column === tabFilter) && (priFilter === 'all' || it.priority === priFilter));
-      if (!items.length) { box.innerHTML = '<tr><td colspan="10" class="empty">No items yet.</td></tr>'; return; }
-      items.forEach(it => {
+      if (!items.length) { box.innerHTML = '<tr><td colspan="11" class="empty">No items yet.</td></tr>'; return; }
+      items.forEach((it, idx) => {
         const col = ITEM_COLS.find(c => c.key === it.column) || ITEM_COLS[0];
         const priClass = it.priority === 'high' ? 'pri-hot' : (it.priority === 'low' ? 'pri-cool' : 'pri-warm');
         let linkCell = '—';
@@ -2574,13 +2656,14 @@
         }
         const tr = document.createElement('tr');
         tr.innerHTML = `
+        <td class="item-cell-mono">${idx + 1}</td>
         <td title="${esc(it.proposer || '')}">${esc(abbreviateName(it.proposer))}</td>
         <td class="item-cell-ellipsis" title="${esc(it.title || '')}">${esc(it.title || '')}</td>
         <td class="item-cell-ellipsis" title="${esc(it.status || '')}">${esc(it.status || '—')}</td>
         <td class="item-cell-ellipsis item-cell-muted" title="${esc(it.idea || '')}">${esc(it.idea || '—')}</td>
-        <td title="${esc(it.owner || '')}">${it.owner ? esc(abbreviateName(it.owner)) : '—'}</td>
-        <td class="item-cell-muted" title="${esc(it.support || '')}">${it.support ? esc(abbreviateName(it.support)) : '—'}</td>
-        <td class="item-cell-muted" title="${esc(it.reviewer || '')}">${it.reviewer ? esc(abbreviateName(it.reviewer)) : '—'}</td>
+        ${peopleCellHtml(it, 'owner')}
+        ${peopleCellHtml(it, 'support', 'item-cell-muted')}
+        ${peopleCellHtml(it, 'reviewer', 'item-cell-muted')}
         <td><span class="pill ${col.cls}">${col.icon} ${col.name}</span> <span class="pill ${priClass}" title="Priority: ${ITEM_PRI_LABEL[it.priority] || 'Medium'}">${ITEM_PRI_LABEL[it.priority] || 'Medium'}</span></td>
         <td class="item-cell-ellipsis">${linkCell}</td>
         <td class="item-cell-mono">${it.updatedAt ? nowStr(new Date(it.updatedAt).getTime()) : '—'}<br><small>${esc(it.updatedBy || '')}</small></td>`;
@@ -2604,9 +2687,13 @@
       document.getElementById('itemIdea').placeholder = L.ideaHint;
 
       document.getElementById('itemProposer').value = it ? it.proposer : ME.name;
-      document.getElementById('itemOwner').value = it ? (it.owner || '') : '';
-      document.getElementById('itemSupport').value = it ? (it.support || '') : '';
-      document.getElementById('itemReviewer').value = it ? (it.reviewer || '') : '';
+      MULTI_FIELDS.forEach(f => {
+        const people = peopleOf(it, f.key);
+        ['1', '2', '3'].forEach((n, i) => document.getElementById(f.id + n).value = people[i] || '');
+        const isMulti = people.length > 1;
+        document.getElementById(f.id + 'Multi').checked = isMulti;
+        document.querySelectorAll(`.multi-extra[data-group="${f.id.replace('item', '')}"]`).forEach(sel => sel.style.display = isMulti ? '' : 'none');
+      });
       document.getElementById('itemTitleInput').value = it ? it.title : '';
       document.getElementById('itemStatus').value = it ? (it.status || '') : '';
       document.getElementById('itemIdea').value = it ? (it.idea || '') : '';
@@ -2621,7 +2708,8 @@
       const ro = !!(it && !canEditItem(it));
       document.getElementById('itemReadonlyNote').style.display = ro ? '' : 'none';
       document.getElementById('itemProposer').disabled = !isAdmin(); // normally locked to the logged-in user; admins may log it on someone else's behalf
-      ['itemOwner', 'itemSupport', 'itemReviewer', 'itemTitleInput', 'itemStatus', 'itemIdea', 'itemLink'].forEach(id => {
+      const multiFieldIds = MULTI_FIELDS.flatMap(f => [f.id + '1', f.id + '2', f.id + '3', f.id + 'Multi']);
+      [...multiFieldIds, 'itemTitleInput', 'itemStatus', 'itemIdea', 'itemLink'].forEach(id => {
         document.getElementById(id).disabled = ro;
       });
       document.getElementById('itemPri').querySelectorAll('button').forEach(b => b.disabled = ro);
@@ -2645,16 +2733,18 @@
       };
       document.getElementById(kind + '-btn-export').onclick = () => {
         const L = ITEM_LABELS[kind];
-        const rows = (db[kind] || []).map(it => ({
+        const rows = (db[kind] || []).map((it, idx) => ({
+          '#': idx + 1,
           ID: it.id, Proposer: it.proposer || '', [L.title]: it.title || '', [L.status]: it.status || '',
-          [L.idea]: it.idea || '', Owner: it.owner || '', Support: it.support || '', Reviewer: it.reviewer || '',
+          [L.idea]: it.idea || '', Owner: peopleOf(it, 'owner').join('; '),
+          Support: peopleOf(it, 'support').join('; '), Reviewer: peopleOf(it, 'reviewer').join('; '),
           Priority: ITEM_PRI_LABEL[it.priority] || 'Medium', Status: colNameOf(it.column),
           'Link/file': it.link || '',
           'Created At': it.createdAt || '', 'Created By': it.createdBy || '',
           'Updated At': it.updatedAt || '', 'Updated By': it.updatedBy || ''
         }));
         const ws = XLSX.utils.json_to_sheet(rows);
-        ws['!cols'] = [18, 14, 26, 26, 26, 14, 14, 14, 10, 12, 24, 20, 16, 20, 16].map(w => ({ wch: w }));
+        ws['!cols'] = [6, 18, 14, 26, 26, 26, 14, 14, 14, 10, 12, 24, 20, 16, 20, 16].map(w => ({ wch: w }));
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, kind === 'backlog' ? 'Optimization Backlog' : 'Training Needs');
         XLSX.writeFile(wb, kind + '-' + new Date().toISOString().slice(0, 10) + '.xlsx');
@@ -2679,7 +2769,7 @@
                   id,
                   column: colKeyOf(r.Status), priority: priKeyOf(r.Priority),
                   proposer: String(r.Proposer || '').trim(),
-                  owner: String(r.Owner || '').trim(), support: String(r.Support || '').trim(), reviewer: String(r.Reviewer || '').trim(),
+                  owner: splitPeople(r.Owner), support: splitPeople(r.Support), reviewer: splitPeople(r.Reviewer),
                   title: String(r[L.title] || '').trim(), status: String(r[L.status] || '').trim(), idea: String(r[L.idea] || '').trim(),
                   link: String(r['Link/file'] || '').trim(),
                   createdAt: String(r['Created At'] || '').trim() || now,
@@ -2713,9 +2803,9 @@
       const data = {
         id: itemEditingId || (itemKind + '-' + Date.now() + '-' + Math.random().toString(36).slice(2, 8)),
         column: getItemCol(), priority: getItemPri(),
-        proposer, owner: document.getElementById('itemOwner').value,
-        support: document.getElementById('itemSupport').value,
-        reviewer: document.getElementById('itemReviewer').value,
+        proposer, owner: gatherMultiField('itemOwner'),
+        support: gatherMultiField('itemSupport'),
+        reviewer: gatherMultiField('itemReviewer'),
         title, status: document.getElementById('itemStatus').value.trim(),
         idea: document.getElementById('itemIdea').value.trim(),
         link: document.getElementById('itemLink').value.trim(),
