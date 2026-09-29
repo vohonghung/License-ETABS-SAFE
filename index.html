@@ -680,6 +680,255 @@
       white-space: nowrap
     }
 
+    /* Implementation Tracking */
+    .tracking-card {
+      scroll-margin-top: 82px
+    }
+
+    .tracking-filters {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 14px
+    }
+
+    .tracking-filter-fields {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap
+    }
+
+    .tracking-filter-fields input,
+    .tracking-filter-fields select {
+      width: auto;
+      min-width: 150px;
+      padding: 6px 9px;
+      font-size: 13px
+    }
+
+    .tracking-filter-fields input {
+      min-width: 220px
+    }
+
+    table.tracking-table {
+      min-width: 1260px
+    }
+
+    table.tracking-table tbody tr.tracking-highlight {
+      background: var(--accent-soft)
+    }
+
+    .tracking-source-title {
+      max-width: 260px
+    }
+
+    .tracking-source-title strong {
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap
+    }
+
+    .tracking-source-title small {
+      display: block;
+      color: var(--ink2);
+      margin-top: 3px
+    }
+
+    .tracking-progress {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      min-width: 118px
+    }
+
+    .tracking-progress-track {
+      flex: 1;
+      height: 7px;
+      background: var(--surface-2);
+      border-radius: var(--r-pill);
+      overflow: hidden
+    }
+
+    .tracking-progress-fill {
+      height: 100%;
+      background: var(--col-idea);
+      border-radius: var(--r-pill)
+    }
+
+    .tracking-progress span {
+      min-width: 34px;
+      text-align: right;
+      font-variant-numeric: tabular-nums
+    }
+
+    .tracking-source-warning {
+      color: var(--warn);
+      font-weight: 700
+    }
+
+    .tracking-modal {
+      max-width: 820px;
+      max-height: calc(100vh - 36px);
+      overflow-y: auto
+    }
+
+    .tracking-source-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 10px 0 16px;
+      padding: 11px 13px;
+      border-radius: var(--r-sm);
+      background: var(--surface-2)
+    }
+
+    .tracking-readonly-grid {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 10px;
+      margin-bottom: 14px
+    }
+
+    .tracking-readonly-grid>div,
+    .tracking-derived-box {
+      padding: 11px 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--r-sm);
+      background: var(--surface)
+    }
+
+    .tracking-readonly-grid span,
+    .tracking-derived-box span {
+      display: block;
+      color: var(--ink2);
+      font-size: 12px;
+      margin-bottom: 4px
+    }
+
+    .tracking-readonly-grid strong,
+    .tracking-derived-box strong {
+      display: block;
+      font-size: 13.5px;
+      overflow-wrap: anywhere
+    }
+
+    .tracking-derived-row {
+      margin-bottom: 16px
+    }
+
+    .tracking-derived-box {
+      background: var(--surface-2)
+    }
+
+    .tracking-milestone-head {
+      margin: 4px 0 10px
+    }
+
+    table.tracking-milestone-table input,
+    table.tracking-milestone-table select {
+      width: 100%;
+      min-width: 0;
+      padding: 5px 7px;
+      font-size: 12.5px
+    }
+
+    .tracking-milestone-table-wrap {
+      max-height: 320px;
+      margin-bottom: 12px
+    }
+
+    table.tracking-milestone-table {
+      min-width: 720px
+    }
+
+    .tracking-milestone-status {
+      width: auto;
+      min-width: 94px;
+      padding: 5px 7px;
+      font-size: 12.5px
+    }
+
+    .tracking-timeline {
+      border-top: 1px solid var(--line);
+      margin-top: 16px;
+      padding-top: 14px
+    }
+
+    .tracking-timeline-item {
+      position: relative;
+      margin-left: 6px;
+      padding: 0 0 15px 18px;
+      border-left: 2px solid var(--line)
+    }
+
+    .tracking-timeline-item:last-child {
+      padding-bottom: 0
+    }
+
+    .tracking-timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -6px;
+      top: 4px;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent)
+    }
+
+    .tracking-timeline-meta {
+      color: var(--ink2);
+      font-size: 12px;
+      margin-bottom: 3px
+    }
+
+    .pill.tr-not-started {
+      background: var(--surface-2);
+      color: var(--ink2)
+    }
+
+    .pill.tr-in-progress {
+      background: var(--col-idea-soft);
+      color: var(--col-idea)
+    }
+
+    .pill.tr-blocked {
+      background: #fdecea;
+      color: var(--warn)
+    }
+
+    .pill.tr-review {
+      background: var(--col-todo-soft);
+      color: var(--col-todo)
+    }
+
+    .pill.tr-done {
+      background: var(--col-done-soft);
+      color: var(--col-done)
+    }
+
+    @media (max-width: 640px) {
+      .tracking-filter-fields,
+      .tracking-filter-fields input,
+      .tracking-filter-fields select {
+        width: 100%
+      }
+
+      .tracking-modal {
+        max-height: calc(100vh - 18px)
+      }
+
+      .tracking-readonly-grid {
+        grid-template-columns: 1fr 1fr
+      }
+    }
+
     #weekTable th,
     #weekTable td {
       border: 1px solid var(--line);
@@ -1181,6 +1430,7 @@
                 <th>Status</th>
                 <th>Link/file</th>
                 <th>Updated</th>
+                <th>Tracking</th>
               </tr>
             </thead>
             <tbody id="backlog-body"></tbody>
@@ -1244,6 +1494,53 @@
         </div>
         <p class="sub" style="text-align:center;margin-top:14px">Data syncs live for the whole team via Firestore.
           Use <b>Export</b> to download an Excel (.xlsx) copy, <b>Import</b> to load/merge data from an exported Excel file.</p>
+      </div>
+
+      <div class="card tracking-card" id="implementation-tracking-card">
+        <div class="recon-head">
+          <div>
+            <h2 style="margin:0">🚀 Implementation Tracking</h2>
+            <p class="sub" style="margin:2px 0 0">Centralized tracking of implementation issues, progress and next actions.</p>
+          </div>
+        </div>
+        <div class="item-note">
+          <span>Track selected Optimization Backlog items from implementation through review and completion.</span>
+          <span>·</span>
+          <span>Click a row to open its details and activity timeline.</span>
+        </div>
+        <div class="tracking-filters">
+          <div class="item-tabs" id="tracking-tabs"></div>
+          <div class="tracking-filter-fields">
+            <input id="tracking-search" type="search" placeholder="Search backlog item..." aria-label="Search implementation tracking">
+            <select id="tracking-owner-filter" aria-label="Filter implementation tracking by owner">
+              <option value="all">All owners</option>
+            </select>
+            <select id="tracking-priority-filter" aria-label="Filter implementation tracking by priority">
+              <option value="all">All priorities</option>
+              <option value="high">High</option>
+              <option value="mid">Medium</option>
+              <option value="low">Low</option>
+            </select>
+          </div>
+        </div>
+        <div class="item-table-wrap">
+          <table class="item-table tracking-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Backlog item</th>
+                <th>Owner</th>
+                <th>Backlog status</th>
+                <th>Milestones</th>
+                <th>Current handling status</th>
+                <th>Next action</th>
+                <th>Updated</th>
+              </tr>
+            </thead>
+            <tbody id="tracking-body"></tbody>
+          </table>
+        </div>
+        <p class="sub" id="tracking-sync-note" style="text-align:center;margin-top:14px">Tracking data syncs live for the whole team via Firestore.</p>
       </div>
     </section>
 
@@ -1494,6 +1791,59 @@
     </div>
   </div>
 
+  <div class="modal-bg" id="trackingBg">
+    <div class="modal tracking-modal">
+      <div class="modal-head">
+        <div>
+          <h2 id="trackingTitle" style="margin:0">Implementation Tracking</h2>
+          <p class="sub" id="trackingTitleSub" style="margin:2px 0 0"></p>
+        </div>
+        <button class="btn ghost small" id="trackingClose">Close</button>
+      </div>
+      <p class="sub" id="trackingReadonlyNote" style="display:none;color:var(--warn);font-weight:600">Backlog information is read-only here. Only an admin or this item's Backlog Owner can update milestones.</p>
+      <div class="tracking-source-box">
+        <div>
+          <span class="sub">Source</span><br>
+          <strong id="trackingSourceLabel">Optimization Backlog</strong>
+          <span class="tracking-source-warning" id="trackingSourceWarning" style="display:none"> · Source deleted</span>
+        </div>
+        <button class="btn ghost small" id="trackingOpenSource">Open source</button>
+      </div>
+
+      <div class="tracking-readonly-grid">
+        <div><span>Proposer</span><strong id="trackingSourceProposer">—</strong></div>
+        <div><span>Owner</span><strong id="trackingSourceOwner">—</strong></div>
+        <div><span>Priority</span><strong id="trackingSourcePriority">—</strong></div>
+        <div><span>Backlog status</span><strong id="trackingSourceStatus">—</strong></div>
+      </div>
+
+      <div class="row2 tracking-derived-row">
+        <div class="tracking-derived-box"><span>Current handling status</span><strong id="trackingHandlingAuto">No milestone completed yet.</strong></div>
+        <div class="tracking-derived-box"><span>Next action</span><strong id="trackingNextActionAuto">No pending milestone.</strong></div>
+      </div>
+
+      <div class="modal-head tracking-milestone-head">
+        <div><h2 style="margin:0">Milestones</h2><p class="sub" style="margin:2px 0 0">Current status and next action are generated automatically from this list.</p></div>
+        <button class="btn primary small" id="milestoneAddToggle">+ Add milestone</button>
+      </div>
+      <div class="item-table-wrap tracking-milestone-table-wrap">
+        <table class="item-table tracking-milestone-table">
+          <thead><tr><th>#</th><th>Action</th><th>Action owner</th><th>Target date</th><th>Status</th><th></th></tr></thead>
+          <tbody id="milestoneBody"></tbody>
+        </table>
+      </div>
+      <div class="modal-head" style="margin-top:6px">
+        <div><button class="btn warn small" id="trackingRemove" style="display:none">Remove tracking</button><span class="sub" id="trackingMeta" style="margin-left:8px"></span></div>
+        <button class="btn primary" id="trackingSave">Save milestone changes</button>
+      </div>
+
+      <div class="tracking-timeline">
+        <h2 style="margin:0 0 12px">Activity timeline</h2>
+        <div id="trackingTimeline"><div class="empty">No updates yet.</div></div>
+      </div>
+    </div>
+  </div>
+
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -1552,6 +1902,7 @@
         state: st, queue: [], history: [], queueLog: [], week: [], wkActivated: [],
         handovers: [], wkSkipped: [], pw, wkMigratedV2: true,
         backlog: seedBacklog(), training: seedTraining(), itemsSeeded: true,
+        implementationTracking: seedImplementationTracking(), implementationTrackingUpdates: seedImplementationTrackingUpdates(),
         employees: []
       };
     }
@@ -1618,6 +1969,65 @@
         }
       ];
     }
+    // sample Implementation Tracking data: 2 tracking records (linked to seed-ob-1/seed-ob-2)
+    // with 3 milestones between them — only used the very first time (when the Sheet is empty)
+    function seedImplementationTracking() {
+      return [
+        {
+          id: "seed-ob-1", backlogId: "seed-ob-1",
+          sourceSnapshot: {
+            title: "Enter survey readings from measurement device photos into Excel",
+            proposer: "NGUYỄN THÀNH PHI", priority: "high",
+            owner: ["NGUYỄN THÀNH PHI"], support: [], reviewer: [],
+            createdBy: "NGUYỄN THÀNH PHI", column: "todo"
+          },
+          milestones: [
+            {
+              id: "seed-ms-1", action: "Test OCR extraction on a batch of sample site photos",
+              owner: "NGUYỄN THÀNH PHI", targetDate: "2026-09-30", status: "idea",
+              createdAt: "2026-09-10T09:00:00", createdBy: "NGUYỄN THÀNH PHI", completedAt: ""
+            }
+          ],
+          createdBy: "NGUYỄN THÀNH PHI", createdAt: "2026-09-10T09:00:00",
+          updatedBy: "NGUYỄN THÀNH PHI", updatedAt: "2026-09-18T10:30:00"
+        },
+        {
+          id: "seed-ob-2", backlogId: "seed-ob-2",
+          sourceSnapshot: {
+            title: "Automatically merge weekly progress reports from multiple Excel files",
+            proposer: "CÁI THỊ THẢO MY", priority: "mid",
+            owner: ["NGUYỄN ĐĂNG QUANG"], support: ["NGUYỄN HỮU THOẠI"], reviewer: ["NGUYỄN PHI GIA"],
+            createdBy: "CÁI THỊ THẢO MY", column: "idea"
+          },
+          milestones: [
+            {
+              id: "seed-ms-2", action: "Build the Power Query template for the pilot project",
+              owner: "NGUYỄN ĐĂNG QUANG", targetDate: "2026-08-20", status: "done",
+              createdAt: "2026-08-01T08:00:00", createdBy: "NGUYỄN ĐĂNG QUANG", completedAt: "2026-08-19T16:00:00"
+            },
+            {
+              id: "seed-ms-3", action: "Roll the template out to the remaining disciplines",
+              owner: "NGUYỄN HỮU THOẠI", targetDate: "2026-10-05", status: "todo",
+              createdAt: "2026-08-20T09:00:00", createdBy: "NGUYỄN ĐĂNG QUANG", completedAt: ""
+            }
+          ],
+          createdBy: "NGUYỄN ĐĂNG QUANG", createdAt: "2026-08-01T08:00:00",
+          updatedBy: "NGUYỄN HỮU THOẠI", updatedAt: "2026-08-20T09:00:00"
+        }
+      ];
+    }
+    function seedImplementationTrackingUpdates() {
+      return {
+        "seed-ob-1": [
+          { id: "seed-upd-1b", note: "Started testing OCR on a batch of site photos.", milestonesTotal: 1, milestonesDone: 0, createdAt: "2026-09-18T10:30:00", createdBy: "NGUYỄN THÀNH PHI" },
+          { id: "seed-upd-1a", note: "Tracking record created from Optimization Backlog.", milestonesTotal: 0, milestonesDone: 0, createdAt: "2026-09-10T09:00:00", createdBy: "NGUYỄN THÀNH PHI" }
+        ],
+        "seed-ob-2": [
+          { id: "seed-upd-2b", note: "Power Query template done; next is rolling it out to the other disciplines.", milestonesTotal: 2, milestonesDone: 1, createdAt: "2026-08-20T09:00:00", createdBy: "NGUYỄN HỮU THOẠI" },
+          { id: "seed-upd-2a", note: "Tracking record created from Optimization Backlog.", milestonesTotal: 0, milestonesDone: 0, createdAt: "2026-08-01T08:00:00", createdBy: "NGUYỄN ĐĂNG QUANG" }
+        ]
+      };
+    }
     // bổ sung mọi trường còn thiếu cho dữ liệu cũ
     function migrate(d) {
       if (!d || typeof d !== 'object') d = fresh();
@@ -1637,6 +2047,8 @@
       // dữ liệu cũ (trước khi có 2 bảng Backlog/Training) -> nạp dữ liệu mẫu đúng 1 lần duy nhất
       if (!Array.isArray(d.backlog)) d.backlog = d.itemsSeeded ? [] : seedBacklog();
       if (!Array.isArray(d.training)) d.training = d.itemsSeeded ? [] : seedTraining();
+      if (!Array.isArray(d.implementationTracking)) d.implementationTracking = [];
+      if (!d.implementationTrackingUpdates || typeof d.implementationTrackingUpdates !== 'object') d.implementationTrackingUpdates = {};
       d.itemsSeeded = true;
       // sửa lỗi 1 lần: trước đây wkKey() dùng toISOString() nên mã tuần bị lùi 1 ngày (múi giờ VN).
       // các bản ghi lịch tuần cũ cộng lại đúng 1 ngày để khớp với wkKey() mới (đúng ngày thứ 2 thật).
@@ -1663,10 +2075,16 @@
       appId: "1:873970747694:web:1e5868e7abab60fbbd12bf"
     };
     const USE_FIRESTORE = firebaseConfig.apiKey !== "YOUR_API_KEY";
-    let fsDocRef = null;
+    const TRACKING_LS = "licmgr_tracking_v1";
+    let fsDocRef = null, fsTrackingRef = null;
+    let trackingRecords = [], trackingByBacklog = {}, trackingUnsub = null;
+    let trackingActiveStatus = 'all', trackingEditingId = null, trackingUpdates = [], trackingEditingMilestones = [], trackingEditingReadOnly = false;
+    let milestoneEditingIndex = -1;
+    let trackingStorageMode = USE_FIRESTORE ? 'collection' : 'local';
     if (USE_FIRESTORE) {
       firebase.initializeApp(firebaseConfig);
       fsDocRef = firebase.firestore().collection('licmgr').doc('state');
+      fsTrackingRef = firebase.firestore().collection('implementationTracking');
     }
 
     async function loadFromServer() {
@@ -1718,6 +2136,7 @@
         if (asStr === LAST_SNAPSHOT) return; // this is our own write echoing back, skip to avoid UI jitter
         LAST_SNAPSHOT = asStr;
         db = data;
+        if (trackingStorageMode === 'state') syncTrackingFromState();
         populatePeopleSelects();
         renderAll();
         if (ME) applyIdentity();
@@ -2321,6 +2740,7 @@
 
     /* ---------- CHARTS (plain SVG) ---------- */
     function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+    function escAttr(s) { return esc(s).replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
     function renderCharts() {
       // 1) sessions by person: from history + currently open sessions
       const cnt = {};
@@ -2539,6 +2959,624 @@
       });
     }
 
+    /* ================== IMPLEMENTATION TRACKING ================== */
+    const TRACKING_FILTER_STATUSES = [
+      { key: 'todo', name: 'Identified', cls: 'st-todo' },
+      { key: 'idea', name: 'In progress', cls: 'st-idea' },
+      { key: 'done', name: 'Done', cls: 'st-done' }
+    ];
+
+    function trackingBacklogStatusOf(key) {
+      return TRACKING_FILTER_STATUSES.find(x => x.key === key) || TRACKING_FILTER_STATUSES[0];
+    }
+    function trackingMillis(value) {
+      if (!value) return 0;
+      if (typeof value.toDate === 'function') return value.toDate().getTime();
+      if (typeof value.toMillis === 'function') return value.toMillis();
+      const n = new Date(value).getTime();
+      return Number.isFinite(n) ? n : 0;
+    }
+    function trackingDateLabel(value) {
+      if (!value) return '—';
+      const p = String(value).split('-');
+      return p.length === 3 ? p[2] + '/' + p[1] + '/' + p[0] : esc(value);
+    }
+    function trackingSource(id) {
+      return (db.backlog || []).find(x => x.id === id) || null;
+    }
+    // Milestone status mirrors the Backlog pipeline: todo=Identified, idea=In progress, done=Done.
+    const MILESTONE_STATUS_KEYS = ['todo', 'idea', 'done'];
+    function normalizeTrackingRecord(record) {
+      if (!record || typeof record !== 'object') return record;
+      if (!Array.isArray(record.milestones)) {
+        record.milestones = [];
+        if (record.nextAction) {
+          record.milestones.push({
+            id: 'legacy-' + (record.backlogId || Date.now()), action: record.nextAction,
+            owner: record.actionOwner || record.owner || '', targetDate: record.actionDue || record.targetDate || '',
+            status: record.status === 'done' ? 'done' : (record.status === 'in_progress' ? 'idea' : 'todo'),
+            createdAt: record.createdAt || record.updatedAt || new Date().toISOString(),
+            createdBy: record.createdBy || record.updatedBy || '',
+            completedAt: record.status === 'done' ? (record.updatedAt || new Date().toISOString()) : ''
+          });
+        }
+      }
+      record.milestones.forEach(milestone => {
+        // legacy 2-state data ('notyet') collapses to "Identified"
+        if (!MILESTONE_STATUS_KEYS.includes(milestone.status)) milestone.status = 'todo';
+      });
+      return record;
+    }
+    function trackingDerived(record) {
+      const milestones = (record && Array.isArray(record.milestones) ? record.milestones : []).slice();
+      const done = milestones.filter(x => x.status === 'done').sort((a, b) =>
+        trackingMillis(b.completedAt || b.updatedAt || b.createdAt) - trackingMillis(a.completedAt || a.updatedAt || a.createdAt));
+      const inProgress = milestones.filter(x => x.status === 'idea').sort((a, b) => {
+        const ad = a.targetDate || '9999-12-31', bd = b.targetDate || '9999-12-31';
+        return ad.localeCompare(bd) || trackingMillis(a.createdAt) - trackingMillis(b.createdAt);
+      });
+      const identified = milestones.filter(x => x.status === 'todo').sort((a, b) => {
+        const ad = a.targetDate || '9999-12-31', bd = b.targetDate || '9999-12-31';
+        return ad.localeCompare(bd) || trackingMillis(a.createdAt) - trackingMillis(b.createdAt);
+      });
+      return {
+        total: milestones.length, doneCount: done.length,
+        // "current" = what's actively in progress right now, falling back to the latest completed one
+        current: inProgress[0] || done[0] || null,
+        // "next" = the next not-yet-started milestone queued up after that
+        next: identified[0] || null,
+        progress: milestones.length ? Math.round(done.length * 100 / milestones.length) : 0
+      };
+    }
+    function milestoneText(milestone, emptyText) {
+      if (!milestone) return emptyText;
+      const suffix = [milestone.owner ? abbreviateName(milestone.owner) : '', milestone.targetDate ? trackingDateLabel(milestone.targetDate) : ''].filter(Boolean).join(' · ');
+      return milestone.action + (suffix ? ' — ' + suffix : '');
+    }
+    function rebuildTrackingIndex() {
+      trackingByBacklog = {};
+      trackingRecords.forEach(x => { normalizeTrackingRecord(x); if (x && x.backlogId) trackingByBacklog[x.backlogId] = x; });
+    }
+    function upsertTrackingRecord(record) {
+      const idx = trackingRecords.findIndex(x => x.backlogId === record.backlogId);
+      if (idx >= 0) trackingRecords[idx] = record;
+      else trackingRecords.push(record);
+      rebuildTrackingIndex();
+    }
+    function readLocalTrackingStore() {
+      try {
+        const parsed = JSON.parse(localStorage.getItem(TRACKING_LS));
+        return parsed && typeof parsed === 'object' ? parsed : { records: [], updates: {} };
+      } catch (e) { return { records: [], updates: {} }; }
+    }
+    function writeLocalTrackingStore(store) {
+      localStorage.setItem(TRACKING_LS, JSON.stringify(store));
+    }
+    function isTrackingPermissionError(error) {
+      return !!error && (error.code === 'permission-denied' || /permission/i.test(String(error.message || '')));
+    }
+    function syncTrackingFromState() {
+      trackingRecords = Array.isArray(db.implementationTracking) ? db.implementationTracking : [];
+      rebuildTrackingIndex();
+    }
+    function activateTrackingStateFallback() {
+      trackingStorageMode = 'state';
+      if (trackingUnsub) { trackingUnsub(); trackingUnsub = null; }
+      if (!Array.isArray(db.implementationTracking)) db.implementationTracking = [];
+      if (!db.implementationTrackingUpdates || typeof db.implementationTrackingUpdates !== 'object') db.implementationTrackingUpdates = {};
+      syncTrackingFromState();
+      renderBacklog(); renderTracking();
+      const note = document.getElementById('tracking-sync-note');
+      if (note) note.textContent = 'Tracking data syncs through the existing shared Firestore document (compatibility mode).';
+    }
+    function watchTracking() {
+      if (!USE_FIRESTORE) {
+        trackingStorageMode = 'local';
+        const store = readLocalTrackingStore();
+        trackingRecords = Array.isArray(store.records) ? store.records : [];
+        rebuildTrackingIndex();
+        renderBacklog(); renderTracking();
+        const note = document.getElementById('tracking-sync-note');
+        if (note) note.textContent = 'Firestore is not configured; tracking data is stored on this device only.';
+        return;
+      }
+      if (trackingUnsub) trackingUnsub();
+      trackingUnsub = fsTrackingRef.onSnapshot(snap => {
+        trackingStorageMode = 'collection';
+        trackingRecords = snap.docs.map(doc => Object.assign({ id: doc.id, backlogId: doc.id }, doc.data()));
+        rebuildTrackingIndex();
+        renderBacklog(); renderTracking();
+      }, err => {
+        console.error('tracking watch', err);
+        if (isTrackingPermissionError(err)) {
+          activateTrackingStateFallback();
+          toast('Implementation Tracking switched to compatible Firestore storage.');
+        } else toast('⚠ Could not load Implementation Tracking. Check the connection.');
+      });
+    }
+
+    // Editing milestones is limited to an admin or the Backlog item's own Owner(s) — not the
+    // proposer, support, reviewer, or any milestone's action owner.
+    function canEditTracking(record) {
+      return !!ME && (isAdmin() || trackingRecordOwners(record).includes(ME.name));
+    }
+
+    // Owner/status shown for a tracking record always mirror the live Optimization Backlog
+    // item (falling back to the frozen sourceSnapshot if that item was later deleted) — they
+    // are never stored or edited on the tracking record itself.
+    function trackingRecordOwners(record) {
+      const source = trackingSource(record.backlogId);
+      return source ? ownersOf(source) : peopleOf(record.sourceSnapshot || {}, 'owner');
+    }
+    function trackingRecordColumn(record) {
+      const source = trackingSource(record.backlogId);
+      return (source && source.column) || (record.sourceSnapshot && record.sourceSnapshot.column) || 'todo';
+    }
+    function snapshotOfSource(source) {
+      return {
+        title: source.title || '', proposer: source.proposer || '', priority: source.priority || 'mid',
+        owner: peopleOf(source, 'owner'), support: peopleOf(source, 'support'), reviewer: peopleOf(source, 'reviewer'),
+        createdBy: source.createdBy || '', column: source.column || 'todo'
+      };
+    }
+
+    function populateTrackingOwnerFilter() {
+      const select = document.getElementById('tracking-owner-filter');
+      if (!select) return;
+      const current = select.value || 'all';
+      const names = Array.from(new Set(trackingRecords.flatMap(trackingRecordOwners).filter(Boolean))).sort((a, b) => a.localeCompare(b, 'vi'));
+      select.innerHTML = '<option value="all">All owners</option>';
+      names.forEach(name => select.append(new Option(name, name)));
+      select.value = names.includes(current) ? current : 'all';
+    }
+
+    function trackingBaseFiltered() {
+      const query = (document.getElementById('tracking-search')?.value || '').trim().toLowerCase();
+      const owner = document.getElementById('tracking-owner-filter')?.value || 'all';
+      const priority = document.getElementById('tracking-priority-filter')?.value || 'all';
+      return trackingRecords.filter(record => {
+        const source = trackingSource(record.backlogId) || record.sourceSnapshot || {};
+        const title = String(source.title || record.sourceSnapshot?.title || '').toLowerCase();
+        const sourcePriority = source.priority || record.sourceSnapshot?.priority || 'mid';
+        return (!query || title.includes(query)) && (owner === 'all' || trackingRecordOwners(record).includes(owner)) &&
+          (priority === 'all' || sourcePriority === priority);
+      });
+    }
+
+    // Tabs filter by the Backlog item's own status column (Identified/In progress/Done) —
+    // Implementation Tracking has no separate status of its own.
+    function renderTrackingTabs(base) {
+      const box = document.getElementById('tracking-tabs');
+      if (!box) return;
+      box.innerHTML = '';
+      [{ key: 'all', icon: '', name: 'All' }].concat(TRACKING_FILTER_STATUSES).forEach(status => {
+        const count = status.key === 'all' ? base.length : base.filter(x => trackingRecordColumn(x) === status.key).length;
+        const button = document.createElement('button');
+        button.type = 'button'; button.className = 'item-tab';
+        if (trackingActiveStatus === status.key) button.classList.add('active');
+        button.textContent = (status.icon ? status.icon + ' ' : '') + status.name + ' ' + count;
+        button.onclick = () => { trackingActiveStatus = status.key; renderTracking(); };
+        box.append(button);
+      });
+    }
+
+    function renderTracking() {
+      const body = document.getElementById('tracking-body');
+      if (!body) return;
+      populateTrackingOwnerFilter();
+      const base = trackingBaseFiltered();
+      renderTrackingTabs(base);
+      const records = base.filter(x => trackingActiveStatus === 'all' || trackingRecordColumn(x) === trackingActiveStatus)
+        .sort((a, b) => trackingMillis(b.updatedAt) - trackingMillis(a.updatedAt));
+      body.innerHTML = '';
+      if (!records.length) {
+        body.innerHTML = '<tr><td colspan="8" class="empty">No tracking records match the current filters.</td></tr>';
+        return;
+      }
+      records.forEach((record, idx) => {
+        const source = trackingSource(record.backlogId);
+        const snap = record.sourceSnapshot || {};
+        const priority = (source && source.priority) || snap.priority || 'mid';
+        const priorityLabel = ITEM_PRI_LABEL[priority] || 'Medium';
+        const title = (source && source.title) || snap.title || 'Untitled backlog item';
+        const ownerList = trackingRecordOwners(record);
+        const backlogStatus = trackingBacklogStatusOf(trackingRecordColumn(record));
+        const derived = trackingDerived(record);
+        const updatedAt = trackingMillis(record.updatedAt);
+        const tr = document.createElement('tr');
+        tr.dataset.trackingId = record.backlogId;
+        tr.innerHTML = `
+          <td class="item-cell-mono">${idx + 1}</td>
+          <td class="tracking-source-title"><strong>${esc(title)}</strong><small>Optimization Backlog · ${esc(priorityLabel)}${source ? '' : ' · <span class="tracking-source-warning">Source deleted</span>'}</small></td>
+          <td title="${escAttr(ownerList.join(', '))}">${ownerList.length ? esc(ownerList.map(abbreviateName).join(', ')) : '—'}</td>
+          <td><span class="pill ${backlogStatus.cls}">${esc(backlogStatus.name)}</span></td>
+          <td class="item-cell-mono">${derived.doneCount}/${derived.total} done</td>
+          <td class="item-cell-ellipsis" title="${escAttr(milestoneText(derived.current, ''))}">${esc(milestoneText(derived.current, 'No milestone completed yet.'))}</td>
+          <td class="item-cell-ellipsis" title="${escAttr(milestoneText(derived.next, ''))}">${esc(milestoneText(derived.next, 'No pending milestone.'))}</td>
+          <td class="item-cell-mono">${updatedAt ? nowStr(updatedAt) : '—'}<br><small>${esc(record.updatedBy || '')}</small></td>`;
+        tr.onclick = () => openTrackingModal(record.backlogId);
+        body.append(tr);
+      });
+    }
+
+    // Milestones are edited in a working copy (trackingEditingMilestones); nothing is
+    // persisted until "Save milestone changes" is clicked.
+    // Milestone status options mirror the Backlog pipeline (Identified/In progress/Done).
+    function milestoneStatusOptionsHtml(selected) {
+      return ITEM_COLS.map(c => `<option value="${c.key}"${c.key === selected ? ' selected' : ''}>${c.name}</option>`).join('');
+    }
+    // A row is either displayed (text + ✎ edit / ✕ delete) or, for the one row at
+    // milestoneEditingIndex, shown as inline inputs (✓ save / ✕ cancel). "+ Add milestone"
+    // appends a blank row already in edit mode, right below the table's existing rows.
+    function renderMilestoneEditor() {
+      const body = document.getElementById('milestoneBody');
+      if (!body) return;
+      body.innerHTML = '';
+      if (!trackingEditingMilestones.length) {
+        body.innerHTML = '<tr><td colspan="6" class="empty">No milestones yet.</td></tr>';
+        return;
+      }
+      trackingEditingMilestones.forEach((m, idx) => {
+        const tr = document.createElement('tr');
+        if (idx === milestoneEditingIndex) {
+          tr.innerHTML = `
+            <td class="item-cell-mono">${idx + 1}</td>
+            <td><input type="text" class="milestone-edit-action" placeholder="Describe the milestone action" value="${escAttr(m.action || '')}"></td>
+            <td><select class="milestone-edit-owner"></select></td>
+            <td><input type="date" class="milestone-edit-date" value="${escAttr(m.targetDate || '')}"></td>
+            <td><select class="milestone-edit-status">${milestoneStatusOptionsHtml(m.status)}</select></td>
+            <td style="white-space:nowrap">
+              <button type="button" class="btn primary small milestone-save" data-idx="${idx}" title="Save">✓</button>
+              <button type="button" class="btn ghost small milestone-cancel-edit" data-idx="${idx}" title="Cancel">✕</button>
+            </td>`;
+          body.append(tr);
+          const ownerSel = tr.querySelector('.milestone-edit-owner');
+          fillPersonSelect(ownerSel, true);
+          ownerSel.value = m.owner || '';
+        } else {
+          tr.innerHTML = `
+            <td class="item-cell-mono">${idx + 1}</td>
+            <td class="item-cell-ellipsis" title="${escAttr(m.action || '')}">${esc(m.action || '')}</td>
+            <td title="${escAttr(m.owner || '')}">${m.owner ? esc(abbreviateName(m.owner)) : '—'}</td>
+            <td class="item-cell-mono">${trackingDateLabel(m.targetDate)}</td>
+            <td><select class="tracking-milestone-status" data-idx="${idx}" ${trackingEditingReadOnly ? 'disabled' : ''}>${milestoneStatusOptionsHtml(m.status)}</select></td>
+            <td style="white-space:nowrap">${trackingEditingReadOnly ? '' : `
+              <button type="button" class="btn ghost small milestone-edit" data-idx="${idx}" title="Edit">✎</button>
+              <button type="button" class="btn ghost small milestone-remove" data-idx="${idx}" title="Delete">✕</button>`}</td>`;
+          body.append(tr);
+        }
+      });
+      body.querySelectorAll('.tracking-milestone-status').forEach(sel => sel.onchange = () => {
+        const idx = Number(sel.dataset.idx);
+        const milestone = trackingEditingMilestones[idx];
+        if (!milestone) return;
+        const status = MILESTONE_STATUS_KEYS.includes(sel.value) ? sel.value : 'todo';
+        milestone.completedAt = status === 'done' && milestone.status !== 'done' ? new Date().toISOString() : (status !== 'done' ? '' : milestone.completedAt);
+        milestone.status = status;
+        renderMilestoneEditor(); renderDerivedBoxes();
+      });
+      body.querySelectorAll('.milestone-remove').forEach(btn => btn.onclick = () => {
+        const idx = Number(btn.dataset.idx);
+        trackingEditingMilestones.splice(idx, 1);
+        milestoneEditingIndex = -1;
+        renderMilestoneEditor(); renderDerivedBoxes();
+      });
+      body.querySelectorAll('.milestone-edit').forEach(btn => btn.onclick = () => {
+        milestoneEditingIndex = Number(btn.dataset.idx);
+        renderMilestoneEditor();
+      });
+      body.querySelectorAll('.milestone-save').forEach(btn => btn.onclick = () => {
+        const idx = Number(btn.dataset.idx);
+        const tr = btn.closest('tr');
+        const action = tr.querySelector('.milestone-edit-action').value.trim();
+        if (!action) { toast('Describe the milestone action first.'); return; }
+        const milestone = trackingEditingMilestones[idx];
+        milestone.action = action;
+        milestone.owner = tr.querySelector('.milestone-edit-owner').value;
+        milestone.targetDate = tr.querySelector('.milestone-edit-date').value;
+        const rawStatus = tr.querySelector('.milestone-edit-status').value;
+        const status = MILESTONE_STATUS_KEYS.includes(rawStatus) ? rawStatus : 'todo';
+        if (status === 'done' && milestone.status !== 'done') milestone.completedAt = new Date().toISOString();
+        else if (status !== 'done') milestone.completedAt = '';
+        milestone.status = status;
+        delete milestone._new;
+        milestoneEditingIndex = -1;
+        renderMilestoneEditor(); renderDerivedBoxes();
+      });
+      body.querySelectorAll('.milestone-cancel-edit').forEach(btn => btn.onclick = () => {
+        const idx = Number(btn.dataset.idx);
+        if (trackingEditingMilestones[idx] && trackingEditingMilestones[idx]._new) trackingEditingMilestones.splice(idx, 1);
+        milestoneEditingIndex = -1;
+        renderMilestoneEditor(); renderDerivedBoxes();
+      });
+    }
+    function renderDerivedBoxes() {
+      const derived = trackingDerived({ milestones: trackingEditingMilestones });
+      document.getElementById('trackingHandlingAuto').textContent = milestoneText(derived.current, 'No milestone completed yet.');
+      document.getElementById('trackingNextActionAuto').textContent = milestoneText(derived.next, 'No pending milestone.');
+    }
+
+    async function loadTrackingUpdates(backlogId) {
+      const box = document.getElementById('trackingTimeline');
+      box.innerHTML = '<div class="empty">Loading updates...</div>';
+      try {
+        if (trackingStorageMode === 'collection') {
+          const snap = await fsTrackingRef.doc(backlogId).collection('updates').orderBy('createdAt', 'desc').limit(50).get();
+          trackingUpdates = snap.docs.map(doc => Object.assign({ id: doc.id }, doc.data()));
+        } else if (trackingStorageMode === 'state') {
+          trackingUpdates = (db.implementationTrackingUpdates && db.implementationTrackingUpdates[backlogId]) || [];
+          trackingUpdates = trackingUpdates.slice().sort((a, b) => trackingMillis(b.createdAt) - trackingMillis(a.createdAt));
+        } else {
+          const store = readLocalTrackingStore();
+          trackingUpdates = (store.updates && store.updates[backlogId]) || [];
+          trackingUpdates.sort((a, b) => trackingMillis(b.createdAt) - trackingMillis(a.createdAt));
+        }
+        renderTrackingTimeline();
+      } catch (e) {
+        console.error('tracking updates', e);
+        if (isTrackingPermissionError(e)) {
+          activateTrackingStateFallback();
+          trackingUpdates = (db.implementationTrackingUpdates && db.implementationTrackingUpdates[backlogId]) || [];
+          renderTrackingTimeline();
+        } else box.innerHTML = '<div class="empty">Could not load the activity timeline.</div>';
+      }
+    }
+    function renderTrackingTimeline() {
+      const box = document.getElementById('trackingTimeline');
+      box.innerHTML = '';
+      if (!trackingUpdates.length) { box.innerHTML = '<div class="empty">No updates yet.</div>'; return; }
+      trackingUpdates.forEach(update => {
+        const div = document.createElement('div'); div.className = 'tracking-timeline-item';
+        const at = trackingMillis(update.createdAt);
+        const hasCounts = Number.isFinite(update.milestonesTotal);
+        div.innerHTML = `<div class="tracking-timeline-meta">${at ? nowStr(at) : 'Pending sync'} · ${esc(update.createdBy || 'Unknown')}</div>
+          <div>${esc(update.note || 'Tracking record updated.')}</div>
+          ${hasCounts ? `<div class="sub" style="margin-top:3px">${Number(update.milestonesDone) || 0}/${Number(update.milestonesTotal) || 0} milestones done</div>` : ''}`;
+        box.append(div);
+      });
+    }
+
+    function openTrackingFromBacklog(backlogId) {
+      document.getElementById('implementation-tracking-card').scrollIntoView({ block: 'start' });
+      document.querySelectorAll('#tracking-body tr').forEach(row => row.classList.toggle('tracking-highlight', row.dataset.trackingId === backlogId));
+      openTrackingModal(backlogId);
+      setTimeout(() => document.querySelectorAll('#tracking-body tr.tracking-highlight').forEach(row => row.classList.remove('tracking-highlight')), 1800);
+    }
+
+    async function openTrackingModal(backlogId) {
+      if (!ME) { toast('Please log in first.'); return; }
+      const record = trackingByBacklog[backlogId];
+      if (!record) { toast('Tracking record not found.'); return; }
+      trackingEditingId = backlogId;
+      const source = trackingSource(backlogId);
+      const snap = record.sourceSnapshot || {};
+      const title = (source && source.title) || snap.title || 'Untitled backlog item';
+      const proposer = (source && source.proposer) || snap.proposer || '';
+      const priority = (source && source.priority) || snap.priority || 'mid';
+      const ownerList = trackingRecordOwners(record);
+      const backlogStatus = trackingBacklogStatusOf(trackingRecordColumn(record));
+      document.getElementById('trackingTitleSub').textContent = title;
+      document.getElementById('trackingSourceLabel').textContent = 'Optimization Backlog · ' + title;
+      document.getElementById('trackingSourceWarning').style.display = source ? 'none' : '';
+      document.getElementById('trackingOpenSource').disabled = !source;
+      document.getElementById('trackingSourceProposer').textContent = proposer ? abbreviateName(proposer) : '—';
+      document.getElementById('trackingSourceOwner').textContent = ownerList.length ? ownerList.map(abbreviateName).join(', ') : '—';
+      document.getElementById('trackingSourcePriority').textContent = ITEM_PRI_LABEL[priority] || 'Medium';
+      document.getElementById('trackingSourceStatus').textContent = backlogStatus.name;
+
+      trackingEditingMilestones = (record.milestones || []).map(m => Object.assign({}, m));
+      milestoneEditingIndex = -1;
+      trackingEditingReadOnly = !canEditTracking(record);
+      document.getElementById('trackingReadonlyNote').style.display = trackingEditingReadOnly ? '' : 'none';
+      document.getElementById('milestoneAddToggle').style.display = trackingEditingReadOnly ? 'none' : '';
+      renderMilestoneEditor(); renderDerivedBoxes();
+
+      document.getElementById('trackingRemove').style.display = isAdmin() ? '' : 'none';
+      document.getElementById('trackingSave').style.display = trackingEditingReadOnly ? 'none' : '';
+      const updatedAt = trackingMillis(record.updatedAt);
+      document.getElementById('trackingMeta').textContent = updatedAt ? 'Last updated ' + nowStr(updatedAt) + ' by ' + (record.updatedBy || 'Unknown') : '';
+      document.getElementById('trackingBg').classList.add('show');
+      await loadTrackingUpdates(backlogId);
+    }
+
+    async function createTrackingFor(backlogId) {
+      if (!ME) { toast('Please log in first.'); return; }
+      if (!isAdmin()) { toast('Only an admin can decide which items get tracked.'); return; }
+      if (trackingByBacklog[backlogId]) { openTrackingFromBacklog(backlogId); return; }
+      const source = trackingSource(backlogId);
+      if (!source) { toast('The source backlog item no longer exists.'); return; }
+      const snapshot = snapshotOfSource(source);
+      const base = { backlogId, sourceSnapshot: snapshot, milestones: [], createdBy: ME.name, updatedBy: ME.name };
+      try {
+        let created = true;
+        if (trackingStorageMode === 'collection') {
+          const ref = fsTrackingRef.doc(backlogId);
+          const updateRef = ref.collection('updates').doc();
+          created = await firebase.firestore().runTransaction(async transaction => {
+            const existing = await transaction.get(ref);
+            if (existing.exists) return false;
+            const stamp = firebase.firestore.FieldValue.serverTimestamp();
+            transaction.set(ref, Object.assign({}, base, { createdAt: stamp, updatedAt: stamp }));
+            transaction.set(updateRef, { note: 'Tracking record created from Optimization Backlog.', milestonesTotal: 0, milestonesDone: 0, createdAt: stamp, createdBy: ME.name });
+            return true;
+          });
+          const snap = await ref.get();
+          if (snap.exists) upsertTrackingRecord(Object.assign({ id: snap.id, backlogId: snap.id }, snap.data()));
+        } else if (trackingStorageMode === 'state') {
+          const list = db.implementationTracking || (db.implementationTracking = []);
+          const updates = db.implementationTrackingUpdates || (db.implementationTrackingUpdates = {});
+          if (list.some(x => x.backlogId === backlogId)) created = false;
+          else {
+            const now = new Date().toISOString();
+            list.push(Object.assign({}, base, { id: backlogId, createdAt: now, updatedAt: now }));
+            updates[backlogId] = [{ id: 'create-' + Date.now(), note: 'Tracking record created from Optimization Backlog.', milestonesTotal: 0, milestonesDone: 0, createdAt: now, createdBy: ME.name }];
+            save(); await flushSave();
+            syncTrackingFromState();
+          }
+        } else {
+          const store = readLocalTrackingStore();
+          store.records = Array.isArray(store.records) ? store.records : [];
+          store.updates = store.updates || {};
+          if (store.records.some(x => x.backlogId === backlogId)) created = false;
+          else {
+            const now = new Date().toISOString();
+            store.records.push(Object.assign({}, base, { id: backlogId, createdAt: now, updatedAt: now }));
+            store.updates[backlogId] = [{ id: 'create-' + Date.now(), note: 'Tracking record created from Optimization Backlog.', milestonesTotal: 0, milestonesDone: 0, createdAt: now, createdBy: ME.name }];
+            writeLocalTrackingStore(store);
+            trackingRecords = store.records;
+            rebuildTrackingIndex();
+          }
+        }
+        renderBacklog(); renderTracking();
+        toast(created ? 'Tracking record created.' : 'This backlog item is already being tracked.');
+        openTrackingFromBacklog(backlogId);
+      } catch (e) {
+        console.error('create tracking', e);
+        if (trackingStorageMode === 'collection' && isTrackingPermissionError(e)) {
+          activateTrackingStateFallback();
+          await createTrackingFor(backlogId);
+        } else toast('⚠ Could not create tracking record. Check the connection.');
+      }
+    }
+
+    async function saveTracking() {
+      const record = trackingByBacklog[trackingEditingId];
+      if (!record || !canEditTracking(record)) return;
+      const source = trackingSource(trackingEditingId);
+      const snapshot = source ? snapshotOfSource(source) : (record.sourceSnapshot || {});
+      const now = new Date().toISOString();
+      // drop any row still mid-edit and never confirmed with ✓ (e.g. a blank "+ Add milestone" row)
+      const milestones = trackingEditingMilestones.filter(m => (m.action || '').trim()).map(m => ({
+        id: m.id || ('m-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7)),
+        action: (m.action || '').trim(), owner: m.owner || '', targetDate: m.targetDate || '',
+        status: MILESTONE_STATUS_KEYS.includes(m.status) ? m.status : 'todo',
+        createdAt: m.createdAt || now, createdBy: m.createdBy || ME.name,
+        completedAt: m.status === 'done' ? (m.completedAt || now) : ''
+      }));
+      const doneCount = milestones.filter(m => m.status === 'done').length;
+      const patch = { sourceSnapshot: snapshot, milestones, updatedBy: ME.name };
+      const note = 'Milestones updated (' + doneCount + ' of ' + milestones.length + ' done).';
+      try {
+        if (trackingStorageMode === 'collection') {
+          const ref = fsTrackingRef.doc(trackingEditingId);
+          const updateRef = ref.collection('updates').doc();
+          const stamp = firebase.firestore.FieldValue.serverTimestamp();
+          const batch = firebase.firestore().batch();
+          batch.set(ref, Object.assign({}, patch, { updatedAt: stamp }), { merge: true });
+          batch.set(updateRef, { note, milestonesTotal: milestones.length, milestonesDone: doneCount, createdAt: stamp, createdBy: ME.name });
+          await batch.commit();
+          const snap = await ref.get();
+          if (snap.exists) upsertTrackingRecord(Object.assign({ id: snap.id, backlogId: snap.id }, snap.data()));
+        } else if (trackingStorageMode === 'state') {
+          const list = db.implementationTracking || (db.implementationTracking = []);
+          const updates = db.implementationTrackingUpdates || (db.implementationTrackingUpdates = {});
+          const idx = list.findIndex(x => x.backlogId === trackingEditingId);
+          if (idx < 0) throw new Error('tracking record missing');
+          list[idx] = Object.assign({}, list[idx], patch, { updatedAt: now });
+          (updates[trackingEditingId] || (updates[trackingEditingId] = [])).unshift({ id: 'update-' + Date.now(), note, milestonesTotal: milestones.length, milestonesDone: doneCount, createdAt: now, createdBy: ME.name });
+          save(); await flushSave();
+          syncTrackingFromState();
+        } else {
+          const store = readLocalTrackingStore();
+          store.records = Array.isArray(store.records) ? store.records : [];
+          store.updates = store.updates || {};
+          const idx = store.records.findIndex(x => x.backlogId === trackingEditingId);
+          if (idx < 0) throw new Error('tracking record missing');
+          store.records[idx] = Object.assign({}, store.records[idx], patch, { updatedAt: now });
+          (store.updates[trackingEditingId] || (store.updates[trackingEditingId] = [])).unshift({ id: 'update-' + Date.now(), note, milestonesTotal: milestones.length, milestonesDone: doneCount, createdAt: now, createdBy: ME.name });
+          writeLocalTrackingStore(store);
+          trackingRecords = store.records; rebuildTrackingIndex();
+        }
+        trackingEditingMilestones = milestones.map(m => Object.assign({}, m));
+        milestoneEditingIndex = -1;
+        renderMilestoneEditor(); renderDerivedBoxes();
+        renderBacklog(); renderTracking();
+        await loadTrackingUpdates(trackingEditingId);
+        const metaRecord = trackingByBacklog[trackingEditingId];
+        const updatedAt = metaRecord ? trackingMillis(metaRecord.updatedAt) : 0;
+        document.getElementById('trackingMeta').textContent = updatedAt ? 'Last updated ' + nowStr(updatedAt) + ' by ' + (metaRecord.updatedBy || 'Unknown') : '';
+        toast('Tracking update saved.');
+      } catch (e) {
+        console.error('save tracking', e);
+        if (trackingStorageMode === 'collection' && isTrackingPermissionError(e)) {
+          const fallbackRecord = Object.assign({}, record, patch, { updatedAt: now });
+          activateTrackingStateFallback();
+          if (!trackingByBacklog[trackingEditingId]) {
+            db.implementationTracking.push(fallbackRecord);
+            syncTrackingFromState();
+          }
+          await saveTracking();
+        } else toast('⚠ Could not save tracking update. Check the connection.');
+      }
+    }
+
+    async function removeTracking() {
+      if (!isAdmin()) { toast('Only an admin can remove tracking.'); return; }
+      const backlogId = trackingEditingId;
+      const record = trackingByBacklog[backlogId];
+      if (!record) return;
+      const title = (trackingSource(backlogId) || record.sourceSnapshot || {}).title || 'this item';
+      if (!confirm('Remove Implementation Tracking for "' + title + '"? This deletes its milestones and history.')) return;
+      try {
+        if (trackingStorageMode === 'collection') {
+          const ref = fsTrackingRef.doc(backlogId);
+          const updatesSnap = await ref.collection('updates').get();
+          const batch = firebase.firestore().batch();
+          updatesSnap.docs.forEach(doc => batch.delete(doc.ref));
+          batch.delete(ref);
+          await batch.commit();
+          trackingRecords = trackingRecords.filter(x => x.backlogId !== backlogId);
+          rebuildTrackingIndex();
+        } else if (trackingStorageMode === 'state') {
+          db.implementationTracking = (db.implementationTracking || []).filter(x => x.backlogId !== backlogId);
+          if (db.implementationTrackingUpdates) delete db.implementationTrackingUpdates[backlogId];
+          save(); await flushSave();
+          syncTrackingFromState();
+        } else {
+          const store = readLocalTrackingStore();
+          store.records = (store.records || []).filter(x => x.backlogId !== backlogId);
+          if (store.updates) delete store.updates[backlogId];
+          writeLocalTrackingStore(store);
+          trackingRecords = store.records; rebuildTrackingIndex();
+        }
+        document.getElementById('trackingBg').classList.remove('show');
+        renderBacklog(); renderTracking();
+        toast('Tracking removed.');
+      } catch (e) {
+        console.error('remove tracking', e);
+        if (trackingStorageMode === 'collection' && isTrackingPermissionError(e)) {
+          activateTrackingStateFallback();
+          await removeTracking();
+        } else toast('⚠ Could not remove tracking. Check the connection.');
+      }
+    }
+
+    document.getElementById('trackingClose').onclick = () => document.getElementById('trackingBg').classList.remove('show');
+    document.getElementById('trackingBg').onclick = e => { if (e.target === document.getElementById('trackingBg')) document.getElementById('trackingBg').classList.remove('show'); };
+    document.getElementById('trackingSave').onclick = saveTracking;
+    document.getElementById('trackingRemove').onclick = removeTracking;
+    document.getElementById('milestoneAddToggle').onclick = () => {
+      if (trackingEditingReadOnly) return;
+      const now = new Date().toISOString();
+      trackingEditingMilestones.push({
+        id: 'm-' + Date.now() + '-' + Math.random().toString(36).slice(2, 7),
+        action: '', owner: '', targetDate: '', status: 'todo',
+        createdAt: now, createdBy: ME.name, completedAt: '', _new: true
+      });
+      milestoneEditingIndex = trackingEditingMilestones.length - 1;
+      renderMilestoneEditor(); renderDerivedBoxes();
+    };
+    document.getElementById('trackingOpenSource').onclick = () => {
+      const source = trackingSource(trackingEditingId);
+      if (!source) return;
+      document.getElementById('trackingBg').classList.remove('show');
+      openItemModal('backlog', source.id);
+    };
+    ['tracking-search', 'tracking-owner-filter', 'tracking-priority-filter'].forEach(id => {
+      const element = document.getElementById(id);
+      element.addEventListener(id === 'tracking-search' ? 'input' : 'change', renderTracking);
+    });
+
     /* ================== OPTIMIZATION BACKLOG & TRAINING NEEDS ================== */
     const ITEM_COLS = [{ key: 'todo', icon: '📌', name: 'Identified', cls: 'st-todo' },
     { key: 'idea', icon: '💡', name: 'In progress', cls: 'st-idea' },
@@ -2643,7 +3681,7 @@
       const tabFilter = ITEM_TAB[kind], priFilter = ITEM_PRI_FILTER[kind];
       const items = (db[kind] || []).filter(it =>
         (tabFilter === 'all' || it.column === tabFilter) && (priFilter === 'all' || it.priority === priFilter));
-      if (!items.length) { box.innerHTML = '<tr><td colspan="11" class="empty">No items yet.</td></tr>'; return; }
+      if (!items.length) { box.innerHTML = '<tr><td colspan="' + (kind === 'backlog' ? '12' : '11') + '" class="empty">No items yet.</td></tr>'; return; }
       items.forEach((it, idx) => {
         const col = ITEM_COLS.find(c => c.key === it.column) || ITEM_COLS[0];
         const priClass = it.priority === 'high' ? 'pri-hot' : (it.priority === 'low' ? 'pri-cool' : 'pri-warm');
@@ -2654,6 +3692,13 @@
             ? `<a href="${safe}" target="_blank" rel="noopener noreferrer" onclick="event.stopPropagation()">${safe}</a>`
             : safe;
         }
+        const trackingRecord = kind === 'backlog' ? trackingByBacklog[it.id] : null;
+        // Only an admin decides which backlog items get tracked; once tracked, anyone can open it.
+        const trackingCell = kind !== 'backlog' ? '' : trackingRecord
+          ? `<td><button type="button" class="btn ghost small backlog-track-btn">Open</button></td>`
+          : isAdmin()
+            ? `<td><button type="button" class="btn primary small backlog-track-btn">Track</button></td>`
+            : `<td><span class="sub" title="Only an admin can start tracking this item">—</span></td>`;
         const tr = document.createElement('tr');
         tr.innerHTML = `
         <td class="item-cell-mono">${idx + 1}</td>
@@ -2666,7 +3711,13 @@
         ${peopleCellHtml(it, 'reviewer', 'item-cell-muted')}
         <td><span class="pill ${col.cls}">${col.icon} ${col.name}</span> <span class="pill ${priClass}" title="Priority: ${ITEM_PRI_LABEL[it.priority] || 'Medium'}">${ITEM_PRI_LABEL[it.priority] || 'Medium'}</span></td>
         <td class="item-cell-ellipsis">${linkCell}</td>
-        <td class="item-cell-mono">${it.updatedAt ? nowStr(new Date(it.updatedAt).getTime()) : '—'}<br><small>${esc(it.updatedBy || '')}</small></td>`;
+        <td class="item-cell-mono">${it.updatedAt ? nowStr(new Date(it.updatedAt).getTime()) : '—'}<br><small>${esc(it.updatedBy || '')}</small></td>
+        ${trackingCell}`;
+        const trackingButton = tr.querySelector('.backlog-track-btn');
+        if (trackingButton) trackingButton.onclick = event => {
+          event.stopPropagation();
+          if (trackingRecord) openTrackingFromBacklog(it.id); else createTrackingFor(it.id);
+        };
         tr.onclick = () => openItemModal(kind, it.id);
         box.append(tr);
       });
@@ -2832,7 +3883,7 @@
     function renderTraining() { renderItemTabs('training'); renderItemBody('training'); }
 
     function renderAll() {
-      [renderDash, renderQueue, renderReport, renderWeek, renderBacklog, renderTraining, renderUsers].forEach(fn => {
+      [renderDash, renderQueue, renderReport, renderWeek, renderBacklog, renderTraining, renderTracking, renderUsers].forEach(fn => {
         try { fn(); } catch (e) { console.error(fn.name, e); }
       });
     }
@@ -2919,6 +3970,7 @@
       if (bootChanged) save();
       renderAll(); updateHint(); updateNoteLabel();
       watchServer();                               // from here on, changes from others push in automatically (no polling)
+      watchTracking();                             // separate collection: one document per backlog item
       // still need to poll periodically since these 2 checks depend on the REAL CLOCK (12:00/17:30), not on someone else's write
       setInterval(() => {
         if (ME) applyIdentity();
